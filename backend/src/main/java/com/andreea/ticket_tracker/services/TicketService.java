@@ -10,8 +10,12 @@ import java.util.List;
 @Service
 public class TicketService {
 
+    private final TicketRepository ticketRepository;
+
     @Autowired
-    private TicketRepository ticketRepository;
+    public TicketService(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
+    }
 
     public Ticket createTicket(Ticket ticket){
         return ticketRepository.save(ticket);

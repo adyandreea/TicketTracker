@@ -10,8 +10,12 @@ import java.util.List;
 @Service
 public class BoardService {
 
+    private final BoardRepository boardRepository;
+
     @Autowired
-    private BoardRepository boardRepository;
+    public BoardService(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
 
     public Board createBoard(Board board){
         return boardRepository.save(board);
