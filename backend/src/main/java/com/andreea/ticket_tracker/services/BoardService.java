@@ -1,7 +1,12 @@
 package com.andreea.ticket_tracker.services;
 
+import com.andreea.ticket_tracker.dto.request.BoardRequestDTO;
+import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
+import com.andreea.ticket_tracker.entity.Project;
+import com.andreea.ticket_tracker.mapper.BoardDTOMapper;
 import com.andreea.ticket_tracker.repository.BoardRepository;
+import com.andreea.ticket_tracker.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,33 +16,52 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final ProjectRepository projectRepository;
 
     @Autowired
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, ProjectRepository projectRepository) {
         this.boardRepository = boardRepository;
+        this.projectRepository = projectRepository;
     }
 
-    public Board createBoard(Board board){
-        return boardRepository.save(board);
+    public BoardResponseDTO createBoard(BoardRequestDTO dto){
+      Project project = projectRepository.findById(dto.getProjectId())
+              .orElseThrow(() -> new RuntimeException("Project not found"));
+
+      Board board = BoardDTOMapper.toEntity(dto, project);
+      Board saved = boardRepository.save(board);
+      return BoardDTOMapper.toDTO(saved);
     }
 
-    public List<Board> getAllBoards(){
-        return boardRepository.findAll();
+    public List<BoardResponseDTO> getAllBoards(){
+        return boardRepository.findAll()
+                .stream()
+                .map(BoardDTOMapper::toDTO)
+                .toList();
     }
 
-    public Board getBoard(Long id){
-        return boardRepository.findById(id)
+    public BoardResponseDTO getBoard(Long id){
+        Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Board not found"));
+
+        return BoardDTOMapper.toDTO(board);
     }
 
-    public Board updateBoard(Long id, Board newBoard){
-        return boardRepository.findById(id)
-                .map(board -> {
-                    board.setName(newBoard.getName());
-                    board.setDescription(newBoard.getDescription());
-                    return boardRepository.save(board);
-                })
-                .orElseThrow(() -> new RuntimeException("Board not Found"));
+    public BoardResponseDTO updateBoard(Long id, BoardRequestDTO dto){
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+
+        board.setName(dto.getName());
+        board.setDescription(dto.getDescription());
+
+        if(dto.getProjectId() != null){
+            Project project = projectRepository.findById(dto.getProjectId())
+                    .orElseThrow(() -> new RuntimeException("Project not found"));
+            board.setProject(project);
+        }
+
+        Board updated = boardRepository.save(board);
+        return BoardDTOMapper.toDTO(updated);
     }
 
     public void deleteBoard(Long id){

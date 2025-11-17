@@ -1,5 +1,7 @@
 package com.andreea.ticket_tracker.controllers;
 
+import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
+import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
 import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.services.ProjectService;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +18,23 @@ public class ProjectController {
     }
 
     @PostMapping("/project")
-    public Project createProject(@RequestBody Project project){
-        return projectService.createProject(project);
+    public ProjectResponseDTO createProject(@RequestBody ProjectRequestDTO dto){
+        return projectService.createProject(dto);
     }
 
     @GetMapping("/projects")
-    public List<Project> getAllProjects(){
+    public List<ProjectResponseDTO> getAllProjects(){
         return projectService.getAllProjects();
     }
 
     @GetMapping("/project/{id}")
-    public Project getProject(@PathVariable Long id){
+    public ProjectResponseDTO getProject(@PathVariable Long id){
         return projectService.getProject(id);
     }
 
     @PutMapping("/project/{id}")
-    public Project updateProject(@PathVariable Long id, @RequestBody Project project){
-        return projectService.updateProject(id, project);
+    public ProjectResponseDTO updateProject(@PathVariable Long id, @RequestBody ProjectRequestDTO dto){
+        return projectService.updateProject(id, dto);
     }
 
     @DeleteMapping("/project/{id}")

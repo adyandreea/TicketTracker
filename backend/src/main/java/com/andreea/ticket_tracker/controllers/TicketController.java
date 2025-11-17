@@ -1,5 +1,7 @@
 package com.andreea.ticket_tracker.controllers;
 
+import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
+import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
 import com.andreea.ticket_tracker.entity.Ticket;
 import com.andreea.ticket_tracker.services.TicketService;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +18,23 @@ public class TicketController {
     }
 
     @PostMapping("/ticket")
-    public Ticket createticket(@RequestBody Ticket ticket){
-        return ticketService.createTicket(ticket);
+    public TicketResponseDTO createticket(@RequestBody TicketRequestDTO dto){
+        return ticketService.createTicket(dto);
     }
 
     @GetMapping("/tickets")
-    public List<Ticket> getAllTickets(){
+    public List<TicketResponseDTO> getAllTickets(){
         return ticketService.getAllTickets();
     }
 
     @GetMapping("/ticket/{id}")
-    public Ticket getTicket(@PathVariable Long id){
+    public TicketResponseDTO getTicket(@PathVariable Long id){
         return ticketService.getTicket(id);
     }
 
     @PutMapping("/ticket/{id}")
-    public Ticket updateTicket(@PathVariable Long id, @RequestBody Ticket ticket){
-        return ticketService.updateTicket(id, ticket);
+    public TicketResponseDTO updateTicket(@PathVariable Long id, @RequestBody TicketRequestDTO dto){
+        return ticketService.updateTicket(id, dto);
     }
 
     @DeleteMapping("/ticket/{id}")
