@@ -1,7 +1,6 @@
 package com.andreea.ticket_tracker.mapper;
 
 import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
-import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
 import com.andreea.ticket_tracker.entity.Project;
 

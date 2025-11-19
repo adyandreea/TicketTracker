@@ -2,8 +2,11 @@ package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
 import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
-import com.andreea.ticket_tracker.entity.Project;
+import com.andreea.ticket_tracker.dto.response.SuccessDTO;
+import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.ProjectService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +21,9 @@ public class ProjectController {
     }
 
     @PostMapping("/project")
-    public ProjectResponseDTO createProject(@RequestBody ProjectRequestDTO dto){
-        return projectService.createProject(dto);
+    public ResponseEntity<SuccessDTO> createProject(@Valid @RequestBody ProjectRequestDTO dto){
+        projectService.createProject(dto);
+        return ResponseHandler.created("Project created successfully");
     }
 
     @GetMapping("/projects")
@@ -33,13 +37,14 @@ public class ProjectController {
     }
 
     @PutMapping("/project/{id}")
-    public ProjectResponseDTO updateProject(@PathVariable Long id, @RequestBody ProjectRequestDTO dto){
-        return projectService.updateProject(id, dto);
+    public ResponseEntity<SuccessDTO> updateProject(@PathVariable Long id, @Valid   @RequestBody ProjectRequestDTO dto){
+        projectService.updateProject(id, dto);
+        return ResponseHandler.updated("Project updated successfully");
     }
 
     @DeleteMapping("/project/{id}")
-    public String deleteProject(@PathVariable Long id){
+    public ResponseEntity<SuccessDTO> deleteProject(@PathVariable Long id){
         projectService.deleteProject(id);
-        return "Project deleted: " + id;
+        return ResponseHandler.deleted("Project deleted successfully");
     }
 }

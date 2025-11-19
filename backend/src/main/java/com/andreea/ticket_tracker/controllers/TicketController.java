@@ -1,9 +1,12 @@
 package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
+import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
-import com.andreea.ticket_tracker.entity.Ticket;
+import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.TicketService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +21,9 @@ public class TicketController {
     }
 
     @PostMapping("/ticket")
-    public TicketResponseDTO createticket(@RequestBody TicketRequestDTO dto){
-        return ticketService.createTicket(dto);
+    public ResponseEntity<SuccessDTO> createTicket(@Valid @RequestBody TicketRequestDTO dto){
+        ticketService.createTicket(dto);
+        return ResponseHandler.created("Ticket created successfully");
     }
 
     @GetMapping("/tickets")
@@ -33,13 +37,14 @@ public class TicketController {
     }
 
     @PutMapping("/ticket/{id}")
-    public TicketResponseDTO updateTicket(@PathVariable Long id, @RequestBody TicketRequestDTO dto){
-        return ticketService.updateTicket(id, dto);
+    public ResponseEntity<SuccessDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody TicketRequestDTO dto){
+        ticketService.updateTicket(id, dto);
+        return ResponseHandler.updated("Ticket updated successfully");
     }
 
     @DeleteMapping("/ticket/{id}")
-    public String deleteTicket(@PathVariable Long id){
+    public ResponseEntity<SuccessDTO> deleteTicket(@PathVariable Long id){
         ticketService.deleteTicket(id);
-        return "Ticket deleted: " + id;
+        return ResponseHandler.deleted("Ticket deleted successfully");
     }
 }
