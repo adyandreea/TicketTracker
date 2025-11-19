@@ -3,9 +3,9 @@ package com.andreea.ticket_tracker.controllers;
 import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
-import com.andreea.ticket_tracker.entity.Ticket;
 import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ public class TicketController {
     }
 
     @PostMapping("/ticket")
-    public ResponseEntity<SuccessDTO> createticket(@RequestBody TicketRequestDTO dto){
+    public ResponseEntity<SuccessDTO> createTicket(@Valid @RequestBody TicketRequestDTO dto){
         ticketService.createTicket(dto);
         return ResponseHandler.created("Ticket created successfully");
     }
@@ -37,7 +37,7 @@ public class TicketController {
     }
 
     @PutMapping("/ticket/{id}")
-    public ResponseEntity<SuccessDTO> updateTicket(@PathVariable Long id, @RequestBody TicketRequestDTO dto){
+    public ResponseEntity<SuccessDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody TicketRequestDTO dto){
         ticketService.updateTicket(id, dto);
         return ResponseHandler.updated("Ticket updated successfully");
     }

@@ -5,6 +5,7 @@ import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.ProjectService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class ProjectController {
     }
 
     @PostMapping("/project")
-    public ResponseEntity<SuccessDTO> createProject(@RequestBody ProjectRequestDTO dto){
+    public ResponseEntity<SuccessDTO> createProject(@Valid @RequestBody ProjectRequestDTO dto){
         projectService.createProject(dto);
         return ResponseHandler.created("Project created successfully");
     }
@@ -36,7 +37,7 @@ public class ProjectController {
     }
 
     @PutMapping("/project/{id}")
-    public ResponseEntity<SuccessDTO> updateProject(@PathVariable Long id, @RequestBody ProjectRequestDTO dto){
+    public ResponseEntity<SuccessDTO> updateProject(@PathVariable Long id, @Valid   @RequestBody ProjectRequestDTO dto){
         projectService.updateProject(id, dto);
         return ResponseHandler.updated("Project updated successfully");
     }
