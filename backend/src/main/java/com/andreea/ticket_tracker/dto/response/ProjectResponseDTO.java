@@ -18,5 +18,6 @@ public class ProjectResponseDTO {
     @Size(max = 255, message = "Description too long")
     private String description;
 
+    @Size(min = 0, message = "board_count_invalid")
     private int boardCount;
 }

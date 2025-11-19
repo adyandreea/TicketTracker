@@ -4,7 +4,6 @@ import com.andreea.ticket_tracker.dto.request.BoardRequestDTO;
 import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Project;
-import com.andreea.ticket_tracker.exceptions.ProjectNotFoundException;
 
 public class BoardDTOMapper {
 

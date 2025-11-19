@@ -22,6 +22,9 @@ public class BoardResponseDTO {
     @NotNull(message = "ProjectId cannot be null")
     private Long projectId;
 
+    @NotBlank(message = "project_name_is_required")
     private String projectName;
+
+    @Size(min = 0, message = "board_count_invalid")
     private int ticketCount;
 }

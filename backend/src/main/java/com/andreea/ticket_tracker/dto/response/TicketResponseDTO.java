@@ -24,5 +24,7 @@ public class TicketResponseDTO {
 
     @NotNull(message = "BoardId cannot be null")
     private Long boardId;
+
+    @NotBlank(message = "board_name_cannot_be_null")
     private String boardName;
 }

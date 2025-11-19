@@ -23,9 +23,7 @@ public class ProjectService {
 
     public void createProject(ProjectRequestDTO dto){
         Project project = ProjectDTOMapper.toEntity(dto);
-        Project saved = projectRepository.save(project);
-
-        ProjectDTOMapper.toDTO(saved);
+        projectRepository.save(project);
     }
 
     public List<ProjectResponseDTO> getAllProjects(){
@@ -49,8 +47,7 @@ public class ProjectService {
         project.setName(dto.getName());
         project.setDescription(dto.getDescription());
 
-        Project updated = projectRepository.save(project);
-        ProjectDTOMapper.toDTO(updated);
+        projectRepository.save(project);
     }
 
     public void deleteProject(Long id){

@@ -6,6 +6,7 @@ import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.exceptions.BoardNotFoundException;
 import com.andreea.ticket_tracker.exceptions.ProjectNotFoundException;
+import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.mapper.BoardDTOMapper;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
@@ -31,8 +32,8 @@ public class BoardService {
               .orElseThrow(ProjectNotFoundException::new);
 
       Board board = BoardDTOMapper.toEntity(dto, project);
-      Board saved = boardRepository.save(board);
-      BoardDTOMapper.toDTO(saved);
+
+      boardRepository.save(board);
     }
 
     public List<BoardResponseDTO> getAllBoards(){
@@ -62,8 +63,7 @@ public class BoardService {
             board.setProject(project);
         }
 
-        Board updated = boardRepository.save(board);
-        BoardDTOMapper.toDTO(updated);
+        boardRepository.save(board);
     }
 
     public void deleteBoard(Long id){
