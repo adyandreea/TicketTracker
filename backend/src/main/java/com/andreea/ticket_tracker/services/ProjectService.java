@@ -3,6 +3,7 @@ package com.andreea.ticket_tracker.services;
 import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
 import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
 import com.andreea.ticket_tracker.entity.Project;
+import com.andreea.ticket_tracker.exceptions.ProjectNotFoundException;
 import com.andreea.ticket_tracker.mapper.ProjectDTOMapper;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,11 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public ProjectResponseDTO createProject(ProjectRequestDTO dto){
+    public void createProject(ProjectRequestDTO dto){
         Project project = ProjectDTOMapper.toEntity(dto);
         Project saved = projectRepository.save(project);
 
-        return ProjectDTOMapper.toDTO(saved);
+        ProjectDTOMapper.toDTO(saved);
     }
 
     public List<ProjectResponseDTO> getAllProjects(){
@@ -36,23 +37,26 @@ public class ProjectService {
 
     public ProjectResponseDTO getProject(Long id){
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(ProjectNotFoundException::new);
 
         return ProjectDTOMapper.toDTO(project);
     }
 
-    public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO dto){
+    public void updateProject(Long id, ProjectRequestDTO dto){
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not Found"));
+                .orElseThrow(ProjectNotFoundException::new);
 
         project.setName(dto.getName());
         project.setDescription(dto.getDescription());
 
         Project updated = projectRepository.save(project);
-        return ProjectDTOMapper.toDTO(updated);
+        ProjectDTOMapper.toDTO(updated);
     }
 
     public void deleteProject(Long id){
+        projectRepository.findById(id)
+                .orElseThrow(ProjectNotFoundException::new);
+
         projectRepository.deleteById(id);
     }
 }

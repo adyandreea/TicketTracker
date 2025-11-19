@@ -2,7 +2,10 @@ package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.BoardRequestDTO;
 import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
+import com.andreea.ticket_tracker.dto.response.SuccessDTO;
+import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.BoardService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +20,9 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public BoardResponseDTO createBoard(@RequestBody BoardRequestDTO dto){
-        return boardService.createBoard(dto);
+    public ResponseEntity<SuccessDTO> createBoard(@RequestBody BoardRequestDTO dto){
+        boardService.createBoard(dto);
+        return ResponseHandler.created("Board created successfully");
     }
 
     @GetMapping("/boards")
@@ -32,13 +36,14 @@ public class BoardController {
     }
 
     @PutMapping("/board/{id}")
-    public BoardResponseDTO updateBoard(@PathVariable Long id, @RequestBody BoardRequestDTO dto){
-        return boardService.updateBoard(id, dto);
+    public ResponseEntity<SuccessDTO> updateBoard(@PathVariable Long id, @RequestBody BoardRequestDTO dto){
+        boardService.updateBoard(id, dto);
+        return ResponseHandler.updated("Board updated successfully");
     }
 
     @DeleteMapping("/board/{id}")
-    public String deleteBoard(@PathVariable Long id){
+    public ResponseEntity<SuccessDTO> deleteBoard(@PathVariable Long id){
         boardService.deleteBoard(id);
-        return "Board deleted: " + id;
+        return ResponseHandler.deleted("Board deleted successfully");
     }
 }
