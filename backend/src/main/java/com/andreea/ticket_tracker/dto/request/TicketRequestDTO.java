@@ -18,8 +18,9 @@ public class TicketRequestDTO {
     @Size(max = 255, message = "Description too long")
     private String description;
 
-    @NotNull(message = "BoardId cannot be null")
-    private int position;
+    @NotNull(message = "Position cannot be null")
+    @Min(value = 0, message = "Position must be >= 0")
+    private Integer position;
 
     @NotNull(message = "BoardId cannot be null")
     private Long boardId;
