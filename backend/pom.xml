@@ -42,6 +42,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -52,5 +58,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
