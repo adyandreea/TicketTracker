@@ -1,6 +1,7 @@
 package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
+import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.handler.ResponseHandler;
@@ -9,10 +10,12 @@ import com.andreea.ticket_tracker.swagger.SwaggerHttpStatus;
 import com.andreea.ticket_tracker.swagger.SwaggerMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +34,14 @@ public class ProjectController {
     @Operation(summary = "Creates a new project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROJECT_SUCCESSFULLY_CREATED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @PostMapping("/project")
@@ -47,11 +53,14 @@ public class ProjectController {
     @Operation(summary = "Returns all the projects.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_PROJECTS,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ProjectResponseDTO[].class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @GetMapping("/projects")
@@ -62,11 +71,14 @@ public class ProjectController {
     @Operation(summary = "Returns a project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_PROJECT,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ProjectResponseDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @GetMapping("/project/{id}")
@@ -77,11 +89,14 @@ public class ProjectController {
     @Operation(summary = "Updates the project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROJECT_SUCCESSFULLY_UPDATED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @PutMapping("/project/{id}")
@@ -93,11 +108,14 @@ public class ProjectController {
     @Operation(summary = "Deletes the project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROJECT_SUCCESSFULLY_DELETED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @DeleteMapping("/project/{id}")

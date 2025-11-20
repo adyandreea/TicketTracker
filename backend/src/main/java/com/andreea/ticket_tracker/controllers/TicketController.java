@@ -1,6 +1,7 @@
 package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
+import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
 import com.andreea.ticket_tracker.handler.ResponseHandler;
@@ -9,10 +10,12 @@ import com.andreea.ticket_tracker.swagger.SwaggerHttpStatus;
 import com.andreea.ticket_tracker.swagger.SwaggerMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +34,14 @@ public class TicketController {
     @Operation(summary = "Creates a new ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.TICKET_SUCCESSFULLY_CREATED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @PostMapping("/ticket")
@@ -47,11 +53,14 @@ public class TicketController {
     @Operation(summary = "Returns all the tickets.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_TICKETS,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TicketResponseDTO[].class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @GetMapping("/tickets")
@@ -62,11 +71,14 @@ public class TicketController {
     @Operation(summary = "Returns a ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_TICKET,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TicketResponseDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @GetMapping("/ticket/{id}")
@@ -77,11 +89,14 @@ public class TicketController {
     @Operation(summary = "Updates the ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.TICKET_SUCCESSFULLY_UPDATED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @PutMapping("/ticket/{id}")
@@ -93,11 +108,14 @@ public class TicketController {
     @Operation(summary = "Deletes the ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.TICKET_SUCCESSFULLY_DELETED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @DeleteMapping("/ticket/{id}")

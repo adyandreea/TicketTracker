@@ -2,6 +2,7 @@ package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.BoardRequestDTO;
 import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
+import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.BoardService;
@@ -9,10 +10,12 @@ import com.andreea.ticket_tracker.swagger.SwaggerHttpStatus;
 import com.andreea.ticket_tracker.swagger.SwaggerMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +34,14 @@ public class BoardController {
     @Operation(summary = "Creates a new board.")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.BOARD_SUCCESSFULLY_CREATED,
-                        content = @Content),
+                        content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = SuccessDTO.class))}),
                 @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                        content = @Content),
+                        content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = ErrorDTO.class))}),
                 @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                        content = @Content)
+                        content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = ErrorDTO.class))})
         }
     )
     @PostMapping("/board")
@@ -47,11 +53,14 @@ public class BoardController {
     @Operation(summary = "Returns all the boards.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_BOARDS,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BoardResponseDTO[].class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @GetMapping("/boards")
@@ -62,11 +71,14 @@ public class BoardController {
     @Operation(summary = "Returns a board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_BOARD,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BoardResponseDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @GetMapping("/board/{id}")
@@ -77,11 +89,14 @@ public class BoardController {
     @Operation(summary = "Updates the board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.BOARD_SUCCESSFULLY_UPDATED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @PutMapping("/board/{id}")
@@ -93,11 +108,14 @@ public class BoardController {
     @Operation(summary = "Deletes the board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.BOARD_SUCCESSFULLY_DELETED,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = @Content),
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = @Content)
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
     @DeleteMapping("/board/{id}")
