@@ -17,12 +17,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Project API", description = "API for project management")
 @RestController
+@RequestMapping("/api/v1/projects")
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -44,7 +46,7 @@ public class ProjectController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @PostMapping("/project")
+    @PostMapping
     public ResponseEntity<SuccessDTO> createProject(@Valid @RequestBody ProjectRequestDTO dto){
         projectService.createProject(dto);
         return ResponseHandler.created("Project created successfully");
@@ -63,7 +65,7 @@ public class ProjectController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @GetMapping("/projects")
+    @GetMapping
     public List<ProjectResponseDTO> getAllProjects(){
         return projectService.getAllProjects();
     }
@@ -81,7 +83,7 @@ public class ProjectController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @GetMapping("/project/{id}")
+    @GetMapping("/{id}")
     public ProjectResponseDTO getProject(@PathVariable Long id){
         return projectService.getProject(id);
     }
@@ -99,7 +101,7 @@ public class ProjectController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @PutMapping("/project/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SuccessDTO> updateProject(@PathVariable Long id, @Valid   @RequestBody ProjectRequestDTO dto){
         projectService.updateProject(id, dto);
         return ResponseHandler.updated("Project updated successfully");
@@ -118,7 +120,7 @@ public class ProjectController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @DeleteMapping("/project/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<SuccessDTO> deleteProject(@PathVariable Long id){
         projectService.deleteProject(id);
         return ResponseHandler.deleted("Project deleted successfully");

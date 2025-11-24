@@ -23,6 +23,7 @@ import java.util.List;
 
 @Tag(name = "Board API", description = "API for board management")
 @RestController
+@RequestMapping("/api/v1/boards")
 public class BoardController {
 
     private final BoardService boardService;
@@ -44,7 +45,7 @@ public class BoardController {
                                 schema = @Schema(implementation = ErrorDTO.class))})
         }
     )
-    @PostMapping("/board")
+    @PostMapping
     public ResponseEntity<SuccessDTO> createBoard(@Valid @RequestBody BoardRequestDTO dto){
         boardService.createBoard(dto);
         return ResponseHandler.created("Board created successfully");
@@ -63,7 +64,7 @@ public class BoardController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @GetMapping("/boards")
+    @GetMapping
     public List<BoardResponseDTO> getAllBoards(){
         return boardService.getAllBoards();
     }
@@ -81,7 +82,7 @@ public class BoardController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @GetMapping("/board/{id}")
+    @GetMapping("/{id}")
     public BoardResponseDTO getBoard(@PathVariable Long id){
         return boardService.getBoard(id);
     }
@@ -99,7 +100,7 @@ public class BoardController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @PutMapping("/board/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SuccessDTO> updateBoard(@PathVariable Long id, @Valid @RequestBody BoardRequestDTO dto){
         boardService.updateBoard(id, dto);
         return ResponseHandler.updated("Board updated successfully");
@@ -118,7 +119,7 @@ public class BoardController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @DeleteMapping("/board/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<SuccessDTO> deleteBoard(@PathVariable Long id){
         boardService.deleteBoard(id);
         return ResponseHandler.deleted("Board deleted successfully");
