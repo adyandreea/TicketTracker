@@ -24,7 +24,9 @@ public class JwtProvider {
 
     public String generateToken(String username) {
         Date currentDate = new Date();
-        Date expiringDate = new Date(currentDate.getTime() + 3600000); // TODO: Analyze
+
+        long JWT_EXPIRATION_TIME = 3600000 * 24 * 2; // JWT Expires after 2 days.
+        Date expiringDate = new Date(currentDate.getTime() + JWT_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .setSubject(username)

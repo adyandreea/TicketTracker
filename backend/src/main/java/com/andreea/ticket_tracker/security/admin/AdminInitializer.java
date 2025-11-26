@@ -2,15 +2,16 @@ package com.andreea.ticket_tracker.security.admin;
 
 import com.andreea.ticket_tracker.security.user.User;
 import com.andreea.ticket_tracker.security.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.andreea.ticket_tracker.security.user.Role.ADMIN;
 
+@Slf4j
 @Component
 public class AdminInitializer implements CommandLineRunner {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AdminProperties adminProperties;
@@ -24,7 +25,7 @@ public class AdminInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         boolean exists = userRepository.existsByUsername(adminProperties.getUsername());
 
@@ -37,9 +38,9 @@ public class AdminInitializer implements CommandLineRunner {
 
             userRepository.save(admin);
 
-            System.out.println("ADMIN CREATED");
+            log.info("Admin has been successfully created!");
         } else {
-            System.out.println("Admin already exists.");
+            log.info("Admin user already exists.");
         }
     }
 }
