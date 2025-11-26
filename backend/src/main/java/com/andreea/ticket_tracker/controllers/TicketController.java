@@ -23,6 +23,7 @@ import java.util.List;
 
 @Tag(name = "Ticket API", description = "API for ticket management")
 @RestController
+@RequestMapping("/api/v1/tickets")
 public class TicketController {
 
     private final TicketService ticketService;
@@ -44,7 +45,7 @@ public class TicketController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @PostMapping("/ticket")
+    @PostMapping
     public ResponseEntity<SuccessDTO> createTicket(@Valid @RequestBody TicketRequestDTO dto){
         ticketService.createTicket(dto);
         return ResponseHandler.created("Ticket created successfully");
@@ -63,7 +64,7 @@ public class TicketController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @GetMapping("/tickets")
+    @GetMapping
     public List<TicketResponseDTO> getAllTickets(){
         return ticketService.getAllTickets();
     }
@@ -81,7 +82,7 @@ public class TicketController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @GetMapping("/ticket/{id}")
+    @GetMapping("/{id}")
     public TicketResponseDTO getTicket(@PathVariable Long id){
         return ticketService.getTicket(id);
     }
@@ -99,7 +100,7 @@ public class TicketController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @PutMapping("/ticket/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SuccessDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody TicketRequestDTO dto){
         ticketService.updateTicket(id, dto);
         return ResponseHandler.updated("Ticket updated successfully");
@@ -118,7 +119,7 @@ public class TicketController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     }
     )
-    @DeleteMapping("/ticket/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<SuccessDTO> deleteTicket(@PathVariable Long id){
         ticketService.deleteTicket(id);
         return ResponseHandler.deleted("Ticket deleted successfully");

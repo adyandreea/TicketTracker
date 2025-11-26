@@ -90,4 +90,15 @@ public class SwaggerMessages {
      * Message when a problem occurred on the server.
      */
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error.";
+
+    /**
+     * Message when user was successfully created.
+     */
+    public static final String USER_SUCCESSFULLY_CREATED = "User created successfully.";
+
+    /**
+     * Message when user was successfully authenticated.
+     */
+    public static final String USER_SUCCESSFULLY_AUTHENTICATED = "User authenticated successfully";
+
 }
