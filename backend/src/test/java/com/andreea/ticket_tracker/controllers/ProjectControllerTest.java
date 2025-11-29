@@ -4,6 +4,7 @@ import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
 import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +30,11 @@ public class ProjectControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void cleanDatabase() {
+        projectRepository.deleteAll();
+    }
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})

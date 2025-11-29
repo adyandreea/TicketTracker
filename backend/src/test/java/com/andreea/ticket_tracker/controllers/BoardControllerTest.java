@@ -6,6 +6,7 @@ import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,6 +34,12 @@ public class BoardControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void cleanDatabase() {
+        boardRepository.deleteAll();
+        projectRepository.deleteAll();
+    }
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
