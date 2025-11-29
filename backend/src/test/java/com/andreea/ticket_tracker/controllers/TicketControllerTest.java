@@ -213,4 +213,17 @@ public class TicketControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Ticket deleted successfully"));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testTicketNotFound() throws Exception {
+
+        Long invalidId = 999L;
+
+        mockMvc.perform(get("/api/v1/tickets/" + invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("ticket_not_found"))
+                .andExpect(jsonPath("$.status").value(404));
+    }
 }

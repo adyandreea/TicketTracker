@@ -176,4 +176,17 @@ public class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Board deleted successfully"));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testBoardNotFound() throws Exception {
+
+        Long invalidId = 999L;
+
+        mockMvc.perform(get("/api/v1/boards/" + invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("board_not_found"))
+                .andExpect(jsonPath("$.status").value(404));
+    }
 }

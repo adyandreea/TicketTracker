@@ -128,4 +128,17 @@ public class ProjectControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Project deleted successfully"));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testProjectNotFound() throws Exception {
+
+        Long invalidId = 999L;
+
+        mockMvc.perform(get("/api/v1/projects/" + invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("project_not_found"))
+                .andExpect(jsonPath("$.status").value(404));
+    }
 }
