@@ -8,12 +8,8 @@ public class ResponseHandler {
 
     private ResponseHandler(){}
 
-    public static ResponseEntity<SuccessDTO> generateSuccess(String message){
-        return new ResponseEntity<>(SuccessDTO.returnNewDTO(HttpStatus.OK.value(),message),HttpStatus.OK);
-    }
-
     public static ResponseEntity<SuccessDTO> created(String message){
-        return new ResponseEntity<>(SuccessDTO.returnNewDTO(HttpStatus.OK.value(),message),HttpStatus.OK);
+        return new ResponseEntity<>(SuccessDTO.returnNewDTO(HttpStatus.CREATED.value(),message),HttpStatus.CREATED);
     }
 
     public static ResponseEntity<SuccessDTO> updated(String message){

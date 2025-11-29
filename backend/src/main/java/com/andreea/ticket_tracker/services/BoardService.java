@@ -6,7 +6,6 @@ import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.exceptions.BoardNotFoundException;
 import com.andreea.ticket_tracker.exceptions.ProjectNotFoundException;
-import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.mapper.BoardDTOMapper;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
@@ -67,7 +66,7 @@ public class BoardService {
     }
 
     public void deleteBoard(Long id){
-        projectRepository.findById(id)
+        boardRepository.findById(id)
                 .orElseThrow(BoardNotFoundException::new);
 
         boardRepository.deleteById(id);
