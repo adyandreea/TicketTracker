@@ -226,4 +226,34 @@ public class TicketControllerTest {
                 .andExpect(jsonPath("$.message").value("ticket_not_found"))
                 .andExpect(jsonPath("$.status").value(404));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testValidationOnCreateTicket() throws Exception {
+
+        TicketRequestDTO dto = new TicketRequestDTO();
+        dto.setTitle("");
+        dto.setDescription("a".repeat(300));
+        dto.setPosition(-1);
+        dto.setBoardId(null);
+
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors").isArray())
+                .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(5)))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='title')].message",
+                        org.hamcrest.Matchers.hasItems("title_is_required", "title_length_invalid")))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
+                        org.hamcrest.Matchers.hasItem("Description too long")))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='position')].message",
+                        org.hamcrest.Matchers.hasItem("Position must be >= 0")))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='boardId')].message",
+                        org.hamcrest.Matchers.hasItem("BoardId cannot be null")));
+    }
 }

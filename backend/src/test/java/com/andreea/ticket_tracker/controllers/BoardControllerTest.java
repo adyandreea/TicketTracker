@@ -189,4 +189,32 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.message").value("board_not_found"))
                 .andExpect(jsonPath("$.status").value(404));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testValidationOnCreateBoard() throws Exception {
+
+        BoardRequestDTO dto = new BoardRequestDTO();
+        dto.setName("");
+        dto.setDescription("a".repeat(300));
+        dto.setProjectId(null);
+
+        mockMvc.perform(post("/api/v1/boards")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors").isArray())
+                .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(4)))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='name')].message",
+                        org.hamcrest.Matchers.hasItem("name_is_required")))
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='name')].message",
+                        org.hamcrest.Matchers.hasItem("name_length_invalid")))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
+                        org.hamcrest.Matchers.hasItem("Description too long")))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='projectId')].message",
+                        org.hamcrest.Matchers.hasItem("ProjectId cannot be null")));
+    }
 }

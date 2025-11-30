@@ -141,4 +141,26 @@ public class ProjectControllerTest {
                 .andExpect(jsonPath("$.message").value("project_not_found"))
                 .andExpect(jsonPath("$.status").value(404));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testValidationOnCreateProject() throws Exception {
+
+        ProjectRequestDTO dto = new ProjectRequestDTO();
+        dto.setName("");
+        dto.setDescription("a".repeat(300));
+
+        mockMvc.perform(post("/api/v1/projects")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors").isArray())
+                .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(3)))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='name')].message",
+                        org.hamcrest.Matchers.hasItems("name_is_required", "name_length_invalid")))
+
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
+                        org.hamcrest.Matchers.hasItem("Description too long")));
+    }
 }
