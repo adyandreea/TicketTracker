@@ -38,8 +38,8 @@ public class SecurityConfiguration {
             "/swagger-ui/**"
     };
 
-    private static final String REGISTER_ENDPOINT = "/api/v1/auth/register**";
-    private static final String AUTHENTICATE_ENDPOINT = "/api/v1/auth/authenticate**";
+    private static final String REGISTER_ENDPOINT = "/api/v1/auth/register/**";
+    private static final String AUTHENTICATE_ENDPOINT = "/api/v1/auth/authenticate/**";
     private static final String BOARDS_ALL_ENDPOINTS = "/api/v1/boards/**";
     private static final String PROJECTS_ALL_ENDPOINTS = "/api/v1/projects/**";
     private static final String TICKETS_ALL_ENDPOINTS = "/api/v1/tickets/**";

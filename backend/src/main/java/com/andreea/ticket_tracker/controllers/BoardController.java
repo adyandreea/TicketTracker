@@ -24,6 +24,7 @@ import java.util.List;
 @Tag(name = "Board API", description = "API for board management")
 @RestController
 @RequestMapping("/api/v1/boards")
+@CrossOrigin(origins = "${frontend.url}")
 public class BoardController {
 
     private final BoardService boardService;
