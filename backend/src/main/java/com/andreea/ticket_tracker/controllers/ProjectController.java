@@ -24,6 +24,7 @@ import java.util.List;
 @Tag(name = "Project API", description = "API for project management")
 @RestController
 @RequestMapping("/api/v1/projects")
+@CrossOrigin(origins = "${frontend.url}")
 public class ProjectController {
 
     private final ProjectService projectService;

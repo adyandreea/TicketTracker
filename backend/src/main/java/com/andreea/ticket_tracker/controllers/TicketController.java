@@ -24,6 +24,7 @@ import java.util.List;
 @Tag(name = "Ticket API", description = "API for ticket management")
 @RestController
 @RequestMapping("/api/v1/tickets")
+@CrossOrigin(origins = "${frontend.url}")
 public class TicketController {
 
     private final TicketService ticketService;
