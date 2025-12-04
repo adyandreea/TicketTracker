@@ -4,10 +4,12 @@ import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,5 +65,17 @@ public class GlobalExceptionHandler {
 
         fieldErrorResponse.setFieldErrors(fieldErrors);
         return new ResponseEntity<>(fieldErrorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorDTO> handleBadCredentials(BadCredentialsException ex) {
+        ErrorDTO error = new ErrorDTO();
+
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.UNAUTHORIZED.value());
+        error.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }
