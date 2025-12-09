@@ -1,7 +1,6 @@
 package com.andreea.ticket_tracker.security.auth;
 
 import com.andreea.ticket_tracker.security.config.JwtProvider;
-import com.andreea.ticket_tracker.security.user.Role;
 import com.andreea.ticket_tracker.security.user.User;
 import com.andreea.ticket_tracker.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;

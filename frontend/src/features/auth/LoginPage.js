@@ -3,19 +3,20 @@ import {
   Avatar,
   Box,
   Container,
-  Grid,
   Paper,
   Typography,
   TextField,
   Checkbox,
   FormControlLabel,
-  Button
+  Button,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { login } from "../../api/authApi";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,9 +28,12 @@ const LoginPage = () => {
 
     try {
       const response = await login(username, password);
+      console.log(response);
       console.log("Login successful", response.data);
+      localStorage.setItem("token", response.token);
+      navigate("/dashboard");
     } catch (err) {
-      console.error("Login failed", err.response.data || err.message);
+      console.error("Login failed", err);
       setError(
         err.response.data.message || "Login failed: check your credentials"
       );
@@ -80,4 +84,5 @@ const LoginPage = () => {
     </Container>
   );
 };
+
 export default LoginPage;

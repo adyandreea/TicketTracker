@@ -3,7 +3,7 @@ import API_URL from "../config";
 
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${API_URL}/authenticate`, {
+    const response = await axios.post(`${API_URL}/auth/authenticate`, {
       username,
       password,
     });
