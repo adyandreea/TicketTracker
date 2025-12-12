@@ -128,7 +128,7 @@ public class BoardController {
 
     @Operation(summary = "Returns all the boards for a specific Project ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = "Boards returned successfully by Project ID",
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_BOARDS,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = BoardResponseDTO[].class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,

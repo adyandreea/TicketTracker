@@ -186,7 +186,6 @@ public class BoardServiceTest {
         List<BoardResponseDTO> result = boardService.getBoardsByProjectId(projectId);
 
         assertEquals(2, result.size());
-
         assertEquals("Board 1", result.get(0).getName());
         assertEquals("Board 2", result.get(1).getName());
         assertEquals(projectId, result.get(0).getProjectId());

@@ -71,4 +71,14 @@ public class TicketService {
 
         ticketRepository.deleteById(id);
     }
+
+    public List<TicketResponseDTO> getTicketsByBoardId(Long boardId){
+        boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
+
+        return ticketRepository.findByBoardId(boardId)
+                .stream()
+                .map(TicketDTOMapper::toDTO)
+                .toList();
+    }
 }

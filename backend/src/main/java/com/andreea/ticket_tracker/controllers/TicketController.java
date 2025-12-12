@@ -1,6 +1,7 @@
 package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
+import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
@@ -124,5 +125,23 @@ public class TicketController {
     public ResponseEntity<SuccessDTO> deleteTicket(@PathVariable Long id){
         ticketService.deleteTicket(id);
         return ResponseHandler.deleted("Ticket deleted successfully");
+    }
+
+    @Operation(summary = "Returns all the tickets for a specific Board ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_TICKETS,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TicketResponseDTO[].class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
+    }
+    )
+    @GetMapping("/by-board/{boardId}")
+    public List<TicketResponseDTO> getTicketsByBoardId(@PathVariable Long boardId){
+        return ticketService.getTicketsByBoardId(boardId);
     }
 }

@@ -1,6 +1,7 @@
 package com.andreea.ticket_tracker.services;
 
 import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
+import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Ticket;
 import com.andreea.ticket_tracker.exceptions.TicketNotFoundException;
@@ -169,5 +170,40 @@ public class TicketServiceTest {
         ticketService.deleteTicket(1L);
 
         verify(ticketRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void getTicketsByBoardId(){
+
+        Board board = new Board();
+        board.setId(1L);
+        board.setName("Board 1");
+        board.setDescription("Desc");
+
+        Ticket ticket1 = new Ticket();
+        ticket1.setId(1L);
+        ticket1.setTitle("Ticket 1");
+        ticket1.setDescription("Desc");
+        ticket1.setBoard(board);
+
+        Ticket ticket2 = new Ticket();
+        ticket2.setId(1L);
+        ticket2.setTitle("Ticket 2");
+        ticket2.setDescription("Desc");
+        ticket2.setBoard(board);
+
+        when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
+        when(ticketRepository.findByBoardId(1L)).thenReturn(List.of(ticket1, ticket2));
+
+        List<TicketResponseDTO> result = ticketService.getTicketsByBoardId(1L);
+
+        assertEquals(2, result.size());
+        assertEquals("Ticket 1", result.get(0).getTitle());
+        assertEquals("Ticket 2", result.get(1).getTitle());
+        assertEquals(1L, result.get(0).getBoardId());
+
+        verify(boardRepository, times(1)).findById(1L);
+        verify(ticketRepository, times(1)).findByBoardId(1L);
+        verify(ticketRepository, times(1)).findByBoardId(1L);
     }
 }

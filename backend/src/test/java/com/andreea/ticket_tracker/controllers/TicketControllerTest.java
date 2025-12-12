@@ -256,4 +256,44 @@ public class TicketControllerTest {
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='boardId')].message",
                         org.hamcrest.Matchers.hasItem("BoardId cannot be null")));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void getTicketsByBoardId() throws Exception{
+
+        Project project = new Project();
+        project.setName("Project");
+        project.setDescription("Desc");
+        project = projectRepository.save(project);
+
+        Board board = new Board();
+        board.setName("Board 1");
+        board.setDescription("Desc");
+        board.setProject(project);
+        board = boardRepository.save(board);
+
+        Ticket ticket1 = new Ticket();
+        ticket1.setTitle("Ticket 1");
+        ticket1.setDescription("Desc");
+        ticket1.setPosition(1);
+        ticket1.setBoard(board);
+        ticketRepository.save(ticket1);
+
+        Ticket ticket2 = new Ticket();
+        ticket2.setTitle("Ticket 2");
+        ticket2.setDescription("Desc");
+        ticket2.setPosition(2);
+        ticket2.setBoard(board);
+        ticketRepository.save(ticket2);
+
+        Long id = board.getId();
+
+        mockMvc.perform(get("/api/v1/tickets/by-board/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].title").value("Ticket 1"))
+                .andExpect(jsonPath("$[1].title").value("Ticket 2"))
+                .andExpect(jsonPath("$[0].boardId").value(id))
+                .andExpect(jsonPath("$[1].boardId").value(id));
+    }
 }
