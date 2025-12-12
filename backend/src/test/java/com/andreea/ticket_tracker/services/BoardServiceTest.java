@@ -1,6 +1,7 @@
 package com.andreea.ticket_tracker.services;
 
 import com.andreea.ticket_tracker.dto.request.BoardRequestDTO;
+import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.exceptions.BoardNotFoundException;
@@ -158,5 +159,40 @@ public class BoardServiceTest {
         boardService.deleteBoard(1L);
 
         verify(boardRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void getBoardsByProjectId(){
+
+        Long projectId = 1L;
+
+        Project project = new Project();
+        project.setId(projectId);
+        project.setName("Project 1");
+
+        Board board1 = new Board();
+        board1.setId(10L);
+        board1.setName("Board 1");
+        board1.setProject(project);
+
+        Board board2 = new Board();
+        board2.setId(10L);
+        board2.setName("Board 2");
+        board2.setProject(project);
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(boardRepository.findByProjectId(projectId)).thenReturn(List.of(board1, board2));
+
+        List<BoardResponseDTO> result = boardService.getBoardsByProjectId(projectId);
+
+        assertEquals(2, result.size());
+
+        assertEquals("Board 1", result.get(0).getName());
+        assertEquals("Board 2", result.get(1).getName());
+        assertEquals(projectId, result.get(0).getProjectId());
+
+        verify(projectRepository, times(1)).findById(projectId);
+        verify(boardRepository, times(1)).findByProjectId(projectId);
+        verify(boardRepository, times(0)).findAll();
     }
 }

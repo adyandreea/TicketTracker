@@ -71,4 +71,14 @@ public class BoardService {
 
         boardRepository.deleteById(id);
     }
+
+    public List<BoardResponseDTO> getBoardsByProjectId(Long projectId){
+        projectRepository.findById(projectId)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        return boardRepository.findByProjectId(projectId)
+                .stream()
+                .map(BoardDTOMapper::toDTO)
+                .toList();
+    }
 }

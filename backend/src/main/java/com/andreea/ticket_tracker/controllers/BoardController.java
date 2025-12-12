@@ -125,4 +125,22 @@ public class BoardController {
         boardService.deleteBoard(id);
         return ResponseHandler.deleted("Board deleted successfully");
     }
+
+    @Operation(summary = "Returns all the boards for a specific Project ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = "Boards returned successfully by Project ID",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BoardResponseDTO[].class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
+    }
+    )
+    @GetMapping("/by-project/{projectId}")
+    public List<BoardResponseDTO> getBoardsByProjectId(@PathVariable Long projectId){
+        return boardService.getBoardsByProjectId(projectId);
+    }
 }

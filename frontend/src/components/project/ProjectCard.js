@@ -1,28 +1,69 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Paper,
-  CircularProgress,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  Alert,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import BoardCard from "../board/BoardCard";
 import Button from "@mui/material/Button";
 import { getProjects } from "../../api/projectApi";
+import { getBoardsByProjectId } from "../../api/boardApi";
 
 const ProjectCard = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loadingProject, setLoadingProject] = useState(true);
+  const [errorProject, setErrorProject] = useState(null);
+
+  const [boards, setBoards] = useState(null);
+  const [selectedBoardId, setSelectedBoardId] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [loadingBoard, setLoadingBoard] = useState(false);
+  const [errorBoard, setErrorBoard] = useState(null);
+
+  useEffect(() => {
+    const fetchBoards = async () => {
+      if (!selectedProjectId) {
+        setBoards([]);
+        setSelectedBoardId("");
+        setLoadingBoard(false);
+        return;
+      }
+
+      try {
+        setLoadingBoard(true);
+        const data = await getBoardsByProjectId(selectedProjectId);
+        setBoards(data);
+
+        if (data && data.length > 0) {
+          setSelectedBoardId(data[0].id);
+        } else {
+          setSelectedBoardId("");
+        }
+      } catch (err) {
+        console.error("Error loading boards:", err);
+        setErrorBoard("Could not load boards.");
+        setBoards([]);
+      } finally {
+        setLoadingBoard(false);
+      }
+    };
+
+    fetchBoards();
+  }, [selectedProjectId]);
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        setLoading(true);
+        setLoadingProject(true);
         const data = await getProjects();
         setProjects(data);
 
@@ -31,51 +72,34 @@ const ProjectCard = () => {
         }
       } catch (err) {
         console.error("Error loading projects:", err);
-        setError("Could not load projects.");
+        setErrorProject("Could not load projects.");
       } finally {
-        setLoading(false);
+        setLoadingProject(false);
       }
     };
 
     fetchProjects();
   }, []);
 
-  const handleChange = (event) => {
+  const handleProjectChange = (event) => {
     setSelectedProjectId(event.target.value);
   };
 
-  const selectedProject = projects.find((p) => p.id === selectedProjectId);
-  return (
-    <Paper
-      sx={{
-        p: 3,
-        borderRadius: 4,
-        boxShadow: "0 9px 90px rgba(104, 86, 86, 0)",
-        mb: 3,
-        backgroundColor: "#DCDCDC",
-        maxWidth: 1900,
-        mx: "auto",
-        height: "540px",
-      }}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        {loading && <CircularProgress size={24} sx={{ mr: 2 }} />}
-        {error && (
-          <Alert severity="error" sx={{ flexGrow: 1 }}>
-            {error}
-          </Alert>
-        )}
+  const handleBoardChange = (event) => {
+    setSelectedBoardId(event.target.value);
+  };
 
-        {!loading && !error && (
+  return (
+    <Box>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+        {!loadingProject && !errorProject && (
           <FormControl
             variant="filled"
             sx={{ m: 1, minWidth: 250, bgcolor: "white", borderRadius: 1 }}
           >
             <Select
-              labelId="project-select-label"
-              id="project-select"
               value={selectedProjectId}
-              onChange={handleChange}
+              onChange={handleProjectChange}
               sx={{
                 "& .MuiSelect-select": {
                   paddingTop: "12px",
@@ -93,13 +117,48 @@ const ProjectCard = () => {
           </FormControl>
         )}
       </Box>
-      <BoardCard />
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 0.8 }}>
-        <Button variant="outlined" culor="primary">
-          Switch boards
-        </Button>
-      </Box>
-    </Paper>
+      <BoardCard selectedBoardId={selectedBoardId} />
+      {!loadingBoard && !errorBoard && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Button
+            variant="outlined"
+            culor="primary"
+            onClick={() => {
+              setModalOpen(true);
+            }}
+          >
+            Switch boards
+          </Button>
+          <Dialog open={isModalOpen} onClose={handleCloseModal}>
+            <DialogTitle>Choose one board</DialogTitle>
+            <DialogContent>
+              <FormControl
+                variant="filled"
+                sx={{ m: 1, minWidth: 250, bgcolor: "white", borderRadius: 1 }}
+              >
+                <Select
+                  value={selectedBoardId}
+                  onChange={handleBoardChange}
+                  sx={{
+                    "& .MuiSelect-select": {
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  {boards && boards.map((board) => (
+                    <MenuItem key={board.id} value={board.id}>
+                      {board.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </DialogContent>
+          </Dialog>
+        </Box>
+      )}
+    </Box>
   );
 };
 
