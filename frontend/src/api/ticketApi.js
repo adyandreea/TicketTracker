@@ -2,23 +2,23 @@ import axios from "axios";
 import API_URL from "../config";
 
 const axiosInstance = axios.create({
-    baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 axiosInstance.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem("token"); 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 const TICKETS_URL = `/tickets`;
@@ -32,7 +32,7 @@ export const getTickets = async () => {
   }
 };
 
-export const createTicket = async (boardData) => {
+export const createTicket = async (ticketData) => {
   try {
     const response = await axiosInstance.post(TICKETS_URL, ticketData);
     return response.data;
@@ -54,9 +54,12 @@ export const getTicketById = async (id) => {
   }
 };
 
-export const updateTicket = async (id, boardData) => {
+export const updateTicket = async (id, ticketData) => {
   try {
-    const response = await axiosInstance.put(`${TICKETS_URL}/${id}`, ticketData);
+    const response = await axiosInstance.put(
+      `${TICKETS_URL}/${id}`,
+      ticketData
+    );
     return response.data;
   } catch (err) {
     throw err.response?.data || { message: "Error updating ticket." };
@@ -69,4 +72,15 @@ export const deleteTicket = async (id) => {
   } catch (err) {
     throw err.response?.data || { message: "Error deleting ticket." };
   }
+}
+
+  export const getTicketsByBoardId = async (boardId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${TICKETS_URL}/by-board/${boardId}`
+      );
+      return response.data;
+    } catch (err) {
+      throw err.response?.data || { message: "Error loading board tickets." };
+    }
 };

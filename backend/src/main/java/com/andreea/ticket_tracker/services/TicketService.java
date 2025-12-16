@@ -26,12 +26,14 @@ public class TicketService {
         this.boardRepository = boardRepository;
     }
 
-    public void createTicket(TicketRequestDTO dto){
+    public TicketResponseDTO createTicket(TicketRequestDTO dto){
         Board board = boardRepository.findById(dto.getBoardId())
                 .orElseThrow(BoardNotFoundException::new);
 
         Ticket ticket = TicketDTOMapper.toEntity(dto, board);
+        Ticket savedTicket = ticketRepository.save(ticket);
         ticketRepository.save(ticket);
+        return TicketDTOMapper.toDTO(savedTicket);
     }
 
     public List<TicketResponseDTO> getAllTickets(){
@@ -55,6 +57,10 @@ public class TicketService {
         ticket.setTitle(dto.getTitle());
         ticket.setDescription(dto.getDescription());
         ticket.setPosition(dto.getPosition());
+
+        if (dto.getStatus() != null) {
+            ticket.setStatus(dto.getStatus());
+        }
 
         if(dto.getBoardId() != null){
             Board board = boardRepository.findById(dto.getBoardId())

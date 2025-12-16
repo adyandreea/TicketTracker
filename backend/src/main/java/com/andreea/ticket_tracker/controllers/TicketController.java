@@ -1,7 +1,6 @@
 package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
-import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
@@ -16,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +48,11 @@ public class TicketController {
     }
     )
     @PostMapping
-    public ResponseEntity<SuccessDTO> createTicket(@Valid @RequestBody TicketRequestDTO dto){
-        ticketService.createTicket(dto);
-        return ResponseHandler.created("Ticket created successfully");
+    public ResponseEntity<TicketResponseDTO> createTicket(@Valid @RequestBody TicketRequestDTO dto){
+        TicketResponseDTO createdTicket = ticketService.createTicket(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdTicket);
     }
 
     @Operation(summary = "Returns all the tickets.")

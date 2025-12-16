@@ -1,5 +1,6 @@
 package com.andreea.ticket_tracker.dto.response;
 
+import com.andreea.ticket_tracker.entity.TicketStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +26,9 @@ public class TicketResponseDTO {
 
     @NotNull(message = "BoardId cannot be null")
     private Long boardId;
+
+    @NotNull(message = "Status cannot be null")
+    private TicketStatus status;
 
     @NotBlank(message = "board_name_cannot_be_null")
     private String boardName;

@@ -147,11 +147,12 @@ const ProjectCard = () => {
                     },
                   }}
                 >
-                  {boards && boards.map((board) => (
-                    <MenuItem key={board.id} value={board.id}>
-                      {board.name}
-                    </MenuItem>
-                  ))}
+                  {boards &&
+                    boards.map((board) => (
+                      <MenuItem key={board.id} value={board.id}>
+                        {board.name}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </DialogContent>

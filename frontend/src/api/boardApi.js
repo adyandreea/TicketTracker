@@ -2,23 +2,23 @@ import axios from "axios";
 import API_URL from "../config";
 
 const axiosInstance = axios.create({
-    baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 axiosInstance.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem("token"); 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 const BOARDS_URL = `/boards`;
@@ -73,7 +73,9 @@ export const deleteBoard = async (id) => {
 
 export const getBoardsByProjectId = async (projectId) => {
   try {
-    const response = await axiosInstance.get(`/projects/${projectId}/boards`);
+    const response = await axiosInstance.get(
+      `${BOARDS_URL}/by-project/${projectId}`
+    );
     return response.data;
   } catch (err) {
     throw err.response?.data || { message: "Error loading project boards." };

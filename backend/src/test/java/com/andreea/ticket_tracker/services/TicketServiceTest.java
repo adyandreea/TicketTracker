@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.andreea.ticket_tracker.entity.TicketStatus.DONE;
+import static com.andreea.ticket_tracker.entity.TicketStatus.TODO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +47,7 @@ public class TicketServiceTest {
         dto.setTitle("Test");
         dto.setDescription("Desc");
         dto.setPosition(1);
+        dto.setStatus(TODO);
         dto.setBoardId(1L);
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
@@ -66,6 +69,7 @@ public class TicketServiceTest {
         ticket1.setTitle("Ticket 1");
         ticket1.setDescription("Desc");
         ticket1.setPosition(1);
+        ticket1.setStatus(TODO);
         ticket1.setBoard(board);
 
         Ticket ticket2 = new Ticket();
@@ -73,6 +77,7 @@ public class TicketServiceTest {
         ticket2.setTitle("Ticket 1");
         ticket2.setDescription("Desc");
         ticket2.setPosition(2);
+        ticket2.setStatus(DONE);
         ticket2.setBoard(board);
 
         when(ticketRepository.findAll()).thenReturn(List.of(ticket1, ticket2));
@@ -132,12 +137,14 @@ public class TicketServiceTest {
         ticket.setTitle("Old ticket");
         ticket.setDescription("Old desc");
         ticket.setPosition(1);
+        ticket.setStatus(TODO);
         ticket.setBoard(board1);
 
         TicketRequestDTO dto = new TicketRequestDTO();
         dto.setTitle("New ticket");
         dto.setDescription("New desc");
         dto.setPosition(2);
+        dto.setStatus(DONE);
         dto.setBoardId(2L);
 
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
@@ -148,6 +155,7 @@ public class TicketServiceTest {
         assertEquals("New ticket", ticket.getTitle());
         assertEquals("New desc", ticket.getDescription());
         assertEquals(2,ticket.getPosition());
+        assertEquals(DONE,ticket.getStatus());
         assertEquals(2L,ticket.getBoard().getId());
     }
 
@@ -163,6 +171,7 @@ public class TicketServiceTest {
         ticket.setId(1L);
         ticket.setTitle("Ticket 1");
         ticket.setDescription("Desc");
+        ticket.setStatus(TODO);
         ticket.setBoard(board);
 
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
@@ -184,12 +193,16 @@ public class TicketServiceTest {
         ticket1.setId(1L);
         ticket1.setTitle("Ticket 1");
         ticket1.setDescription("Desc");
+        ticket1.setPosition(1);
+        ticket1.setStatus(TODO);
         ticket1.setBoard(board);
 
         Ticket ticket2 = new Ticket();
         ticket2.setId(1L);
         ticket2.setTitle("Ticket 2");
         ticket2.setDescription("Desc");
+        ticket1.setPosition(2);
+        ticket1.setStatus(DONE);
         ticket2.setBoard(board);
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));

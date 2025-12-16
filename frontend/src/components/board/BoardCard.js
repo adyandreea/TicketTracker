@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -10,16 +10,66 @@ import {
 import TicketCard from "../ticket/TicketCard";
 import CheckIcon from "@mui/icons-material/Check";
 import AddIcon from "@mui/icons-material/Add";
+import {
+  getTicketsByBoardId,
+  updateTicket,
+  createTicket,
+  deleteTicket,
+} from "../../api/ticketApi";
 
-const BoardCard = () => {
+const BoardCard = ({ selectedBoardId }) => {
   const columns = ["To Do", "In Progress", "Done"];
-  const [nextId, setNextId] = useState(1);
+  const statusMap = {
+    "To Do": "TODO",
+    "In Progress": "IN_PROGRESS",
+    Done: "DONE",
+  };
 
   const [tickets, setTickets] = useState({
     "To Do": [],
     "In Progress": [],
-    Done: [],
+    "Done": [],
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const reverseStatusMap = {
+      TODO: "To Do",
+      IN_PROGRESS: "In Progress",
+      DONE: "Done",
+    };
+
+    const fetchTickets = async () => {
+      if (!selectedBoardId) {
+        setTickets({ "To Do": [], "In Progress": [], "Done": [] });
+        return;
+      }
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data = await getTicketsByBoardId(selectedBoardId);
+        const groupedTickets = { "To Do": [], "In Progress": [], "Done": [] };
+
+        data.forEach((ticket) => {
+          const columnName = reverseStatusMap[ticket.status];
+          if (columnName) {
+            groupedTickets[columnName].push(ticket);
+          }
+        });
+
+        setTickets(groupedTickets);
+      } catch (err) {
+        setError("Could not load tickets for this board.");
+        console.error("Error loading tickets:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTickets();
+  }, [selectedBoardId]);
 
   const [editingTicketId, setEditingTicketId] = useState(null);
   const [editingText, setEditingText] = useState("");
@@ -45,15 +95,31 @@ const BoardCard = () => {
 
   const handleSaveClick = (col) => {
     if (newCardText[col].trim() !== "") {
-      const newTicket = {
-        id: nextId,
+      const newTicketData = {
         title: newCardText[col],
+        description: "",
+        position: tickets[col].length,
+        status: statusMap[col],
+        boardId: selectedBoardId,
       };
-      setTickets((prevTickets) => ({
-        ...prevTickets,
-        [col]: [...prevTickets[col], newTicket],
-      }));
-      setNextId(nextId + 1);
+
+      createTicket(newTicketData)
+        .then((createdTicket) => {
+          const ticketId = createdTicket.id;
+          const completeTicket = {
+            ...createdTicket,
+            ...newTicketData,
+            id: ticketId,
+          };
+          setTickets((prevTickets) => ({
+            ...prevTickets,
+            [col]: [...prevTickets[col], completeTicket],
+          }));
+        })
+        .catch((err) => {
+          console.error("Failed to create ticket:", err);
+          setError("Failed to create ticket.");
+        });
     }
     setNewCardText({ ...newCardText, [col]: "" });
     setIsAdding({ ...isAdding, [col]: false });
@@ -70,20 +136,58 @@ const BoardCard = () => {
     if (col === draggedFromCol) {
       setDraggedTicket(null);
       setDraggedFromCol(null);
-      return;
+      return; 
     }
+
+    const newStatusJava = statusMap[col];
+    const destTickets = [...tickets[col]];
+    const newPosition = destTickets.length;
+
+    const ticketToUpdate = {
+      ...draggedTicket,
+      boardId: selectedBoardId,
+      status: newStatusJava,
+      position: newPosition,
+    };
 
     const sourceTickets = tickets[draggedFromCol].filter(
       (t) => t.id !== draggedTicket.id
     );
 
-    const destTickets = [...tickets[col], draggedTicket];
+    const updatedDestTickets = [...destTickets, ticketToUpdate];
 
-    setTickets({
-      ...tickets,
+    setTickets((prevTickets) => ({
+      ...prevTickets,
       [draggedFromCol]: sourceTickets,
-      [col]: destTickets,
-    });
+      [col]: updatedDestTickets,
+    }));
+
+    updateTicket(draggedTicket.id, ticketToUpdate)
+      .then((response) => {
+        console.log(
+          `Ticket ${draggedTicket.id} updated successfully with status ${newStatusJava}`
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to update status in DB. Rolling back local changes.",
+          error
+        );
+
+        setTickets((prevTickets) => {
+          const revertedSourceTickets = [...sourceTickets, draggedTicket];
+          const revertedDestTickets = updatedDestTickets.filter(
+            (t) => t.id !== draggedTicket.id
+          );
+
+          return {
+            ...prevTickets,
+            [draggedFromCol]: revertedSourceTickets,
+            [col]: revertedDestTickets,
+          };
+        });
+        setError("Failed to move ticket. Please try again.");
+      });
 
     setDraggedTicket(null);
     setDraggedFromCol(null);
@@ -95,19 +199,69 @@ const BoardCard = () => {
   };
 
   const handleEditSave = (col) => {
-    setTickets((prevTickets) => {
-      const newTickets = { ...prevTickets };
+    const ticketToEdit = tickets[col].find((t) => t.id === editingTicketId);
 
-      newTickets[col] = newTickets[col].map((t) =>
-        t.id === editingTicketId ? { ...t, title: editingText } : t
-      );
+    if (!ticketToEdit || editingText.trim() === "") {
+      setEditingTicketId(null);
+      setEditingText("");
+      return;
+    }
 
-      return newTickets;
-    });
+    const updatedData = {
+      ...ticketToEdit,
+      title: editingText.trim(),
+      boardId: selectedBoardId,
+    };
+
+    updateTicket(editingTicketId, updatedData)
+      .then(() => {
+        setTickets((prevTickets) => {
+          const newTickets = { ...prevTickets };
+          newTickets[col] = newTickets[col].map((t) =>
+            t.id === editingTicketId ? { ...t, title: updatedData.title } : t
+          );
+          return newTickets;
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to update ticket title:", error);
+        setError("Failed to update ticket title.");
+      });
 
     setEditingTicketId(null);
     setEditingText("");
   };
+
+  const handleDeleteTicket = (ticketId, col) => {
+    deleteTicket(ticketId)
+      .then(() => {
+        setTickets((prevTickets) => {
+          const newTickets = { ...prevTickets };
+          newTickets[col] = newTickets[col].filter((t) => t.id !== ticketId);
+          return newTickets;
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to delete ticket:", error);
+        setError("Failed to delete ticket.");
+      });
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ p: 3, textAlign: "center" }}>
+        <Typography variant="h6">Loading tickets...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3, textAlign: "center", color: "error.main" }}>
+        <Typography variant="h6">Error: {error}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: "flex", gap: 2, flexGrow: 1 }}>
@@ -154,6 +308,7 @@ const BoardCard = () => {
                   onEditChange={(e) => setEditingText(e.target.value)}
                   onEditSave={() => handleEditSave(col)}
                   editingText={editingText}
+                  onDelete={() => handleDeleteTicket(ticket.id, col)}
                 />
               </Box>
             ))}
