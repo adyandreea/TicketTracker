@@ -58,9 +58,9 @@ public class BoardControllerTest {
         mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Board created successfully"))
-                .andExpect(jsonPath("$.status").value(201));
+                .andExpect(jsonPath("$.name").value("Test"))
+                .andExpect(jsonPath("$.description").value("Description"))
+                .andExpect(jsonPath("$.projectId").value(project.getId()));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class BoardControllerTest {
 
         BoardRequestDTO dto = new BoardRequestDTO();
         dto.setName("New board");
-        dto.setDescription("Old Description");
+        dto.setDescription("New Description");
         dto.setProjectId(p2.getId());
 
         Long id = board1.getId();
@@ -150,8 +150,9 @@ public class BoardControllerTest {
         mockMvc.perform(put("/api/v1/boards/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Board updated successfully"));
+                .andExpect(jsonPath("$.name").value("New board"))
+                .andExpect(jsonPath("$.description").value("New Description"))
+                .andExpect(jsonPath("$.projectId").value(p2.getId()));
 
     }
 

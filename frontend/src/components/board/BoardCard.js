@@ -22,7 +22,7 @@ const BoardCard = ({ selectedBoardId }) => {
   const statusMap = {
     "To Do": "TODO",
     "In Progress": "IN_PROGRESS",
-    Done: "DONE",
+    "Done": "DONE",
   };
 
   const [tickets, setTickets] = useState({

@@ -21,9 +21,10 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public void createProject(ProjectRequestDTO dto){
+    public ProjectResponseDTO createProject(ProjectRequestDTO dto){
         Project project = ProjectDTOMapper.toEntity(dto);
-        projectRepository.save(project);
+        Project savedProject = projectRepository.save(project);
+        return ProjectDTOMapper.toDTO(savedProject);
     }
 
     public List<ProjectResponseDTO> getAllProjects(){
@@ -40,14 +41,15 @@ public class ProjectService {
         return ProjectDTOMapper.toDTO(project);
     }
 
-    public void updateProject(Long id, ProjectRequestDTO dto){
+    public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO dto){
         Project project = projectRepository.findById(id)
                 .orElseThrow(ProjectNotFoundException::new);
 
         project.setName(dto.getName());
         project.setDescription(dto.getDescription());
 
-        projectRepository.save(project);
+        Project savedProject = projectRepository.save(project);
+        return ProjectDTOMapper.toDTO(savedProject);
     }
 
     public void deleteProject(Long id){

@@ -44,9 +44,13 @@ public class BoardServiceTest {
         dto.setProjectId(1L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(boardRepository.save(any(Board.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        boardService.createBoard(dto);
+        var result = boardService.createBoard(dto);
 
+        assertEquals("Test", result.getName());
+        assertEquals("Desc", result.getDescription());
+        assertEquals(1L, result.getProjectId());
         verify(boardRepository, times(1)).save(any(Board.class));
     }
 
@@ -132,6 +136,7 @@ public class BoardServiceTest {
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
         when(projectRepository.findById(2L)).thenReturn(Optional.of(project2));
+        when(boardRepository.save(any(Board.class))).thenAnswer(i -> i.getArguments()[0]);
 
         boardService.updateBoard(1L, dto);
         verify(boardRepository, times(1)).save(board);

@@ -47,9 +47,8 @@ public class ProjectControllerTest {
         mockMvc.perform(post("/api/v1/projects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Project created successfully"))
-                .andExpect(jsonPath("$.status").value(201));
+                .andExpect(jsonPath("$.name").value("Test"))
+                .andExpect(jsonPath("$.description").value("Description"));
     }
 
     @Test
@@ -110,8 +109,8 @@ public class ProjectControllerTest {
         mockMvc.perform(put("/api/v1/projects/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Project updated successfully"));
+                .andExpect(jsonPath("$.name").value("New project"))
+                .andExpect(jsonPath("$.description").value("New Description"));
     }
 
     @Test

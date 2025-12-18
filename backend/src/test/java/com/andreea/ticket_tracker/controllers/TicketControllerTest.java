@@ -74,9 +74,11 @@ public class TicketControllerTest {
         mockMvc.perform(post("/api/v1/tickets")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Ticket created successfully"))
-                .andExpect(jsonPath("$.status").value(201));
+                .andExpect(jsonPath("$.title").value("Ticket"))
+                .andExpect(jsonPath("$.description").value("Desc"))
+                .andExpect(jsonPath("$.position").value(1))
+                .andExpect(jsonPath("$.status").value("TODO"))
+                .andExpect(jsonPath("$.boardId").value(board.getId()));
     }
 
     @Test
@@ -190,8 +192,11 @@ public class TicketControllerTest {
         mockMvc.perform(put("/api/v1/tickets/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Ticket updated successfully"));
+                .andExpect(jsonPath("$.title").value("New ticket"))
+                .andExpect(jsonPath("$.description").value("New Desc"))
+                .andExpect(jsonPath("$.position").value(2))
+                .andExpect(jsonPath("$.status").value("DONE"))
+                .andExpect(jsonPath("$.boardId").value(board.getId()));
     }
 
     @Test

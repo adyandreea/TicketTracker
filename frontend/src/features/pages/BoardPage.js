@@ -121,7 +121,7 @@ const BoardsPage = () => {
       }
 
       const projectName =
-        projectsData.find((p) => p.id === resultBoard.projectId)?.name || "N/A";
+        projectsData.find((p) => p.id === resultBoard.projectId)?.name;
       const finalBoard = { ...resultBoard, project: projectName };
 
       if (isEditing) {
@@ -227,9 +227,7 @@ const BoardsPage = () => {
       </Box>
 
       <Dialog open={isModalOpen} onClose={handleCloseModal}>
-        <DialogTitle>
-          {isEditing ? "Edit board" : "Create a new board"}
-        </DialogTitle>
+        <DialogTitle>Edit board</DialogTitle>
         <DialogContent sx={{ minWidth: 400 }}>
           <TextField
             autoFocus

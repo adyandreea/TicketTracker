@@ -24,7 +24,7 @@ import {
   updateProject,
   deleteProject,
 } from "../../api/projectApi";
-  
+
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -66,12 +66,17 @@ const ProjectsPage = () => {
 
     const newProjectRequest = {
       name: newProjectName,
-      description: "",
+      description: newProjectDescription || "",
     };
 
     try {
       const createdProject = await createProject(newProjectRequest);
-      setProjects([...projects, createdProject]);
+      const completeProject = {
+        ...createdProject,
+        ...newProjectRequest,
+        id: createdProject.id,
+      };
+      setProjects([...projects, completeProject]);
       handleCloseModal();
     } catch (error) {
       console.error("Create project error:", error.message || error);
@@ -81,6 +86,7 @@ const ProjectsPage = () => {
   const handleEditStart = (project) => {
     setEditingProject(project);
     setNewProjectName(project.name);
+    setNewProjectDescription(project.description || "");
     setIsEditing(true);
     setModalOpen(true);
   };
@@ -214,9 +220,7 @@ const ProjectsPage = () => {
       </Box>
 
       <Dialog open={isModalOpen} onClose={handleCloseModal}>
-        <DialogTitle>
-          {isEditing ? "Edit project" : "Create a new project"}
-        </DialogTitle>
+        <DialogTitle>Edit project</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -245,10 +249,10 @@ const ProjectsPage = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal} color="primary" >
+          <Button onClick={handleCloseModal} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained" >
+          <Button onClick={handleSubmit} color="primary" variant="contained">
             Save changes
           </Button>
         </DialogActions>

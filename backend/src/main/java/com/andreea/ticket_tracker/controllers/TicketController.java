@@ -105,9 +105,9 @@ public class TicketController {
     }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody TicketRequestDTO dto){
-        ticketService.updateTicket(id, dto);
-        return ResponseHandler.updated("Ticket updated successfully");
+    public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody TicketRequestDTO dto){
+        TicketResponseDTO updatedTicket = ticketService.updateTicket(id, dto);
+        return ResponseEntity.ok(updatedTicket);
     }
 
     @Operation(summary = "Deletes the ticket.")

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,9 +48,11 @@ public class BoardController {
         }
     )
     @PostMapping
-    public ResponseEntity<SuccessDTO> createBoard(@Valid @RequestBody BoardRequestDTO dto){
-        boardService.createBoard(dto);
-        return ResponseHandler.created("Board created successfully");
+    public ResponseEntity<BoardResponseDTO> createBoard(@Valid @RequestBody BoardRequestDTO dto){
+        BoardResponseDTO createdBoard = boardService.createBoard(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdBoard);
     }
 
     @Operation(summary = "Returns all the boards.")
@@ -102,9 +105,9 @@ public class BoardController {
     }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessDTO> updateBoard(@PathVariable Long id, @Valid @RequestBody BoardRequestDTO dto){
-        boardService.updateBoard(id, dto);
-        return ResponseHandler.updated("Board updated successfully");
+    public ResponseEntity<BoardResponseDTO> updateBoard(@PathVariable Long id, @Valid @RequestBody BoardRequestDTO dto){
+        BoardResponseDTO updatedBoard = boardService.updateBoard(id, dto);
+        return ResponseEntity.ok(updatedBoard);
     }
 
     @Operation(summary = "Deletes the board.")

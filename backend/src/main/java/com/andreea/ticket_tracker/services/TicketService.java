@@ -32,7 +32,6 @@ public class TicketService {
 
         Ticket ticket = TicketDTOMapper.toEntity(dto, board);
         Ticket savedTicket = ticketRepository.save(ticket);
-        ticketRepository.save(ticket);
         return TicketDTOMapper.toDTO(savedTicket);
     }
 
@@ -50,7 +49,7 @@ public class TicketService {
         return TicketDTOMapper.toDTO(ticket);
     }
 
-    public void updateTicket(Long id, TicketRequestDTO dto){
+    public TicketResponseDTO updateTicket(Long id, TicketRequestDTO dto){
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(TicketNotFoundException::new);
 
@@ -68,7 +67,8 @@ public class TicketService {
             ticket.setBoard(board);
         }
 
-        ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        return TicketDTOMapper.toDTO(savedTicket);
     }
 
     public void deleteTicket(Long id){

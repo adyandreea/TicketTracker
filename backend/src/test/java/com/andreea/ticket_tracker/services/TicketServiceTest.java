@@ -47,13 +47,21 @@ public class TicketServiceTest {
         dto.setTitle("Test");
         dto.setDescription("Desc");
         dto.setPosition(1);
-        dto.setStatus(TODO);
+        dto.setStatus(DONE);
         dto.setBoardId(1L);
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
+        when(ticketRepository.save(any(Ticket.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        ticketService.createTicket(dto);
+        var result = ticketService.createTicket(dto);
 
+        assertEquals("Test", result.getTitle());
+        assertEquals("Desc", result.getDescription());
+        assertEquals(1, result.getPosition());
+        assertEquals(DONE, result.getStatus());
+        assertEquals(1L, result.getBoardId());
+
+        verify(boardRepository).findById(1L);
         verify(ticketRepository, times(1)).save(any(Ticket.class));
     }
 
@@ -100,6 +108,7 @@ public class TicketServiceTest {
         ticket.setTitle("Ticket 1");
         ticket.setDescription("Desc");
         ticket.setPosition(1);
+        ticket.setStatus(DONE);
         ticket.setBoard(board);
 
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
@@ -149,6 +158,7 @@ public class TicketServiceTest {
 
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
         when(boardRepository.findById(2L)).thenReturn(Optional.of(board2));
+        when(ticketRepository.save(any(Ticket.class))).thenAnswer(i -> i.getArguments()[0]);
 
         ticketService.updateTicket(1L, dto);
         verify(ticketRepository, times(1)).save(ticket);
