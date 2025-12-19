@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.andreea.ticket_tracker.entity.TicketStatus.DONE;
+import static com.andreea.ticket_tracker.entity.TicketStatus.TODO;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,14 +68,17 @@ public class TicketControllerTest {
         dto.setTitle("Ticket");
         dto.setDescription("Desc");
         dto.setPosition(1);
+        dto.setStatus(TODO);
         dto.setBoardId(board.getId());
 
         mockMvc.perform(post("/api/v1/tickets")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Ticket created successfully"))
-                .andExpect(jsonPath("$.status").value(201));
+                .andExpect(jsonPath("$.title").value("Ticket"))
+                .andExpect(jsonPath("$.description").value("Desc"))
+                .andExpect(jsonPath("$.position").value(1))
+                .andExpect(jsonPath("$.status").value("TODO"))
+                .andExpect(jsonPath("$.boardId").value(board.getId()));
     }
 
     @Test
@@ -95,6 +100,7 @@ public class TicketControllerTest {
         ticket1.setTitle("Ticket 1");
         ticket1.setDescription("Desc");
         ticket1.setPosition(1);
+        ticket1.setStatus(TODO);
         ticket1.setBoard(board);
         ticketRepository.save(ticket1);
 
@@ -102,6 +108,7 @@ public class TicketControllerTest {
         ticket2.setTitle("Ticket 2");
         ticket2.setDescription("Desc");
         ticket2.setPosition(1);
+        ticket2.setStatus(DONE);
         ticket2.setBoard(board);
         ticketRepository.save(ticket2);
 
@@ -134,6 +141,7 @@ public class TicketControllerTest {
         ticket.setTitle("Ticket 1");
         ticket.setDescription("Desc");
         ticket.setPosition(1);
+        ticket.setStatus(TODO);
         ticket.setBoard(board);
         ticket = ticketRepository.save(ticket);
 
@@ -145,6 +153,7 @@ public class TicketControllerTest {
                 .andExpect(jsonPath("$.title").value("Ticket 1"))
                 .andExpect(jsonPath("$.description").value("Desc"))
                 .andExpect(jsonPath("$.position").value(1))
+                .andExpect(jsonPath("$.status").value("TODO"))
                 .andExpect(jsonPath("$.boardId").value(board.getId()));
     }
 
@@ -167,6 +176,7 @@ public class TicketControllerTest {
         ticket1.setTitle("Old ticket");
         ticket1.setDescription("Old Desc");
         ticket1.setPosition(1);
+        ticket1.setStatus(TODO);
         ticket1.setBoard(board);
         ticket1 = ticketRepository.save(ticket1);
 
@@ -174,6 +184,7 @@ public class TicketControllerTest {
         dto.setTitle("New ticket");
         dto.setDescription("New Desc");
         dto.setPosition(2);
+        dto.setStatus(DONE);
         dto.setBoardId(board.getId());
 
         Long id = ticket1.getId();
@@ -181,8 +192,11 @@ public class TicketControllerTest {
         mockMvc.perform(put("/api/v1/tickets/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Ticket updated successfully"));
+                .andExpect(jsonPath("$.title").value("New ticket"))
+                .andExpect(jsonPath("$.description").value("New Desc"))
+                .andExpect(jsonPath("$.position").value(2))
+                .andExpect(jsonPath("$.status").value("DONE"))
+                .andExpect(jsonPath("$.boardId").value(board.getId()));
     }
 
     @Test
@@ -204,6 +218,7 @@ public class TicketControllerTest {
         ticket.setTitle("Ticket");
         ticket.setDescription("Desc");
         ticket.setPosition(1);
+        ticket.setStatus(DONE);
         ticket.setBoard(board);
         ticket = ticketRepository.save(ticket);
 
@@ -235,6 +250,7 @@ public class TicketControllerTest {
         dto.setTitle("");
         dto.setDescription("a".repeat(300));
         dto.setPosition(-1);
+        dto.setStatus(null);
         dto.setBoardId(null);
 
         mockMvc.perform(post("/api/v1/tickets")
@@ -242,7 +258,7 @@ public class TicketControllerTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.fieldErrors").isArray())
-                .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(5)))
+                .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(6)))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='title')].message",
                         org.hamcrest.Matchers.hasItems("title_is_required", "title_length_invalid")))
@@ -253,7 +269,52 @@ public class TicketControllerTest {
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='position')].message",
                         org.hamcrest.Matchers.hasItem("Position must be >= 0")))
 
+                .andExpect(jsonPath("$.fieldErrors[?(@.field=='status')].message",
+                        org.hamcrest.Matchers.hasItem("Status cannot be null")))
+
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='boardId')].message",
                         org.hamcrest.Matchers.hasItem("BoardId cannot be null")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void getTicketsByBoardId() throws Exception{
+
+        Project project = new Project();
+        project.setName("Project");
+        project.setDescription("Desc");
+        project = projectRepository.save(project);
+
+        Board board = new Board();
+        board.setName("Board 1");
+        board.setDescription("Desc");
+        board.setProject(project);
+        board = boardRepository.save(board);
+
+        Ticket ticket1 = new Ticket();
+        ticket1.setTitle("Ticket 1");
+        ticket1.setDescription("Desc");
+        ticket1.setPosition(1);
+        ticket1.setStatus(TODO);
+        ticket1.setBoard(board);
+        ticketRepository.save(ticket1);
+
+        Ticket ticket2 = new Ticket();
+        ticket2.setTitle("Ticket 2");
+        ticket2.setDescription("Desc");
+        ticket2.setPosition(2);
+        ticket2.setStatus(DONE);
+        ticket2.setBoard(board);
+        ticketRepository.save(ticket2);
+
+        Long id = board.getId();
+
+        mockMvc.perform(get("/api/v1/tickets/by-board/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].title").value("Ticket 1"))
+                .andExpect(jsonPath("$[1].title").value("Ticket 2"))
+                .andExpect(jsonPath("$[0].boardId").value(id))
+                .andExpect(jsonPath("$[1].boardId").value(id));
     }
 }

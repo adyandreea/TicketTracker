@@ -58,9 +58,9 @@ public class BoardControllerTest {
         mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Board created successfully"))
-                .andExpect(jsonPath("$.status").value(201));
+                .andExpect(jsonPath("$.name").value("Test"))
+                .andExpect(jsonPath("$.description").value("Description"))
+                .andExpect(jsonPath("$.projectId").value(project.getId()));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class BoardControllerTest {
 
         BoardRequestDTO dto = new BoardRequestDTO();
         dto.setName("New board");
-        dto.setDescription("Old Description");
+        dto.setDescription("New Description");
         dto.setProjectId(p2.getId());
 
         Long id = board1.getId();
@@ -150,8 +150,9 @@ public class BoardControllerTest {
         mockMvc.perform(put("/api/v1/boards/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Board updated successfully"));
+                .andExpect(jsonPath("$.name").value("New board"))
+                .andExpect(jsonPath("$.description").value("New Description"))
+                .andExpect(jsonPath("$.projectId").value(p2.getId()));
 
     }
 
@@ -216,5 +217,37 @@ public class BoardControllerTest {
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='projectId')].message",
                         org.hamcrest.Matchers.hasItem("ProjectId cannot be null")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testGetBoardsByProjectId() throws Exception{
+
+        Project project1 = new Project();
+        project1.setName("Project 1");
+        project1.setDescription("Desc");
+        project1 = projectRepository.save(project1);
+
+        Board board1 = new Board();
+        board1.setName("Board 1");
+        board1.setDescription("Desc");
+        board1.setProject(project1);
+        boardRepository.save(board1);
+
+        Board board2 = new Board();
+        board2.setName("Board 2");
+        board2.setDescription("Desc");
+        board2.setProject(project1);
+        boardRepository.save(board2);
+
+        Long id = project1.getId();
+
+        mockMvc.perform(get("/api/v1/boards/by-project/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].name").value("Board 1"))
+                .andExpect(jsonPath("$[1].name").value("Board 2"))
+                .andExpect(jsonPath("$[0].projectId").value(id))
+                .andExpect(jsonPath("$[1].projectId").value(id));
     }
 }

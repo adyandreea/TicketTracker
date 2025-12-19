@@ -32,15 +32,16 @@ public class ProjectServiceTest {
     @Test
     void testCreateProject(){
 
-        //given
         ProjectRequestDTO dto = new ProjectRequestDTO();
         dto.setName("Test Project");
         dto.setDescription("Description");
 
-        //when
-        projectService.createProject(dto);
+        when(projectRepository.save(any(Project.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        //then
+        var result =  projectService.createProject(dto);
+
+        assertEquals("Test Project", result.getName());
+        assertEquals("Description", result.getDescription());
         verify(projectRepository, times(1)).save(any(Project.class));
     }
 
@@ -96,7 +97,6 @@ public class ProjectServiceTest {
     @Test
     void testUpdateProject(){
 
-        //given
         Project p1 = new Project();
         p1.setName("Old");
         p1.setDescription("Old Description");
@@ -105,12 +105,11 @@ public class ProjectServiceTest {
         dto.setName("New project");
         dto.setDescription("New Description");
 
+        when(projectRepository.save(any(Project.class))).thenAnswer(i -> i.getArguments()[0]);
         when(projectRepository.findById(1L)).thenReturn(Optional.of(p1));
 
-        //when
         projectService.updateProject(1L, dto);
 
-        //then
         verify(projectRepository).save(p1);
         assertEquals("New project", p1.getName());
         assertEquals("New Description", p1.getDescription());

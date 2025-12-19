@@ -26,13 +26,14 @@ public class BoardService {
         this.projectRepository = projectRepository;
     }
 
-    public void createBoard(BoardRequestDTO dto){
+    public BoardResponseDTO createBoard(BoardRequestDTO dto){
       Project project = projectRepository.findById(dto.getProjectId())
               .orElseThrow(ProjectNotFoundException::new);
 
       Board board = BoardDTOMapper.toEntity(dto, project);
 
-      boardRepository.save(board);
+      Board savedBoard = boardRepository.save(board);
+      return BoardDTOMapper.toDTO(savedBoard);
     }
 
     public List<BoardResponseDTO> getAllBoards(){
@@ -49,7 +50,7 @@ public class BoardService {
         return BoardDTOMapper.toDTO(board);
     }
 
-    public void updateBoard(Long id, BoardRequestDTO dto){
+    public BoardResponseDTO updateBoard(Long id, BoardRequestDTO dto){
         Board board = boardRepository.findById(id)
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -62,7 +63,8 @@ public class BoardService {
             board.setProject(project);
         }
 
-        boardRepository.save(board);
+        Board savedBoard = boardRepository.save(board);
+        return BoardDTOMapper.toDTO(savedBoard);
     }
 
     public void deleteBoard(Long id){
@@ -70,5 +72,15 @@ public class BoardService {
                 .orElseThrow(BoardNotFoundException::new);
 
         boardRepository.deleteById(id);
+    }
+
+    public List<BoardResponseDTO> getBoardsByProjectId(Long projectId){
+        projectRepository.findById(projectId)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        return boardRepository.findByProjectId(projectId)
+                .stream()
+                .map(BoardDTOMapper::toDTO)
+                .toList();
     }
 }

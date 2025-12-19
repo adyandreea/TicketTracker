@@ -26,12 +26,13 @@ public class TicketService {
         this.boardRepository = boardRepository;
     }
 
-    public void createTicket(TicketRequestDTO dto){
+    public TicketResponseDTO createTicket(TicketRequestDTO dto){
         Board board = boardRepository.findById(dto.getBoardId())
                 .orElseThrow(BoardNotFoundException::new);
 
         Ticket ticket = TicketDTOMapper.toEntity(dto, board);
-        ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        return TicketDTOMapper.toDTO(savedTicket);
     }
 
     public List<TicketResponseDTO> getAllTickets(){
@@ -48,7 +49,7 @@ public class TicketService {
         return TicketDTOMapper.toDTO(ticket);
     }
 
-    public void updateTicket(Long id, TicketRequestDTO dto){
+    public TicketResponseDTO updateTicket(Long id, TicketRequestDTO dto){
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(TicketNotFoundException::new);
 
@@ -56,13 +57,18 @@ public class TicketService {
         ticket.setDescription(dto.getDescription());
         ticket.setPosition(dto.getPosition());
 
+        if (dto.getStatus() != null) {
+            ticket.setStatus(dto.getStatus());
+        }
+
         if(dto.getBoardId() != null){
             Board board = boardRepository.findById(dto.getBoardId())
                     .orElseThrow(BoardNotFoundException::new);
             ticket.setBoard(board);
         }
 
-        ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        return TicketDTOMapper.toDTO(savedTicket);
     }
 
     public void deleteTicket(Long id){
@@ -70,5 +76,15 @@ public class TicketService {
                 .orElseThrow(TicketNotFoundException::new);
 
         ticketRepository.deleteById(id);
+    }
+
+    public List<TicketResponseDTO> getTicketsByBoardId(Long boardId){
+        boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
+
+        return ticketRepository.findByBoardId(boardId)
+                .stream()
+                .map(TicketDTOMapper::toDTO)
+                .toList();
     }
 }

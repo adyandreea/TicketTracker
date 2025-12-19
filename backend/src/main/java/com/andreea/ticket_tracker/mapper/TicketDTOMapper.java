@@ -12,6 +12,7 @@ public class TicketDTOMapper {
         ticket.setTitle(dto.getTitle());
         ticket.setDescription(dto.getDescription());
         ticket.setPosition(dto.getPosition());
+        ticket.setStatus(dto.getStatus());
         ticket.setBoard(board);
         return ticket;
     }
@@ -22,6 +23,7 @@ public class TicketDTOMapper {
         dto.setId(ticket.getId());
         dto.setTitle(ticket.getTitle());
         dto.setDescription(ticket.getDescription());
+        dto.setStatus(ticket.getStatus());
         dto.setPosition(ticket.getPosition());
 
         if(ticket.getBoard() != null){

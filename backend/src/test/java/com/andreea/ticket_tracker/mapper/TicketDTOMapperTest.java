@@ -6,6 +6,7 @@ import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Ticket;
 import org.junit.jupiter.api.Test;
 
+import static com.andreea.ticket_tracker.entity.TicketStatus.TODO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TicketDTOMapperTest {
@@ -22,6 +23,7 @@ public class TicketDTOMapperTest {
         dto.setTitle("Ticket");
         dto.setDescription("Desc");
         dto.setPosition(1);
+        dto.setStatus(TODO);
         dto.setBoardId(board.getId());
 
         Ticket ticket = TicketDTOMapper.toEntity(dto, board);
@@ -31,6 +33,7 @@ public class TicketDTOMapperTest {
         assertThat(ticket.getTitle()).isEqualTo(dto.getTitle());
         assertThat(ticket.getDescription()).isEqualTo(dto.getDescription());
         assertThat(ticket.getPosition()).isEqualTo(dto.getPosition());
+        assertThat(ticket.getStatus()).isEqualTo(dto.getStatus());
         assertThat(board.getId()).isEqualTo(dto.getBoardId());
     }
 
@@ -46,6 +49,7 @@ public class TicketDTOMapperTest {
         ticket.setTitle("Ticket");
         ticket.setDescription("Desc");
         ticket.setPosition(1);
+        ticket.setStatus(TODO);
         ticket.setBoard(board);
 
         TicketResponseDTO dto = TicketDTOMapper.toDTO(ticket);
@@ -55,6 +59,7 @@ public class TicketDTOMapperTest {
         assertThat(dto.getTitle()).isEqualTo(ticket.getTitle());
         assertThat(dto.getDescription()).isEqualTo(ticket.getDescription());
         assertThat(dto.getPosition()).isEqualTo(ticket.getPosition());
+        assertThat(dto.getStatus()).isEqualTo(ticket.getStatus());
         assertThat(dto.getBoardId()).isEqualTo(board.getId());
     }
 }

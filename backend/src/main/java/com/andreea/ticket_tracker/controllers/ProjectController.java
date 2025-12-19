@@ -6,6 +6,7 @@ import com.andreea.ticket_tracker.dto.response.ProjectResponseDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
 import com.andreea.ticket_tracker.handler.ResponseHandler;
 import com.andreea.ticket_tracker.services.ProjectService;
+import com.andreea.ticket_tracker.services.TicketService;
 import com.andreea.ticket_tracker.swagger.SwaggerHttpStatus;
 import com.andreea.ticket_tracker.swagger.SwaggerMessages;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +30,11 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final TicketService ticketService;
 
-    public ProjectController(final ProjectService projectService){
+    public ProjectController(final ProjectService projectService, TicketService ticketService){
         this.projectService = projectService;
+        this.ticketService = ticketService;
     }
 
     @Operation(summary = "Creates a new project.")
@@ -47,9 +51,11 @@ public class ProjectController {
     }
     )
     @PostMapping
-    public ResponseEntity<SuccessDTO> createProject(@Valid @RequestBody ProjectRequestDTO dto){
-        projectService.createProject(dto);
-        return ResponseHandler.created("Project created successfully");
+    public ResponseEntity<ProjectResponseDTO> createProject(@Valid @RequestBody ProjectRequestDTO dto){
+        ProjectResponseDTO createdProject = projectService.createProject(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdProject);
     }
 
     @Operation(summary = "Returns all the projects.")
@@ -102,9 +108,9 @@ public class ProjectController {
     }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessDTO> updateProject(@PathVariable Long id, @Valid   @RequestBody ProjectRequestDTO dto){
-        projectService.updateProject(id, dto);
-        return ResponseHandler.updated("Project updated successfully");
+    public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long id, @Valid   @RequestBody ProjectRequestDTO dto){
+        ProjectResponseDTO updatedProject = projectService.updateProject(id, dto);
+        return ResponseEntity.ok(updatedProject);
     }
 
     @Operation(summary = "Deletes the project.")
