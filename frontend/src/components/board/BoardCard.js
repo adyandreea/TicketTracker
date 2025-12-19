@@ -1,5 +1,4 @@
 import {
-  Box,
   Typography,
   Card,
   CardContent,
@@ -9,58 +8,48 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const BoardCard = ({ boards, handleEditStart, handleDelete }) => {
+const BoardCard = ({ board, handleEditStart, handleDelete }) => {
   return (
-    <Box
+    <Card
+      key={board.id}
       sx={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-        gap: 3,
+        borderRadius: 2,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        bgcolor: "white",
       }}
     >
-      {boards.map((board) => (
-        <Card
-          key={board.id}
-          sx={{
-            borderRadius: 2,
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            bgcolor: "white",
-          }}
+      <CardContent>
+        <Typography variant="h6" component="div" fontWeight="bold">
+          {board.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          ID: {board.id}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Project: {board.project}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Description: {board.description}
+        </Typography>
+      </CardContent>
+      <CardActions sx={{ justifyContent: "flex-end" }}>
+        <IconButton
+          color="primary"
+          aria-label="edit"
+          onClick={() => handleEditStart(board)}
         >
-          <CardContent>
-            <Typography variant="h6" component="div" fontWeight="bold">
-              {board.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              ID: {board.id}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Project: {board.project}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Description: {board.description}
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <IconButton
-              color="primary"
-              aria-label="edit"
-              onClick={() => handleEditStart(board)}
-            >
-              <EditIcon />
-            </IconButton>
+          <EditIcon />
+        </IconButton>
 
-            <IconButton
-              color="error"
-              aria-label="delete"
-              onClick={() => handleDelete(board.id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </CardActions>
-        </Card>
-      ))}
-    </Box>
+        <IconButton
+          color="error"
+          aria-label="delete"
+          onClick={() => handleDelete(board.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 };
 

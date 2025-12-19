@@ -149,11 +149,21 @@ const BoardsPage = () => {
               Create board
             </Button>
           </Box>
-          <BoardCard
-            boards={boards}
-            handleEditStart={handleEditStart}
-            handleDelete={handleDelete}
-          />
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: 3,
+            }}
+          >
+            {boards.map((board) => (
+              <BoardCard
+                board={board}
+                handleEditStart={handleEditStart}
+                handleDelete={handleDelete}
+              />
+            ))}
+          </Box>
         </Box>
       </Box>
       <BoardModal

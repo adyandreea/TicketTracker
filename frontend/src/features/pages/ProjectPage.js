@@ -146,11 +146,21 @@ const ProjectsPage = () => {
               Create project
             </Button>
           </Box>
-          <ProjectCard
-            projects={projects}
-            handleEditStart={handleEditStart}
-            handleDelete={handleDelete}
-          />
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: 3,
+            }}
+          >
+            {projects.map((project) => (
+              <ProjectCard
+                project={project}
+                handleEditStart={handleEditStart}
+                handleDelete={handleDelete}
+              />
+            ))}
+          </Box>
         </Box>
       </Box>
       <ProjectModal
