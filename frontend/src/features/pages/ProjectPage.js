@@ -1,23 +1,10 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Card,
-  CardContent,
-  CardActions,
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Typography, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
+import ProjectModal from "../../components/project/ProjectModal";
+import ProjectCard from "../../components/project/ProjectCard";
 import {
   getProjects,
   createProject,
@@ -33,7 +20,6 @@ const ProjectsPage = () => {
   const [newProjectName, setNewProjectName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
-
   const [newProjectDescription, setNewProjectDescription] = useState("");
 
   const fetchProjects = async () => {
@@ -160,103 +146,23 @@ const ProjectsPage = () => {
               Create project
             </Button>
           </Box>
-
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 3,
-            }}
-          >
-            {projects.map((project) => (
-              <Card
-                key={project.id}
-                sx={{
-                  borderRadius: 2,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  bgcolor: "white",
-                }}
-              >
-                <CardContent>
-                  <Typography variant="h6" component="div" fontWeight="bold">
-                    {project.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mt: 1 }}
-                  >
-                    ID: {project.id}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mt: 1 }}
-                  >
-                    Description: {project.description}
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "flex-end" }}>
-                  <IconButton
-                    color="primary"
-                    aria-label="edit"
-                    onClick={() => handleEditStart(project)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-
-                  <IconButton
-                    color="error"
-                    aria-label="delete"
-                    onClick={() => handleDelete(project.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            ))}
-          </Box>
+          <ProjectCard
+            projects={projects}
+            handleEditStart={handleEditStart}
+            handleDelete={handleDelete}
+          />
         </Box>
       </Box>
-
-      <Dialog open={isModalOpen} onClose={handleCloseModal}>
-        <DialogTitle>Edit project</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Project Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSubmit();
-            }}
-          />
-
-          <TextField
-            margin="dense"
-            label="Descriere"
-            type="text"
-            fullWidth
-            multiline
-            rows={3}
-            variant="outlined"
-            value={newProjectDescription}
-            onChange={(e) => setNewProjectDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained">
-            Save changes
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ProjectModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        projectName={newProjectName}
+        setProjectName={setNewProjectName}
+        projectDescription={newProjectDescription}
+        setProjectDescription={setNewProjectDescription}
+        onSubmit={handleSubmit}
+        isEditing={isEditing}
+      />
     </Box>
   );
 };

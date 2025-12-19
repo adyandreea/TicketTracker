@@ -1,25 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Card,
-  CardContent,
-  CardActions,
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Typography, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
 import {
@@ -29,6 +10,8 @@ import {
   deleteBoard,
 } from "../../api/boardApi";
 import { getProjects } from "../../api/projectApi";
+import BoardModal from "../../components/board/BoardModal";
+import BoardCard from "../../components/board/BoardCard";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
@@ -120,8 +103,9 @@ const BoardsPage = () => {
         resultBoard = await createBoard(requestData);
       }
 
-      const projectName =
-        projectsData.find((p) => p.id === resultBoard.projectId)?.name;
+      const projectName = projectsData.find(
+        (p) => p.id === resultBoard.projectId
+      )?.name;
       const finalBoard = { ...resultBoard, project: projectName };
 
       if (isEditing) {
@@ -165,120 +149,25 @@ const BoardsPage = () => {
               Create board
             </Button>
           </Box>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 3,
-            }}
-          >
-            {boards.map((board) => (
-              <Card
-                key={board.id}
-                sx={{
-                  borderRadius: 2,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  bgcolor: "white",
-                }}
-              >
-                <CardContent>
-                  <Typography variant="h6" component="div" fontWeight="bold">
-                    {board.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mt: 1 }}
-                  >
-                    ID: {board.id}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mt: 1 }}
-                  >
-                    Project: {board.project}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Description: {board.description}
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "flex-end" }}>
-                  <IconButton
-                    color="primary"
-                    aria-label="edit"
-                    onClick={() => handleEditStart(board)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-
-                  <IconButton
-                    color="error"
-                    aria-label="delete"
-                    onClick={() => handleDelete(board.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            ))}
-          </Box>
+          <BoardCard
+            boards={boards}
+            handleEditStart={handleEditStart}
+            handleDelete={handleDelete}
+          />
         </Box>
       </Box>
-
-      <Dialog open={isModalOpen} onClose={handleCloseModal}>
-        <DialogTitle>Edit board</DialogTitle>
-        <DialogContent sx={{ minWidth: 400 }}>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Board Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={boardName}
-            onChange={(e) => setBoardName(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-
-          <TextField
-            margin="dense"
-            label="Description"
-            type="text"
-            fullWidth
-            multiline
-            rows={2}
-            variant="outlined"
-            value={boardDescription}
-            onChange={(e) => setBoardDescription(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-
-          <FormControl fullWidth margin="dense">
-            <InputLabel id="project-select-label">Project</InputLabel>
-            <Select
-              labelId="project-select-label"
-              value={selectedProjectId}
-              label="Project"
-              onChange={(e) => setSelectedProjectId(e.target.value)}
-            >
-              {projectsData.map((project) => (
-                <MenuItem key={project.id} value={project.id}>
-                  {project.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained">
-            Save changes
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <BoardModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        boardName={boardName}
+        setBoardName={setBoardName}
+        boardDescription={boardDescription}
+        setBoardDescription={setBoardDescription}
+        selectedProjectId={selectedProjectId}
+        setSelectedProjectId={setSelectedProjectId}
+        projectsData={projectsData}
+        onSubmit={handleSubmit}
+      />
     </Box>
   );
 };
