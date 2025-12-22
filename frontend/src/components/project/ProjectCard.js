@@ -1,14 +1,35 @@
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
   CardActions,
   Typography,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+  deleteProject,
+} from "../../api/projectApi";
 
-const ProjectCard = ({ project, handleEditStart, handleDelete }) => {
+const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteProject(id);
+      setProjects(projects.filter((project) => project.id !== id));
+    } catch (error) {
+      console.error("Delete project error:", error.message || error);
+    }
+  };
+
   return (
     <Card
       key={project.id}
@@ -37,15 +58,33 @@ const ProjectCard = ({ project, handleEditStart, handleDelete }) => {
         >
           <EditIcon />
         </IconButton>
-
         <IconButton
           color="error"
           aria-label="delete"
-          onClick={() => handleDelete(project.id)}
+          onClick={() => setShowConfirmationDialog(true)}
         >
           <DeleteIcon />
         </IconButton>
       </CardActions>
+      {showConfirmationDialog && (
+      <Dialog
+        open={showConfirmationDialog}
+        keepMounted
+        onClose={() => setShowConfirmationDialog(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Delete confirmation"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to delete the project? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowConfirmationDialog(false)}>Cancel</Button>
+          <Button onClick={() => handleDelete(project.id)}>Delete</Button>
+        </DialogActions>
+      </Dialog>
+      )}
     </Card>
   );
 };

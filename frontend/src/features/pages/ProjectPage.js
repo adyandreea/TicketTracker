@@ -9,7 +9,6 @@ import {
   getProjects,
   createProject,
   updateProject,
-  deleteProject,
 } from "../../api/projectApi";
 
 const ProjectsPage = () => {
@@ -21,6 +20,8 @@ const ProjectsPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [newProjectDescription, setNewProjectDescription] = useState("");
+
+  const [errors, setErrors] = useState({name: ""});
 
   const fetchProjects = async () => {
     try {
@@ -45,6 +46,7 @@ const ProjectsPage = () => {
     setEditingProject(null);
     setNewProjectName("");
     setNewProjectDescription("");
+    setErrors({name: ""});
   };
 
   const handleCreate = async () => {
@@ -75,6 +77,7 @@ const ProjectsPage = () => {
     setNewProjectDescription(project.description || "");
     setIsEditing(true);
     setModalOpen(true);
+    setErrors({name: ""});
   };
 
   const handleEditSave = async () => {
@@ -98,16 +101,14 @@ const ProjectsPage = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteProject(id);
-      setProjects(projects.filter((project) => project.id !== id));
-    } catch (error) {
-      console.error("Delete project error:", error.message || error);
-    }
-  };
-
   const handleSubmit = () => {
+    if (newProjectName.trim() === "") {
+      setErrors({name: "Project name is required"});
+      return;
+    }
+
+    setErrors({name: ""});
+
     if (isEditing) {
       handleEditSave();
     } else {
@@ -156,8 +157,9 @@ const ProjectsPage = () => {
             {projects.map((project) => (
               <ProjectCard
                 project={project}
+                projects={projects}
+                setProjects={setProjects}
                 handleEditStart={handleEditStart}
-                handleDelete={handleDelete}
               />
             ))}
           </Box>
@@ -172,6 +174,7 @@ const ProjectsPage = () => {
         setProjectDescription={setNewProjectDescription}
         onSubmit={handleSubmit}
         isEditing={isEditing}
+        errors={errors}
       />
     </Box>
   );
