@@ -5,18 +5,11 @@ import {
   CardActions,
   Typography,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  deleteProject,
-} from "../../api/projectApi";
+import { deleteProject } from "../../api/projectApi";
+import ConfirmationDialog from "../common/ConfirmationDialog";
 
 const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -67,23 +60,19 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
         </IconButton>
       </CardActions>
       {showConfirmationDialog && (
-      <Dialog
-        open={showConfirmationDialog}
-        keepMounted
-        onClose={() => setShowConfirmationDialog(false)}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Delete confirmation"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete the project? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowConfirmationDialog(false)}>Cancel</Button>
-          <Button onClick={() => handleDelete(project.id)}>Delete</Button>
-        </DialogActions>
-      </Dialog>
+        <ConfirmationDialog
+          title={"Confirm Deletion"}
+          description={"Are you sure you want to delete the project?"}
+          open={showConfirmationDialog}
+          onClose={() => setShowConfirmationDialog(false)}
+          buttonOneText={"Cancel"}
+          buttonTwoText={"Delete"}
+          buttonOneHandle={() => setShowConfirmationDialog(false)}
+          buttonTwoHandle={() => {
+            handleDelete(project.id);
+            setShowConfirmationDialog(false);
+          }}
+        />
       )}
     </Card>
   );

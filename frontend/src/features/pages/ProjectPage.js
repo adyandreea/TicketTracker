@@ -21,7 +21,7 @@ const ProjectsPage = () => {
   const [editingProject, setEditingProject] = useState(null);
   const [newProjectDescription, setNewProjectDescription] = useState("");
 
-  const [errors, setErrors] = useState({name: ""});
+  const [errors, setErrors] = useState({ name: "" });
 
   const fetchProjects = async () => {
     try {
@@ -46,7 +46,7 @@ const ProjectsPage = () => {
     setEditingProject(null);
     setNewProjectName("");
     setNewProjectDescription("");
-    setErrors({name: ""});
+    setErrors({ name: "" });
   };
 
   const handleCreate = async () => {
@@ -77,7 +77,7 @@ const ProjectsPage = () => {
     setNewProjectDescription(project.description || "");
     setIsEditing(true);
     setModalOpen(true);
-    setErrors({name: ""});
+    setErrors({ name: "" });
   };
 
   const handleEditSave = async () => {
@@ -103,11 +103,11 @@ const ProjectsPage = () => {
 
   const handleSubmit = () => {
     if (newProjectName.trim() === "") {
-      setErrors({name: "Project name is required"});
+      setErrors({ name: "Project name is required" });
       return;
     }
 
-    setErrors({name: ""});
+    setErrors({ name: "" });
 
     if (isEditing) {
       handleEditSave();
