@@ -14,7 +14,6 @@ import {
   getTicketsByBoardId,
   updateTicket,
   createTicket,
-  deleteTicket,
 } from "../../api/ticketApi";
 
 const BoardCard = ({ selectedBoardId }) => {
@@ -232,21 +231,6 @@ const BoardCard = ({ selectedBoardId }) => {
     setEditingText("");
   };
 
-  const handleDeleteTicket = (ticketId, col) => {
-    deleteTicket(ticketId)
-      .then(() => {
-        setTickets((prevTickets) => {
-          const newTickets = { ...prevTickets };
-          newTickets[col] = newTickets[col].filter((t) => t.id !== ticketId);
-          return newTickets;
-        });
-      })
-      .catch((error) => {
-        console.error("Failed to delete ticket:", error);
-        setError("Failed to delete ticket.");
-      });
-  };
-
   if (loading) {
     return (
       <Box sx={{ p: 3, textAlign: "center" }}>
@@ -308,7 +292,9 @@ const BoardCard = ({ selectedBoardId }) => {
                   onEditChange={(e) => setEditingText(e.target.value)}
                   onEditSave={() => handleEditSave(col)}
                   editingText={editingText}
-                  onDelete={() => handleDeleteTicket(ticket.id, col)}
+                  tickets={tickets}
+                  setTickets={setTickets}
+                  setError={setError}
                 />
               </Box>
             ))}

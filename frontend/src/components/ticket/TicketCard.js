@@ -1,7 +1,10 @@
+import React, { useState } from "react";
 import { Paper, Typography, TextField, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteTicket } from "../../api/ticketApi";
+import ConfirmationDialog from "../common/ConfirmationDialog";
 
 const TicketCard = ({
   ticket,
@@ -10,9 +13,29 @@ const TicketCard = ({
   onEditChange,
   onEditSave,
   editingText,
-  onDelete,
+  setTickets,
+  setError,
 }) => {
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
+  const handleDeleteTicket = (ticketId) => {
+    deleteTicket(ticketId)
+      .then(() => {
+        setTickets((prevTickets) => {
+          const newTickets = { ...prevTickets };
+          Object.keys(newTickets).forEach((columnName) => {
+            newTickets[columnName] = newTickets[columnName].filter(
+              (t) => t.id !== ticketId
+            );
+          });
+          return newTickets;
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to delete ticket:", error);
+        setError("Failed to delete ticket.");
+      });
+  };
 
   if (isEditing) {
     return (
@@ -40,9 +63,24 @@ const TicketCard = ({
         <IconButton size="small" onClick={onEditSave} color="primary">
           <CheckIcon fontSize="small" />
         </IconButton>
-        <IconButton onClick={onDelete}>
+        <IconButton onClick={() => setShowConfirmationDialog(true)}>
           <DeleteIcon fontSize="small" color="error" />
         </IconButton>
+        {showConfirmationDialog && (
+          <ConfirmationDialog
+            title={"Confirm Deletion"}
+            description={"Are you sure you want to delete the ticket?"}
+            open={showConfirmationDialog}
+            onClose={() => setShowConfirmationDialog(false)}
+            buttonOneText={"Cancel"}
+            buttonTwoText={"Delete"}
+            buttonOneHandle={() => setShowConfirmationDialog(false)}
+            buttonTwoHandle={() => {
+              handleDeleteTicket(ticket.id);
+              setShowConfirmationDialog(false);
+            }}
+          />
+        )}
       </Paper>
     );
   }
