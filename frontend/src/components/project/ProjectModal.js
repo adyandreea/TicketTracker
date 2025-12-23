@@ -16,6 +16,7 @@ const ProjectModal = ({
   setProjectDescription,
   onSubmit,
   isEditing,
+  errors,
 }) => {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -32,6 +33,8 @@ const ProjectModal = ({
           variant="outlined"
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
+          error={errors.name !== ""}
+          helperText={errors.name}
           onKeyDown={(e) => {
             if (e.key === "Enter") onSubmit();
           }}
@@ -39,7 +42,7 @@ const ProjectModal = ({
 
         <TextField
           margin="dense"
-          label="Descriere"
+          label="Description"
           type="text"
           fullWidth
           multiline
@@ -54,7 +57,7 @@ const ProjectModal = ({
           Cancel
         </Button>
         <Button onClick={onSubmit} color="primary" variant="contained">
-          Save changes
+          {isEditing ? "Save changes" : "Create Project"}
         </Button>
       </DialogActions>
     </Dialog>

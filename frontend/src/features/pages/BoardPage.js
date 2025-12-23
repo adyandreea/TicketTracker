@@ -3,12 +3,7 @@ import { Box, Typography, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
-import {
-  getBoards,
-  createBoard,
-  updateBoard,
-  deleteBoard,
-} from "../../api/boardApi";
+import { getBoards, createBoard, updateBoard } from "../../api/boardApi";
 import { getProjects } from "../../api/projectApi";
 import BoardModal from "../../components/board/BoardModal";
 import BoardCard from "../../components/board/BoardCard";
@@ -26,6 +21,8 @@ const BoardsPage = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingBoard, setEditingBoard] = useState(null);
+
+  const [errors, setErrors] = useState({ name: "", projectId: "" });
 
   const fetchBoardsAndProjects = async () => {
     try {
@@ -65,15 +62,7 @@ const BoardsPage = () => {
     setBoardName("");
     setBoardDescription("");
     setSelectedProjectId("");
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteBoard(id);
-      setBoards(boards.filter((board) => board.id !== id));
-    } catch (error) {
-      console.error("Delete board error:", error.message || error);
-    }
+    setErrors({ name: "", projectId: "" });
   };
 
   const handleEditStart = (board) => {
@@ -83,10 +72,23 @@ const BoardsPage = () => {
     setSelectedProjectId(board.projectId);
     setIsEditing(true);
     setModalOpen(true);
+    setErrors({ name: "", projectId: "" });
   };
 
   const handleSubmit = async () => {
-    if (boardName.trim() === "" || selectedProjectId === "") return;
+    const validation = { name: "", projectId: "" };
+
+    if (boardName.trim() === "") {
+      validation.name = "Board name is required";
+    }
+
+    if (!selectedProjectId) {
+      validation.projectId = "Project selection is required";
+    }
+
+    setErrors(validation);
+    const hasErrors = validation.name || validation.projectId;
+    if (hasErrors) return;
 
     const requestData = {
       name: boardName,
@@ -158,9 +160,10 @@ const BoardsPage = () => {
           >
             {boards.map((board) => (
               <BoardCard
+                boards={boards}
+                setBoards={setBoards}
                 board={board}
                 handleEditStart={handleEditStart}
-                handleDelete={handleDelete}
               />
             ))}
           </Box>
@@ -177,6 +180,8 @@ const BoardsPage = () => {
         setSelectedProjectId={setSelectedProjectId}
         projectsData={projectsData}
         onSubmit={handleSubmit}
+        isEditing={isEditing}
+        errors={errors}
       />
     </Box>
   );
