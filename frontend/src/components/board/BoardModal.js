@@ -23,6 +23,7 @@ const BoardModal = ({
   projectsData,
   onSubmit,
   isEditing,
+  errors,
 }) => {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -37,6 +38,8 @@ const BoardModal = ({
           variant="outlined"
           value={boardName}
           onChange={(e) => setBoardName(e.target.value)}
+          error={errors.name !== ""}
+          helperText={errors.name}
           sx={{ mb: 2 }}
         />
 
@@ -52,13 +55,13 @@ const BoardModal = ({
           onChange={(e) => setBoardDescription(e.target.value)}
           sx={{ mb: 2 }}
         />
-
         <FormControl fullWidth margin="dense">
           <InputLabel id="project-select-label">Project</InputLabel>
           <Select
             labelId="project-select-label"
             value={selectedProjectId}
             label="Project"
+            error={errors.projectId !== ""}
             onChange={(e) => setSelectedProjectId(e.target.value)}
           >
             {projectsData.map((project) => (
@@ -74,7 +77,7 @@ const BoardModal = ({
           Cancel
         </Button>
         <Button onClick={onSubmit} color="primary" variant="contained">
-          Save changes
+          {isEditing ? "Save changes" : "Create Board"}
         </Button>
       </DialogActions>
     </Dialog>

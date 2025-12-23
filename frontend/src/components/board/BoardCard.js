@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Typography,
   Card,
@@ -7,8 +8,21 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { deleteBoard } from "../../api/boardApi";
+import ConfirmationDialog from "../common/ConfirmationDialog";
 
-const BoardCard = ({ board, handleEditStart, handleDelete }) => {
+const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteBoard(id);
+      setBoards(boards.filter((board) => board.id !== id));
+    } catch (error) {
+      console.error("Delete board error:", error.message || error);
+    }
+  };
+
   return (
     <Card
       key={board.id}
@@ -44,11 +58,26 @@ const BoardCard = ({ board, handleEditStart, handleDelete }) => {
         <IconButton
           color="error"
           aria-label="delete"
-          onClick={() => handleDelete(board.id)}
+          onClick={() => setShowConfirmationDialog(true)}
         >
           <DeleteIcon />
         </IconButton>
       </CardActions>
+      {showConfirmationDialog && (
+        <ConfirmationDialog
+          title={"Confirm Deletion"}
+          description={"Are you sure you want to delete the board?"}
+          open={showConfirmationDialog}
+          onClose={() => setShowConfirmationDialog(false)}
+          buttonOneText={"Cancel"}
+          buttonTwoText={"Delete"}
+          buttonOneHandle={() => setShowConfirmationDialog(false)}
+          buttonTwoHandle={() => {
+            handleDelete(board.id);
+            setShowConfirmationDialog(false);
+          }}
+        />
+      )}
     </Card>
   );
 };
