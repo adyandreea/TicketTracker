@@ -101,22 +101,52 @@ const DashboardPage = () => {
     <Box sx={{ display: "flex", height: "100vh", backgroundColor: "#f0f0f0" }}>
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          width: { xs: "100%", md: "calc(100% - 240px)" },
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+        }}
+      >
         <Navbar onMenuClick={handleSidebarToggle} />
-        <Box sx={{ flexGrow: 1, p: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+
+        <Box
+          sx={{
+            p: { xs: 2, md: 3 },
+            flexGrow: 1,
+            overflowX: "hidden",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "stretch", sm: "center" },
+              mb: 3,
+              gap: 2,
+            }}
+          >
             {!loadingProject && !errorProject && (
               <FormControl
                 variant="filled"
-                sx={{ m: 1, minWidth: 250, bgcolor: "white", borderRadius: 1 }}
+                sx={{
+                  m: 0,
+                  minWidth: { xs: "100%", sm: 250 },
+                  bgcolor: "white",
+                  borderRadius: 1,
+                }}
               >
                 <Select
                   value={selectedProjectId}
                   onChange={handleProjectChange}
                   sx={{
                     "& .MuiSelect-select": {
-                      paddingTop: "12px",
-                      paddingBottom: "12px",
+                      py: "12px",
                       fontWeight: "bold",
                     },
                   }}
@@ -130,19 +160,41 @@ const DashboardPage = () => {
               </FormControl>
             )}
           </Box>
-          <DashboardBoard selectedBoardId={selectedBoardId} />
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <DashboardBoard selectedBoardId={selectedBoardId} />
+          </Box>
+
           {!loadingBoard && !errorBoard && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <Button
                 variant="outlined"
-                culor="primary"
+                fullWidth={{ xs: true, sm: false }}
+                color="primary"
                 onClick={() => {
                   setModalOpen(true);
+                }}
+                sx={{
+                  height: { sm: "56px" },
+                  px: 3,
+                  fontWeight: "bold",
                 }}
               >
                 Switch boards
               </Button>
-              <Dialog open={isModalOpen} onClose={handleCloseModal}>
+              <Dialog
+                open={isModalOpen}
+                onClose={handleCloseModal}
+                fullWidth
+                maxWidth="xs"
+              >
                 <DialogTitle>Choose one board</DialogTitle>
                 <DialogContent>
                   <FormControl

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Paper, Typography, TextField, IconButton } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  TextField,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -17,6 +24,8 @@ const TicketCard = ({
   setError,
 }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleDeleteTicket = (ticketId) => {
     deleteTicket(ticketId)
@@ -25,7 +34,7 @@ const TicketCard = ({
           const newTickets = { ...prevTickets };
           Object.keys(newTickets).forEach((columnName) => {
             newTickets[columnName] = newTickets[columnName].filter(
-              (t) => t.id !== ticketId
+              (t) => t.id !== ticketId,
             );
           });
           return newTickets;
@@ -87,21 +96,23 @@ const TicketCard = ({
   return (
     <Paper
       sx={{
-        p: 1,
-        mb: 1,
+        p: { xs: 1.5, md: 1 },
+        mb: 1.5,
         borderRadius: 2,
-        backgroundColor: "#f0f0f0",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
-        cursor: "grab",
+        backgroundColor: "#f9f9f9",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
       }}
     >
-      <Typography variant="body2" sx={{ flexGrow: 1 }}>
+      <Typography
+        variant="body2"
+        sx={{ flexGrow: 1, fontSize: { xs: "0.95rem", md: "0.875rem" } }}
+      >
         {ticket.title}
       </Typography>
-      <IconButton size="small" onClick={onEditStart} sx={{ ml: 1 }}>
+      <IconButton size={isMobile ? "medium" : "small"} onClick={onEditStart}>
         <EditIcon fontSize="small" />
       </IconButton>
     </Paper>

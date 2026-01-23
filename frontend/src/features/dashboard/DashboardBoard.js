@@ -150,7 +150,7 @@ const BoardCard = ({ selectedBoardId }) => {
     };
 
     const sourceTickets = tickets[draggedFromCol].filter(
-      (t) => t.id !== draggedTicket.id
+      (t) => t.id !== draggedTicket.id,
     );
 
     const updatedDestTickets = [...destTickets, ticketToUpdate];
@@ -164,19 +164,19 @@ const BoardCard = ({ selectedBoardId }) => {
     updateTicket(draggedTicket.id, ticketToUpdate)
       .then((response) => {
         console.log(
-          `Ticket ${draggedTicket.id} updated successfully with status ${newStatusJava}`
+          `Ticket ${draggedTicket.id} updated successfully with status ${newStatusJava}`,
         );
       })
       .catch((error) => {
         console.error(
           "Failed to update status in DB. Rolling back local changes.",
-          error
+          error,
         );
 
         setTickets((prevTickets) => {
           const revertedSourceTickets = [...sourceTickets, draggedTicket];
           const revertedDestTickets = updatedDestTickets.filter(
-            (t) => t.id !== draggedTicket.id
+            (t) => t.id !== draggedTicket.id,
           );
 
           return {
@@ -217,7 +217,7 @@ const BoardCard = ({ selectedBoardId }) => {
         setTickets((prevTickets) => {
           const newTickets = { ...prevTickets };
           newTickets[col] = newTickets[col].map((t) =>
-            t.id === editingTicketId ? { ...t, title: updatedData.title } : t
+            t.id === editingTicketId ? { ...t, title: updatedData.title } : t,
           );
           return newTickets;
         });
@@ -248,35 +248,54 @@ const BoardCard = ({ selectedBoardId }) => {
   }
 
   return (
-    <Box sx={{ display: "flex", gap: 2, flexGrow: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        gap: 2,
+        flexGrow: 1,
+        overflowX: "auto",
+        pb: 2,
+        pt: 1,
+        px: 0.5,
+        "&::-webkit-scrollbar": { height: 8 },
+        "&::-webkit-scrollbar-thumb": { bgcolor: "#ccc", borderRadius: 4 },
+      }}
+    >
       {columns.map((col) => (
         <Paper
           key={col}
           sx={{
-            flex: 1,
+            minWidth: { xs: "280px", sm: "320px", md: "1fr" },
+            flex: { xs: "0 0 auto", md: 1 },
             p: 2,
             borderRadius: 2,
             backgroundColor: "white",
-            height: 400,
+            height: { xs: "75vh", md: "500px" },
+            maxHeight: { md: "500px" },
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
             boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            overflow: "hidden",
           }}
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => handleDrop(col)}
         >
-          <Typography variant="body2" sx={{ fontWeight: "bold", mb: 1 }}>
-            {col}
-          </Typography>
+          <Box sx={{ p: 2, borderBottom: "1px solid #f0f0f0" }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+              {col}
+            </Typography>
+          </Box>
 
           <Box
             sx={{
               flexGrow: 1,
-              display: "flex",
-              flexDirection: "column",
               overflowY: "auto",
-              pr: 1,
+              p: 2,
+              "&::-webkit-scrollbar": { width: 5 },
+              "&::-webkit-scrollbar-thumb": {
+                bgcolor: "#ccc",
+                borderRadius: 10,
+              },
             }}
           >
             {tickets[col].map((ticket) => (
@@ -300,16 +319,16 @@ const BoardCard = ({ selectedBoardId }) => {
             ))}
           </Box>
 
-          <Box>
+          <Box sx={{ p: 2, borderTop: "1px solid #f0f0f0", bgcolor: "white" }}>
             {isAdding[col] ? (
-              <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+              <Box sx={{ display: "flex", gap: 1 }}>
                 <TextField
                   value={newCardText[col]}
                   onChange={(e) =>
                     setNewCardText({ ...newCardText, [col]: e.target.value })
                   }
                   size="small"
-                  variant="outlined"
+                  autoFocus
                   fullWidth
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleSaveClick(col);
@@ -325,12 +344,9 @@ const BoardCard = ({ selectedBoardId }) => {
             ) : (
               <Button
                 startIcon={<AddIcon />}
-                size="small"
+                fullWidth
                 onClick={() => handleAddClick(col)}
-                sx={{
-                  mt: 1,
-                  textTransform: "none",
-                }}
+                sx={{ justifyContent: "flex-start", textTransform: "none" }}
               >
                 Add a card
               </Button>
