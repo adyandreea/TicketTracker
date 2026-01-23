@@ -9,6 +9,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 const BoardModal = ({
@@ -25,10 +27,18 @@ const BoardModal = ({
   isEditing,
   errors,
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullScreen={fullScreen}
+      fullWidth
+      maxWidth="sm"
+    >
       <DialogTitle>{isEditing ? "Edit Board" : "Create New Board"}</DialogTitle>
-      <DialogContent sx={{ minWidth: 400 }}>
+      <DialogContent>
         <TextField
           autoFocus
           margin="dense"
