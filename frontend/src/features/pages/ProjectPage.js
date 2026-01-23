@@ -89,11 +89,11 @@ const ProjectsPage = () => {
     try {
       const updatedProject = await updateProject(
         editingProject.id,
-        updateRequest
+        updateRequest,
       );
 
       setProjects(
-        projects.map((p) => (p.id === editingProject.id ? updatedProject : p))
+        projects.map((p) => (p.id === editingProject.id ? updatedProject : p)),
       );
       handleCloseModal();
     } catch (error) {
@@ -117,26 +117,56 @@ const ProjectsPage = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", backgroundColor: "#f0f0f0" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundColor: "#f0f0f0",
+      }}
+    >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          width: { xs: "100%", md: "calc(100% - 240px)" },
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+        }}
+      >
         <Navbar onMenuClick={handleSidebarToggle} />
 
-        <Box sx={{ p: 4, flexGrow: 1, overflowY: "auto" }}>
+        <Box
+          sx={{
+            p: { xs: 2, sm: 4 },
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
               justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: { xs: "flex-start", sm: "center" },
+              gap: 2,
               mb: 4,
+              width: "100%",
             }}
           >
-            <Typography variant="h4" fontWeight="bold">
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}
+            >
               Projects
             </Typography>
             <Button
               variant="contained"
+              fullWidth={{ xs: true, sm: false }}
+              sx={{ width: { xs: "100%", sm: "auto" } }}
               startIcon={<AddIcon />}
               onClick={() => {
                 setModalOpen(true);
@@ -150,12 +180,16 @@ const ProjectsPage = () => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 3,
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "repeat(auto-fill, minmax(280px, 1fr))",
+              },
+              gap: { xs: 2, sm: 3 },
             }}
           >
             {projects.map((project) => (
               <ProjectCard
+                key={project.id}
                 project={project}
                 projects={projects}
                 setProjects={setProjects}
