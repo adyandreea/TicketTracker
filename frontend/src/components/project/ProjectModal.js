@@ -5,6 +5,8 @@ import {
   DialogTitle,
   TextField,
   Button,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 const ProjectModal = ({
@@ -18,8 +20,16 @@ const ProjectModal = ({
   isEditing,
   errors,
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullScreen={fullScreen}
+      fullWidth
+      maxWidth="sm"
+    >
       <DialogTitle>
         {isEditing ? "Edit Project" : "Create New Project"}
       </DialogTitle>

@@ -5,6 +5,8 @@ import {
   CardContent,
   CardActions,
   IconButton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -13,6 +15,8 @@ import ConfirmationDialog from "../common/ConfirmationDialog";
 
 const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleDelete = async (id) => {
     try {
@@ -30,25 +34,58 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
         borderRadius: 2,
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         bgcolor: "white",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
-      <CardContent>
-        <Typography variant="h6" component="div" fontWeight="bold">
+      <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+        <Typography
+          variant="h6"
+          component="div"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
+        >
           {board.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ display: "block", mt: 1 }}
+        >
           ID: {board.id}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ display: "block", mt: 1 }}
+        >
           Project: {board.project}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mt: 1.5,
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
           Description: {board.description}
         </Typography>
       </CardContent>
-      <CardActions sx={{ justifyContent: "flex-end" }}>
+      <CardActions
+        sx={{
+          justifyContent: "flex-end",
+          p: 1,
+          borderTop: "1px solid #f0f0f0",
+        }}
+      >
         <IconButton
           color="primary"
+          size={isMobile ? "medium" : "small"}
           aria-label="edit"
           onClick={() => handleEditStart(board)}
         >
@@ -57,6 +94,7 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
 
         <IconButton
           color="error"
+          size={isMobile ? "medium" : "small"}
           aria-label="delete"
           onClick={() => setShowConfirmationDialog(true)}
         >

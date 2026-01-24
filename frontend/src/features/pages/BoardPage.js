@@ -106,7 +106,7 @@ const BoardsPage = () => {
       }
 
       const projectName = projectsData.find(
-        (p) => p.id === resultBoard.projectId
+        (p) => p.id === resultBoard.projectId,
       )?.name;
       const finalBoard = { ...resultBoard, project: projectName };
 
@@ -122,26 +122,56 @@ const BoardsPage = () => {
     }
   };
   return (
-    <Box sx={{ display: "flex", height: "100vh", backgroundColor: "#f0f0f0" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundColor: "#f0f0f0",
+      }}
+    >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          width: { xs: "100%", md: "calc(100% - 240px)" },
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+        }}
+      >
         <Navbar onMenuClick={handleSidebarToggle} />
 
-        <Box sx={{ p: 4, flexGrow: 1, overflowY: "auto" }}>
+        <Box
+          sx={{
+            p: { xs: 2, sm: 4 },
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
               justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: { xs: "flex-start", sm: "center" },
+              gap: 2,
               mb: 4,
+              width: "100%",
             }}
           >
-            <Typography variant="h4" fontWeight="bold">
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}
+            >
               Boards
             </Typography>
             <Button
               variant="contained"
+              fullWidth={{ xs: true, sm: false }}
+              sx={{ width: { xs: "100%", sm: "auto" } }}
               startIcon={<AddIcon />}
               onClick={() => {
                 setModalOpen(true);
@@ -154,12 +184,16 @@ const BoardsPage = () => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 3,
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "repeat(auto-fill, minmax(280px, 1fr))",
+              },
+              gap: { xs: 2, sm: 3 },
             }}
           >
             {boards.map((board) => (
               <BoardCard
+                key={board.id}
                 boards={boards}
                 setBoards={setBoards}
                 board={board}

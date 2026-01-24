@@ -5,13 +5,16 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const drawerWidth = 450;
-
 const Sidebar = ({ open, onClose }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleNavigate = (path) => {
         navigate(path);
@@ -22,24 +25,20 @@ const Sidebar = ({ open, onClose }) => {
       variant="temporary"
       open={open}
       onClose={onClose}
-      slotProps={{
-        backdrop: {
-          sx: {
-            backgroundColor: "transparent",
-          },
-        },
-      }}
       sx={{
-        width: drawerWidth,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          height: "80vh",
-          top: "10vh",
-          left: "16px",
+          width: { 
+            xs: "80%",    
+            sm: "300px",  
+            md: "350px"   
+          },
+          height: isMobile ? "100vh" : "80vh", 
+          top: isMobile ? 0 : "10vh",          
+          left: isMobile ? 0 : "16px",         
+          borderRadius: isMobile ? 0 : "16px", 
           bgcolor: "#E0E0E0",
-          color: "black",
-          borderRadius: "16px",
           boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+          transition: "all 0.3s ease", 
         },
       }}
     >
@@ -55,7 +54,7 @@ const Sidebar = ({ open, onClose }) => {
             primary="Dashboard"
             sx={{
               "& .MuiListItemText-primary": {
-                fontSize: "18px",
+                fontSize: { xs: "16px", sm: "18px" },
                 fontWeight: "bold",
                 color: "black",
               },

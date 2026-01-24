@@ -12,10 +12,11 @@ const Navbar = ({ onMenuClick }) => {
         color: "black",
         mt: 0,
         width: "100%",
-        mx: "auto",
       }}
     >
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar
+        sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}
+      >
         <IconButton edge="start" color="inherit" onClick={onMenuClick}>
           <MenuIcon />
         </IconButton>
@@ -28,7 +29,8 @@ const Navbar = ({ onMenuClick }) => {
             sx={{
               bgcolor: "#DCDCDC",
               borderRadius: 2,
-              width: 900,
+              width: { xs: "100%", sm: "80%", md: 600 },
+              maxWidth: "900px",
               "& .MuiOutlinedInput-root": {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 "& fieldset": {
