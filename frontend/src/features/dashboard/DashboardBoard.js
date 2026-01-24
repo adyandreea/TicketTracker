@@ -254,24 +254,18 @@ const BoardCard = ({ selectedBoardId }) => {
         gap: 2,
         flexGrow: 1,
         overflowX: "auto",
-        pb: 2,
-        pt: 1,
-        px: 0.5,
-        "&::-webkit-scrollbar": { height: 8 },
-        "&::-webkit-scrollbar-thumb": { bgcolor: "#ccc", borderRadius: 4 },
+        height: "100%",
       }}
     >
       {columns.map((col) => (
         <Paper
           key={col}
           sx={{
-            minWidth: { xs: "280px", sm: "320px", md: "1fr" },
+            minWidth: { xs: "280px", sm: "300px", md: "1fr" },
             flex: { xs: "0 0 auto", md: 1 },
-            p: 2,
             borderRadius: 2,
             backgroundColor: "white",
-            height: { xs: "75vh", md: "500px" },
-            maxHeight: { md: "500px" },
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
@@ -286,18 +280,7 @@ const BoardCard = ({ selectedBoardId }) => {
             </Typography>
           </Box>
 
-          <Box
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              p: 2,
-              "&::-webkit-scrollbar": { width: 5 },
-              "&::-webkit-scrollbar-thumb": {
-                bgcolor: "#ccc",
-                borderRadius: 10,
-              },
-            }}
-          >
+          <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
             {tickets[col].map((ticket) => (
               <Box
                 key={ticket.id}

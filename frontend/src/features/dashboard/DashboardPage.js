@@ -98,7 +98,14 @@ const DashboardPage = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", backgroundColor: "#f0f0f0" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundColor: "#f0f0f0",
+        overflow: "hidden",
+      }}
+    >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <Box
@@ -109,6 +116,7 @@ const DashboardPage = () => {
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
+          height: "100vh",
         }}
       >
         <Navbar onMenuClick={handleSidebarToggle} />
@@ -117,25 +125,21 @@ const DashboardPage = () => {
           sx={{
             p: { xs: 2, md: 3 },
             flexGrow: 1,
-            overflowX: "hidden",
+            overflow: "hidden",
             display: "flex",
             flexDirection: "column",
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              alignItems: { xs: "stretch", sm: "center" },
-              mb: 3,
-              gap: 2,
+              mb: 2,
+              flexShrink: 0,
             }}
           >
             {!loadingProject && !errorProject && (
               <FormControl
                 variant="filled"
                 sx={{
-                  m: 0,
                   minWidth: { xs: "100%", sm: 250 },
                   bgcolor: "white",
                   borderRadius: 1,
@@ -164,16 +168,23 @@ const DashboardPage = () => {
           <Box
             sx={{
               flexGrow: 1,
-              overflow: "hidden",
+              minHeight: 0,
               display: "flex",
-              flexDirection: "column",
             }}
           >
             <DashboardBoard selectedBoardId={selectedBoardId} />
           </Box>
 
           {!loadingBoard && !errorBoard && (
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <Box
+              sx={{
+                mt: 4,
+                pb: 2,
+                flexShrink: 0,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Button
                 variant="outlined"
                 fullWidth={{ xs: true, sm: false }}
@@ -182,7 +193,7 @@ const DashboardPage = () => {
                   setModalOpen(true);
                 }}
                 sx={{
-                  height: { sm: "56px" },
+                  height: { sm: "40px" },
                   px: 3,
                   fontWeight: "bold",
                 }}
