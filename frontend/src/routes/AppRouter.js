@@ -4,7 +4,7 @@ import DashboardPage from "../features/dashboard/DashboardPage";
 import ProjectPage from "../features/pages/ProjectPage.js";
 import BoardPage from "../features/pages/BoardPage.js";
 import RegisterPage from "../features/pages/RegisterPage.js";
-import DeleteUserPage from "../features/pages/DeleteUserPage.js";
+import EditUserPage from "../features/pages/EditUserPage.js";
 
 const AppRouter = () => {
   return (
@@ -15,7 +15,7 @@ const AppRouter = () => {
         <Route path="/projects" element={<ProjectPage />} />
         <Route path="/boards" element={<BoardPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/delete-user" element={<DeleteUserPage />} />
+        <Route path="/edit-user" element={<EditUserPage />} />
       </Routes>
     </BrowserRouter>
   );

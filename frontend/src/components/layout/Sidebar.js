@@ -21,7 +21,7 @@ import {
   ExpandLess,
   ExpandMore,
   PersonAdd as CreateUserIcon,
-  PersonRemove as DeleteUserIcon,
+  ManageAccounts as EditUserIcon,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -34,7 +34,7 @@ const Sidebar = ({ open, onClose }) => {
   const [adminOpen, setAdminOpen] = useState(false);
 
   const isSubPageActive =
-    location.pathname === "/register" || location.pathname === "/delete-user";
+    location.pathname === "/register" || location.pathname === "/edit-user";
 
   useEffect(() => {
     if (isSubPageActive) {
@@ -214,22 +214,22 @@ const Sidebar = ({ open, onClose }) => {
             </ListItemButton>
 
             <ListItemButton
-              onClick={() => handleNavigate("/delete-user")}
-              sx={getButtonStyle("/delete-user")}
+              onClick={() => handleNavigate("/edit-user")}
+              sx={getButtonStyle("/edit-user")}
             >
               <ListItemIcon
                 sx={{
                   minWidth: "40px",
                   color:
-                    location.pathname === "/delete-user"
+                    location.pathname === "/edit-user"
                       ? theme.palette.primary.main
                       : "inherit",
                 }}
               >
-                <DeleteUserIcon fontSize="small" />
+                <EditUserIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText
-                primary="Delete User"
+                primary="Manage Users"
                 primaryTypographyProps={{ fontSize: "14px" }}
               />
             </ListItemButton>
