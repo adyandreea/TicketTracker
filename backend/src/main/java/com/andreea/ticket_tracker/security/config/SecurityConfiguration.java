@@ -43,6 +43,7 @@ public class SecurityConfiguration {
     private static final String BOARDS_ALL_ENDPOINTS = "/api/v1/boards/**";
     private static final String PROJECTS_ALL_ENDPOINTS = "/api/v1/projects/**";
     private static final String TICKETS_ALL_ENDPOINTS = "/api/v1/tickets/**";
+    private static final String USERS_MANAGEMENT_ENDPOINT = "/api/v1/auth/users/**";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -70,6 +71,9 @@ public class SecurityConfiguration {
 
                         .requestMatchers(HttpMethod.POST, REGISTER_ENDPOINT).hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, AUTHENTICATE_ENDPOINT).permitAll()
+                        .requestMatchers(HttpMethod.GET, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 );
