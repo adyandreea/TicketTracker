@@ -41,6 +41,8 @@ const EditUserPage = () => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
+  const [errors, setErrors] = useState({});
+
   const handleSidebarToggle = () => setSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {
@@ -66,13 +68,32 @@ const EditUserPage = () => {
   const handleCloseEdit = () => {
     setOpenEdit(false);
     setSelectedUser(null);
+    setErrors({});
+  };
+
+  const validate = () => {
+    let tempErrors = {};
+
+    if (!selectedUser?.firstname?.trim())
+      tempErrors.firstname = "First name is required";
+    if (!selectedUser?.lastname?.trim())
+      tempErrors.lastname = "Last name is required";
+    if (!selectedUser?.username?.trim())
+      tempErrors.username = "Username is required";
+    if (!selectedUser?.email?.trim()) tempErrors.email = "Email is required";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
   };
 
   const handleSaveEdit = async () => {
+    if (!validate()) return;
+
     try {
       const updated = await updateUser(selectedUser.id, selectedUser);
       setUsers(users.map((u) => (u.id === updated.id ? updated : u)));
       handleCloseEdit();
+      setErrors({});
     } catch (err) {
       alert("Failed to update user");
     }
@@ -95,7 +116,7 @@ const EditUserPage = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        bgcolor: "#f9f9f9",
+        bgcolor: "#f5f7fa",
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -108,6 +129,7 @@ const EditUserPage = () => {
           mb: 4,
           px: { xs: 2, sm: 3 },
           flexGrow: 1,
+          pt: { xs: "64px", sm: "70px" },
         }}
       >
         <Box sx={{ mb: { xs: 2, sm: 4 } }}>
@@ -125,11 +147,13 @@ const EditUserPage = () => {
         <TableContainer
           component={Paper}
           sx={{
-            borderRadius: "20px",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.05)",
+            borderRadius: "24px",
+            boxShadow: "0 12px 50px rgba(0,0,0,0.1)",
             overflowX: "auto",
             width: "100%",
             maxHeight: "70vh",
+            transition: "all 0.3s ease",
+            "&:hover": { boxShadow: "0 20px 60px rgba(0,0,0,0.15)" },
             "&::-webkit-scrollbar": { height: "6px" },
             "&::-webkit-scrollbar-thumb": {
               backgroundColor: "#ccc",
@@ -147,31 +171,31 @@ const EditUserPage = () => {
               stickyHeader
               aria-label="sticky table"
             >
-              <TableHead sx={{ bgcolor: "#ffffff" }}>
+              <TableHead sx={{ bgcolor: "#f3f4f6" }}>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 700, bgcolor: "#ffffff" }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
                     First Name
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 700, bgcolor: "#ffffff" }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
                     Last Name
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 700, bgcolor: "#ffffff" }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
                     Username
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 700, bgcolor: "#ffffff" }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
                     Email
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 700, bgcolor: "#ffffff" }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
                     Role
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: 700, bgcolor: "#ffffff" }}
+                    sx={{ fontWeight: 700, color: "#111827" }}
                     align="center"
                   >
                     Edit
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: 700, bgcolor: "#ffffff" }}
+                    sx={{ fontWeight: 700, color: "#111827" }}
                     align="center"
                   >
                     Delete
@@ -232,36 +256,54 @@ const EditUserPage = () => {
               <TextField
                 label="First Name"
                 value={selectedUser.firstname}
-                onChange={(e) =>
+                onChange={(e) => {
                   setSelectedUser({
                     ...selectedUser,
                     firstname: e.target.value,
-                  })
-                }
+                  });
+                  if (errors.firstname) setErrors({ ...errors, firstname: "" });
+                }}
+                error={!!errors.firstname}
+                helperText={errors.firstname}
                 fullWidth
               />
               <TextField
                 label="Last Name"
                 value={selectedUser.lastname}
-                onChange={(e) =>
-                  setSelectedUser({ ...selectedUser, lastname: e.target.value })
-                }
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    lastname: e.target.value,
+                  });
+                  if (errors.lastname) setErrors({ ...errors, lastname: "" });
+                }}
+                error={!!errors.lastname}
+                helperText={errors.lastname}
                 fullWidth
               />
               <TextField
                 label="Username"
                 value={selectedUser.username}
-                onChange={(e) =>
-                  setSelectedUser({ ...selectedUser, username: e.target.value })
-                }
+                onChange={(e) => {
+                  setSelectedUser({
+                    ...selectedUser,
+                    username: e.target.value,
+                  });
+                  if (errors.username) setErrors({ ...errors, username: "" });
+                }}
+                error={!!errors.username}
+                helperText={errors.username}
                 fullWidth
               />
               <TextField
                 label="Email"
                 value={selectedUser.email}
-                onChange={(e) =>
-                  setSelectedUser({ ...selectedUser, email: e.target.value })
-                }
+                onChange={(e) => {
+                  setSelectedUser({ ...selectedUser, email: e.target.value });
+                  if (errors.email) setErrors({ ...errors, email: "" });
+                }}
+                error={!!errors.email}
+                helperText={errors.email}
                 fullWidth
               />
               <FormControl fullWidth>
