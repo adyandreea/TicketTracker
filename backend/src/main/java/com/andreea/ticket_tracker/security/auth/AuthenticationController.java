@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class AuthenticationController {
     )
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
+            @Valid @RequestBody RegisterRequest request
     ){
         return ResponseEntity.ok(service.register(request));
     }
@@ -59,7 +60,7 @@ public class AuthenticationController {
     )
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+            @Valid @RequestBody AuthenticationRequest request
     ){
         return ResponseEntity.ok(service.authenticate(request));
     }
@@ -109,7 +110,7 @@ public class AuthenticationController {
     @PutMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Integer id,
-            @RequestBody UserRequestDTO request
+            @Valid @RequestBody UserRequestDTO request
     ) {
         return ResponseEntity.ok(service.updateUser(id, request));
     }

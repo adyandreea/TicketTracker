@@ -40,11 +40,31 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     let tempErrors = {};
-    if (!formData.firstname) tempErrors.firstname = "First name is required";
-    if (!formData.lastname) tempErrors.lastname = "Last name is required";
-    if (!formData.username) tempErrors.username = "Username is required";
-    if (!formData.email) tempErrors.email = "Email is required";
-    if (!formData.password) tempErrors.password = "Password is required";
+
+    if (!formData.firstname?.trim())
+      tempErrors.firstname = "First name is required";
+    if (!formData.lastname?.trim())
+      tempErrors.lastname = "Last name is required";
+
+    if (!formData.username?.trim()) {
+      tempErrors.username = "Username is required";
+    } else if (formData.username.trim().length < 3) {
+      tempErrors.username = "Username must be at least 3 characters long";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email?.trim()) {
+      tempErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      tempErrors.email =
+        "Please enter a valid email address (ex: user@example.com)";
+    }
+
+    if (!formData.password) {
+      tempErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      tempErrors.password = "Password must be at least 6 characters long";
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;

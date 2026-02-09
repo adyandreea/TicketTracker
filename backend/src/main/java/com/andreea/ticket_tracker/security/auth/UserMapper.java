@@ -1,13 +1,12 @@
 package com.andreea.ticket_tracker.security.auth;
 
-import com.andreea.ticket_tracker.security.auth.UserResponseDTO;
 import com.andreea.ticket_tracker.security.user.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public UserResponseDTO toDto(User user) {
+    public UserResponseDTO toDTO(User user) {
         if (user == null) return null;
 
         return UserResponseDTO.builder()

@@ -74,18 +74,31 @@ const EditUserPage = () => {
   const validate = () => {
     let tempErrors = {};
 
-    if (!selectedUser?.firstname?.trim())
+    if (!selectedUser?.firstname?.trim()) {
       tempErrors.firstname = "First name is required";
-    if (!selectedUser?.lastname?.trim())
+    }
+
+    if (!selectedUser?.lastname?.trim()) {
       tempErrors.lastname = "Last name is required";
-    if (!selectedUser?.username?.trim())
+    }
+
+    if (!selectedUser?.username?.trim()) {
       tempErrors.username = "Username is required";
-    if (!selectedUser?.email?.trim()) tempErrors.email = "Email is required";
+    } else if (selectedUser.username.trim().length < 3) {
+      tempErrors.username = "Username must be at least 3 characters long";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!selectedUser?.email?.trim()) {
+      tempErrors.email = "Email is required";
+    } else if (!emailRegex.test(selectedUser.email)) {
+      tempErrors.email =
+        "Please enter a valid email address (ex: user@example.com)";
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
-
   const handleSaveEdit = async () => {
     if (!validate()) return;
 

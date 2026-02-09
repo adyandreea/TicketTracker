@@ -58,7 +58,7 @@ public class AuthenticationService {
     public List<UserResponseDTO> getAllUsers() {
         return repository.findAll()
                 .stream()
-                .map(userMapper::toDto)
+                .map(userMapper::toDTO)
                 .toList();
     }
 
@@ -81,6 +81,6 @@ public class AuthenticationService {
 
         User updatedUser = repository.save(user);
 
-        return userMapper.toDto(updatedUser);
+        return userMapper.toDTO(updatedUser);
     }
 }
