@@ -31,12 +31,17 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
     <Card
       key={board.id}
       sx={{
-        borderRadius: 2,
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        borderRadius: 3,
+        boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
         bgcolor: "white",
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: "0 12px 36px rgba(0,0,0,0.18)",
+        },
       }}
     >
       <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>

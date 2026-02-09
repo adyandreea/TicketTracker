@@ -17,15 +17,21 @@ import {
 } from "../../api/ticketApi";
 
 const BoardCard = ({ selectedBoardId }) => {
-  const columns = ["To Do", "In Progress", "Done"];
+  const columns = ["To DO", "In Progress", "Done"];
   const statusMap = {
-    "To Do": "TODO",
+    "To DO": "TODO",
     "In Progress": "IN_PROGRESS",
     Done: "DONE",
   };
 
+  const columnColors = {
+    "To DO": "#1976d2",
+    "In Progress": "#ed6c02",
+    Done: "#2e7d32",
+  };
+
   const [tickets, setTickets] = useState({
-    "To Do": [],
+    "To DO": [],
     "In Progress": [],
     Done: [],
   });
@@ -35,14 +41,14 @@ const BoardCard = ({ selectedBoardId }) => {
 
   useEffect(() => {
     const reverseStatusMap = {
-      TODO: "To Do",
+      TODO: "To DO",
       IN_PROGRESS: "In Progress",
       DONE: "Done",
     };
 
     const fetchTickets = async () => {
       if (!selectedBoardId) {
-        setTickets({ "To Do": [], "In Progress": [], Done: [] });
+        setTickets({ "To DO": [], "In Progress": [], Done: [] });
         return;
       }
       setLoading(true);
@@ -50,7 +56,7 @@ const BoardCard = ({ selectedBoardId }) => {
 
       try {
         const data = await getTicketsByBoardId(selectedBoardId);
-        const groupedTickets = { "To Do": [], "In Progress": [], Done: [] };
+        const groupedTickets = { "To DO": [], "In Progress": [], Done: [] };
 
         data.forEach((ticket) => {
           const columnName = reverseStatusMap[ticket.status];
@@ -74,13 +80,13 @@ const BoardCard = ({ selectedBoardId }) => {
   const [editingText, setEditingText] = useState("");
 
   const [isAdding, setIsAdding] = useState({
-    "To Do": false,
+    "To DO": false,
     "In Progress": false,
     Done: false,
   });
 
   const [newCardText, setNewCardText] = useState({
-    "To Do": "",
+    "To DO": "",
     "In Progress": "",
     Done: "",
   });
@@ -251,9 +257,8 @@ const BoardCard = ({ selectedBoardId }) => {
     <Box
       sx={{
         display: "flex",
-        gap: 2,
+        gap: 3,
         flexGrow: 1,
-        overflowX: "auto",
         height: "100%",
       }}
     >
@@ -264,18 +269,32 @@ const BoardCard = ({ selectedBoardId }) => {
             minWidth: { xs: "280px", sm: "300px", md: "1fr" },
             flex: { xs: "0 0 auto", md: 1 },
             borderRadius: 2,
-            backgroundColor: "white",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
+            transition: "box-shadow 0.2s ease, transform 0.2s ease",
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
             overflow: "hidden",
           }}
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => handleDrop(col)}
         >
-          <Box sx={{ p: 2, borderBottom: "1px solid #f0f0f0" }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+          <Box
+            sx={{
+              p: 2,
+              borderColor: "#e5e7eb",
+              borderTop: `4px solid ${columnColors[col]}`,
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: "bold",
+                color: columnColors[col],
+              }}
+            >
               {col}
             </Typography>
           </Box>

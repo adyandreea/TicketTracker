@@ -121,12 +121,13 @@ const BoardsPage = () => {
       console.error("Submit board error:", error.message || error);
     }
   };
+
   return (
     <Box
       sx={{
         display: "flex",
-        height: "100vh",
-        backgroundColor: "#f0f0f0",
+        minHeight: "100vh",
+        backgroundColor: "#f5f7fa",
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -148,6 +149,8 @@ const BoardsPage = () => {
             p: { xs: 2, sm: 4 },
             width: "100%",
             boxSizing: "border-box",
+            pt: { xs: "64px", sm: "70px" },
+            mt: 3,
           }}
         >
           <Box
@@ -163,8 +166,12 @@ const BoardsPage = () => {
           >
             <Typography
               variant="h4"
-              fontWeight="bold"
-              sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}
+              sx={{
+                fontWeight: 800,
+                color: "#1a2027",
+                fontSize: { xs: "1.8rem", sm: "2.4rem" },
+                letterSpacing: "-0.5px",
+              }}
             >
               Boards
             </Typography>

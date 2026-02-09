@@ -81,7 +81,7 @@ const RegisterPage = () => {
   const handleSidebarToggle = () => setSidebarOpen(!isSidebarOpen);
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f5f5" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <Box
@@ -89,7 +89,6 @@ const RegisterPage = () => {
           flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
         }}
       >
         <Navbar onMenuClick={handleSidebarToggle} />
@@ -98,35 +97,46 @@ const RegisterPage = () => {
           sx={{
             flexGrow: 1,
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
-            p: 2,
+            alignItems: "flex-start",
+            p: { xs: 2, sm: 4 },
+            overflowY: "auto",
+            pt: { xs: "64px", sm: "70px" },
+            mt: 4,
           }}
         >
-          <Container maxWidth="sm">
-            <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 }, borderRadius: 2 }}>
+          <Container maxWidth="xs">
+            <Paper
+              elevation={4}
+              sx={{
+                p: { xs: 3, sm: 4 },
+                borderRadius: 3,
+                mt: { xs: 2, sm: 4 },
+                mb: 4,
+              }}
+            >
               <Typography
-                variant="h4"
+                variant="h5"
                 align="center"
-                gutterBottom
-                sx={{ fontWeight: "bold", mb: 3 }}
+                sx={{ fontWeight: 800, mb: 3, color: "primary.main" }}
               >
-                Create User Account
+                Create Account
               </Typography>
 
               {serverMessage.text && (
                 <Alert
                   severity={serverMessage.type}
-                  sx={{ mb: 3, width: "100%" }}
+                  sx={{ mb: 2, borderRadius: 2 }}
                 >
                   {serverMessage.text}
                 </Alert>
               )}
 
               <form onSubmit={handleSubmit} noValidate>
-                <Stack spacing={2}>
+                <Stack spacing={1.5}>
                   <TextField
                     fullWidth
+                    size="small"
                     label="First Name"
                     name="firstname"
                     value={formData.firstname}
@@ -136,6 +146,7 @@ const RegisterPage = () => {
                   />
                   <TextField
                     fullWidth
+                    size="small"
                     label="Last Name"
                     name="lastname"
                     value={formData.lastname}
@@ -145,6 +156,7 @@ const RegisterPage = () => {
                   />
                   <TextField
                     fullWidth
+                    size="small"
                     label="Username"
                     name="username"
                     value={formData.username}
@@ -154,6 +166,7 @@ const RegisterPage = () => {
                   />
                   <TextField
                     fullWidth
+                    size="small"
                     label="Email"
                     name="email"
                     type="email"
@@ -164,6 +177,7 @@ const RegisterPage = () => {
                   />
                   <TextField
                     fullWidth
+                    size="small"
                     label="Password"
                     name="password"
                     type="password"
@@ -174,14 +188,15 @@ const RegisterPage = () => {
                   />
                   <TextField
                     fullWidth
+                    size="small"
                     select
                     name="role"
                     label="User Role"
                     value={formData.role}
                     onChange={handleChange}
                   >
-                    <MenuItem value="USER">User</MenuItem>
-                    <MenuItem value="MANAGER">Manager</MenuItem>
+                    <MenuItem value="USER">USER</MenuItem>
+                    <MenuItem value="MANAGER">MANAGER</MenuItem>
                   </TextField>
 
                   <Button
@@ -189,7 +204,14 @@ const RegisterPage = () => {
                     variant="contained"
                     type="submit"
                     size="large"
-                    sx={{ py: 1.5, fontWeight: "bold", mt: 1 }}
+                    sx={{
+                      py: 1.2,
+                      fontWeight: "bold",
+                      mt: 1,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      fontSize: "1rem",
+                    }}
                   >
                     Create Account
                   </Button>
