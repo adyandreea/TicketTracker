@@ -5,6 +5,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
 import ProjectModal from "../../components/project/ProjectModal";
 import ProjectCard from "../../components/project/ProjectCard";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import {
   getProjects,
   createProject,
@@ -14,6 +15,7 @@ import {
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const [newProjectName, setNewProjectName] = useState("");
@@ -38,6 +40,10 @@ const ProjectsPage = () => {
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleProfileClick = () => {
+    setProfileSidebarOpen(!isProfileSidebarOpen);
   };
 
   const handleCloseModal = () => {
@@ -125,6 +131,11 @@ const ProjectsPage = () => {
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
 
       <Box
         component="main"
@@ -136,7 +147,10 @@ const ProjectsPage = () => {
           minWidth: 0,
         }}
       >
-        <Navbar onMenuClick={handleSidebarToggle} />
+        <Navbar
+          onMenuClick={handleSidebarToggle}
+          onProfileClick={handleProfileClick}
+        />
 
         <Box
           sx={{

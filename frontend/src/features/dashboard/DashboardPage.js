@@ -14,9 +14,11 @@ import DashboardBoard from "./DashboardBoard";
 import Button from "@mui/material/Button";
 import { getProjects } from "../../api/projectApi";
 import { getBoardsByProjectId } from "../../api/boardApi";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
 
 const DashboardPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
   const [loadingProject, setLoadingProject] = useState(true);
@@ -30,6 +32,10 @@ const DashboardPage = () => {
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleProfileClick = () => {
+    setProfileSidebarOpen(!isProfileSidebarOpen);
   };
 
   const handleCloseModal = () => {
@@ -101,6 +107,11 @@ const DashboardPage = () => {
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
+
       <Box
         component="main"
         sx={{
@@ -112,7 +123,10 @@ const DashboardPage = () => {
           overflow: "hidden",
         }}
       >
-        <Navbar onMenuClick={handleSidebarToggle} />
+        <Navbar
+          onMenuClick={handleSidebarToggle}
+          onProfileClick={handleProfileClick}
+        />
 
         <Box
           sx={{

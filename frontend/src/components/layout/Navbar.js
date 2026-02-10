@@ -10,7 +10,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 
-const Navbar = ({ onMenuClick }) => {
+const Navbar = ({ onMenuClick, onProfileClick }) => {
   return (
     <AppBar
       position="fixed"
@@ -87,10 +87,12 @@ const Navbar = ({ onMenuClick }) => {
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
+            edge="start"
+            color="inherit"
+            onClick={onProfileClick}
             sx={{
-              p: 0.5,
-              border: "2px solid transparent",
-              "&:hover": { color: "primary.main" },
+              mr: 1,
+              "&:hover": { bgcolor: "rgba(0,0,0,0.04)" },
             }}
           >
             <AccountCircleIcon sx={{ fontSize: 32, color: "white" }} />

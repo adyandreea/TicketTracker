@@ -13,9 +13,11 @@ import {
   Alert,
 } from "@mui/material";
 import { register } from "../../api/registerApi";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
 
 const RegisterPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [serverMessage, setServerMessage] = useState({ type: "", text: "" });
   const [errors, setErrors] = useState({});
 
@@ -99,10 +101,16 @@ const RegisterPage = () => {
   };
 
   const handleSidebarToggle = () => setSidebarOpen(!isSidebarOpen);
+  const handleProfileClick = () => setProfileSidebarOpen(!isProfileSidebarOpen);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
 
       <Box
         sx={{
@@ -111,7 +119,10 @@ const RegisterPage = () => {
           flexDirection: "column",
         }}
       >
-        <Navbar onMenuClick={handleSidebarToggle} />
+        <Navbar
+          onMenuClick={handleSidebarToggle}
+          onProfileClick={handleProfileClick}
+        />
 
         <Box
           sx={{

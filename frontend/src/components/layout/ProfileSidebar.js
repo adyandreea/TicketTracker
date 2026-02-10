@@ -1,0 +1,195 @@
+import { useState } from "react";
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Divider,
+  Box,
+  Switch,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import {
+  Person as PersonIcon,
+  Language as LanguageIcon,
+  DarkMode as DarkModeIcon,
+  LightMode as LightModeIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
+
+const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [language, setLanguage] = useState("EN");
+
+  const handleLanguageChange = (event) => {
+    setLanguage(event.target.value);
+  };
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    if (isMobile) onClose();
+  };
+
+  const getButtonStyle = (path) => {
+    const isActive = location.pathname === path;
+    return {
+      mb: 1,
+      borderRadius: "12px",
+      backgroundColor: isActive ? "rgba(25, 118, 210, 0.08)" : "transparent",
+      color: isActive ? theme.palette.primary.main : "text.primary",
+      "&:hover": {
+        backgroundColor: "rgba(0, 0, 0, 0.04)",
+        transform: "translateX(-5px)",
+      },
+      transition: "all 0.2s ease",
+    };
+  };
+
+  return (
+    <Drawer
+      anchor="right"
+      variant="temporary"
+      open={open}
+      onClose={onClose}
+      sx={{
+        "& .MuiDrawer-paper": {
+          width: { xs: "85%", sm: "340px" },
+          height: isMobile ? "100vh" : "auto",
+          maxHeight: isMobile ? "100vh" : "90vh",
+          top: isMobile ? 0 : "5vh",
+          right: isMobile ? 0 : "20px",
+          borderRadius: isMobile ? 0 : "24px",
+          bgcolor: "background.paper",
+          boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+          border: "none",
+          p: 1,
+          mt: isMobile ? 0 : 2.5,
+        },
+      }}
+    >
+      <Toolbar
+        sx={{
+          mt: 2,
+          mb: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: 60,
+            height: 60,
+            bgcolor: "primary.main",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mb: 1,
+            color: "white",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+          }}
+        >
+          UP
+        </Box>
+        <Typography variant="h6" sx={{ fontWeight: 800 }}>
+          User Profile
+        </Typography>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          user@example.com
+        </Typography>
+      </Toolbar>
+
+      <Divider sx={{ mx: 2, my: 2 }} />
+
+      <List sx={{ px: 1 }}>
+        <ListItemButton
+          onClick={() => handleNavigate("/profile")}
+          sx={getButtonStyle("/profile")}
+        >
+          <ListItemIcon sx={{ minWidth: 40 }}>
+            <PersonIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Account Settings" />
+        </ListItemButton>
+
+        <Box
+          sx={{
+            px: 2,
+            py: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              {isDarkMode ? (
+                <LightModeIcon sx={{ color: "#ffb300" }} />
+              ) : (
+                <DarkModeIcon />
+              )}
+            </ListItemIcon>
+            <Typography variant="body1">Dark Mode</Typography>
+          </Box>
+          <Switch checked={isDarkMode} onChange={toggleDarkMode} size="small" />
+        </Box>
+
+        <Box sx={{ px: 2, py: 2 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="language-select-label">Language</InputLabel>
+            <Select
+              labelId="language-select-label"
+              value={language}
+              label="Language"
+              onChange={handleLanguageChange}
+              startAdornment={
+                <LanguageIcon
+                  sx={{ mr: 1, color: "action.active", fontSize: 20 }}
+                />
+              }
+              sx={{ borderRadius: "10px" }}
+            >
+              <MenuItem value="EN">English</MenuItem>
+              <MenuItem value="RO">Romanian</MenuItem>
+              <MenuItem value="FR">French</MenuItem>
+              <MenuItem value="RU">Russian</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Divider sx={{ my: 2, mx: 2 }} />
+
+        <ListItemButton
+          onClick={() => navigate("/logout")}
+          sx={{
+            borderRadius: "12px",
+            color: "error.main",
+            "&:hover": { bgcolor: "error.lighter" },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 40 }}>
+            <LogoutIcon color="error" fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Sign Out" />
+        </ListItemButton>
+      </List>
+    </Drawer>
+  );
+};
+
+export default ProfileSidebar;

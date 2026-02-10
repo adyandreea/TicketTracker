@@ -29,9 +29,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { getAllUsers, deleteUser, updateUser } from "../../api/editUserApi";
 import ConfirmationDialog from "../../components/common/ConfirmationDialog";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
 
 const EditUserPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +46,7 @@ const EditUserPage = () => {
   const [errors, setErrors] = useState({});
 
   const handleSidebarToggle = () => setSidebarOpen(!isSidebarOpen);
+  const handleProfileClick = () => setProfileSidebarOpen(!isProfileSidebarOpen);
 
   useEffect(() => {
     fetchUsers();
@@ -133,7 +136,16 @@ const EditUserPage = () => {
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <Navbar onMenuClick={handleSidebarToggle} />
+
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
+
+      <Navbar
+        onMenuClick={handleSidebarToggle}
+        onProfileClick={handleProfileClick}
+      />
 
       <Container
         maxWidth="lg"
