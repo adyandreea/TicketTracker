@@ -70,10 +70,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, TICKETS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name(),Role.MANAGER.name())
 
                         .requestMatchers(HttpMethod.POST, REGISTER_ENDPOINT).hasAnyAuthority(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.POST, AUTHENTICATE_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.GET, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, AUTHENTICATE_ENDPOINT).permitAll()
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 );
