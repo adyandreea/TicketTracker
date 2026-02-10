@@ -1,4 +1,4 @@
-package com.andreea.ticket_tracker.security.auth;
+package com.andreea.ticket_tracker.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

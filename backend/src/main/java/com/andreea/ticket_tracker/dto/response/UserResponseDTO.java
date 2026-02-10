@@ -1,4 +1,4 @@
-package com.andreea.ticket_tracker.security.auth;
+package com.andreea.ticket_tracker.dto.response;
 
 import com.andreea.ticket_tracker.security.user.Role;
 import jakarta.validation.constraints.Email;

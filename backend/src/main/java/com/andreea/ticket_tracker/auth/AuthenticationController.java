@@ -1,7 +1,9 @@
-package com.andreea.ticket_tracker.security.auth;
+package com.andreea.ticket_tracker.auth;
 
+import com.andreea.ticket_tracker.dto.request.UserRequestDTO;
 import com.andreea.ticket_tracker.dto.response.ErrorDTO;
 import com.andreea.ticket_tracker.dto.response.SuccessDTO;
+import com.andreea.ticket_tracker.dto.response.UserResponseDTO;
 import com.andreea.ticket_tracker.swagger.SwaggerHttpStatus;
 import com.andreea.ticket_tracker.swagger.SwaggerMessages;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,7 +69,7 @@ public class AuthenticationController {
 
     @Operation(summary = "Returns all users.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = "Users successfully retrieved",
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_USERS,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = UserResponseDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
@@ -81,8 +83,8 @@ public class AuthenticationController {
 
     @Operation(summary = "Deletes a user by ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User successfully deleted"),
-            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = "User not found",
+            @ApiResponse(responseCode = SwaggerHttpStatus.NO_CONTENT, description = SwaggerMessages.USER_SUCCESSFULLY_DELETED),
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
@@ -97,10 +99,10 @@ public class AuthenticationController {
 
     @Operation(summary = "Updates an existing user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = "User successfully updated",
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.USER_SUCCESSFULLY_UPDATED,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = UserResponseDTO.class))}),
-            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = "Invalid user data",
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorDTO.class))}),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
