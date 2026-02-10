@@ -53,7 +53,7 @@ const TicketCard = ({
           p: 1,
           mb: 1,
           borderRadius: 2,
-          backgroundColor: "#E8E8E8",
+          backgroundColor: "#f1f3f5",
           boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
           display: "flex",
           alignItems: "center",
@@ -99,8 +99,9 @@ const TicketCard = ({
         p: { xs: 1.5, md: 1 },
         mb: 1.5,
         borderRadius: 2,
-        backgroundColor: "#f9f9f9",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        backgroundColor: "#ffffff",
+        border: "1px solid #e5e7eb",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -113,7 +114,7 @@ const TicketCard = ({
         {ticket.title}
       </Typography>
       <IconButton size={isMobile ? "medium" : "small"} onClick={onEditStart}>
-        <EditIcon fontSize="small" />
+        <EditIcon fontSize="small" color="primary" />
       </IconButton>
     </Paper>
   );

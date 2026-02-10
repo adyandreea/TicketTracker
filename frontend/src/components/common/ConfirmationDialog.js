@@ -32,18 +32,17 @@ const ConfirmationDialog = ({
       <DialogActions
         sx={{ px: 3, pb: 2, justifyContent: { xs: "center", sm: "flex-end" } }}
       >
-        <Button 
-          onClick={buttonOneHandle} 
-          variant="outlined" 
-          color="inherit"
+        <Button
+          onClick={buttonOneHandle}
+          color="primary"
           sx={{ minWidth: 100 }}
         >
           {buttonOneText}
         </Button>
-        <Button 
-          onClick={buttonTwoHandle} 
-          variant="contained" 
-          color="error" 
+        <Button
+          onClick={buttonTwoHandle}
+          variant="contained"
+          color="error"
           autoFocus
           sx={{ minWidth: 100 }}
         >

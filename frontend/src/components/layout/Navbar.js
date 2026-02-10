@@ -1,55 +1,99 @@
-import { AppBar, Toolbar, Box, IconButton, TextField } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Navbar = ({ onMenuClick }) => {
   return (
     <AppBar
-      position="static"
+      position="fixed"
       elevation={0}
       sx={{
-        bgcolor: "#DCDCDC",
-        color: "black",
-        mt: 0,
+        bgcolor: "secondary",
+        backdropFilter: "blur(10px)",
         width: "100%",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+        zIndex: (theme) => theme.zIndex.drawer - 1,
       }}
     >
       <Toolbar
-        sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 2,
+          px: { xs: 1, sm: 3 },
+        }}
       >
-        <IconButton edge="start" color="inherit" onClick={onMenuClick}>
-          <MenuIcon />
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={onMenuClick}
+          sx={{
+            mr: 1,
+            "&:hover": { bgcolor: "rgba(0,0,0,0.04)" },
+          }}
+        >
+          <MenuIcon sx={{ color: "white" }} />
         </IconButton>
 
         <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
           <TextField
             size="small"
-            placeholder="Search"
+            placeholder="Search tasks, projects..."
             variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" sx={{ color: "gray" }} />
+                </InputAdornment>
+              ),
+            }}
             sx={{
-              bgcolor: "#DCDCDC",
-              borderRadius: 2,
-              width: { xs: "100%", sm: "80%", md: 600 },
-              maxWidth: "900px",
+              width: { xs: "100%", sm: "80%", md: 500 },
+              maxWidth: "700px",
               "& .MuiOutlinedInput-root": {
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                bgcolor: "#f5f7fa",
+                borderRadius: "12px",
+                transition: "all 0.3s ease",
                 "& fieldset": {
-                  borderColor: "white",
-                  borderWidth: 1,
+                  borderColor: "transparent",
+                },
+                "&:hover": {
+                  bgcolor: "#eeeeee",
                 },
                 "&:hover fieldset": {
-                  borderColor: "white",
+                  borderColor: "transparent",
                 },
-                "&.Mui-focused fieldset": {
-                  borderColor: "white",
+                "&.Mui-focused": {
+                  bgcolor: "#fff",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                  "& fieldset": {
+                    borderColor: "primary.main",
+                    borderWidth: "1px",
+                  },
                 },
               },
             }}
           />
         </Box>
+
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton>
-            <AccountCircleIcon />
+          <IconButton
+            sx={{
+              p: 0.5,
+              border: "2px solid transparent",
+              "&:hover": { color: "primary.main" },
+            }}
+          >
+            <AccountCircleIcon sx={{ fontSize: 32, color: "white" }} />
           </IconButton>
         </Box>
       </Toolbar>

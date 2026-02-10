@@ -101,4 +101,19 @@ public class SwaggerMessages {
      */
     public static final String USER_SUCCESSFULLY_AUTHENTICATED = "User authenticated successfully";
 
+    /**
+     * Message when user was successfully updated.
+     */
+    public static final String USER_SUCCESSFULLY_UPDATED = "User updated successfully";
+
+    /**
+     * Message when user was successfully deleted.
+     */
+    public static final String USER_SUCCESSFULLY_DELETED = "User deleted successfully";
+
+    /**
+     * Message when all the users were returned.
+     */
+    public static final String RETURN_USERS = "Returns all the users.";
+
 }

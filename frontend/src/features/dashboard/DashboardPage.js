@@ -17,11 +17,6 @@ import { getBoardsByProjectId } from "../../api/boardApi";
 
 const DashboardPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-  const handleSidebarToggle = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
   const [loadingProject, setLoadingProject] = useState(true);
@@ -33,20 +28,44 @@ const DashboardPage = () => {
   const [loadingBoard, setLoadingBoard] = useState(false);
   const [errorBoard, setErrorBoard] = useState(null);
 
+  const handleSidebarToggle = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoadingProject(true);
+        const data = await getProjects();
+        setProjects(data);
+        if (data && data.length > 0) {
+          setSelectedProjectId(data[0].id);
+        }
+      } catch (err) {
+        console.error("Error loading projects:", err);
+        setErrorProject("Could not load projects.");
+      } finally {
+        setLoadingProject(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
   useEffect(() => {
     const fetchBoards = async () => {
       if (!selectedProjectId) {
         setBoards([]);
         setSelectedBoardId("");
-        setLoadingBoard(false);
         return;
       }
-
       try {
         setLoadingBoard(true);
         const data = await getBoardsByProjectId(selectedProjectId);
         setBoards(data);
-
         if (data && data.length > 0) {
           setSelectedBoardId(data[0].id);
         } else {
@@ -60,34 +79,8 @@ const DashboardPage = () => {
         setLoadingBoard(false);
       }
     };
-
     fetchBoards();
   }, [selectedProjectId]);
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        setLoadingProject(true);
-        const data = await getProjects();
-        setProjects(data);
-
-        if (data && data.length > 0) {
-          setSelectedProjectId(data[0].id);
-        }
-      } catch (err) {
-        console.error("Error loading projects:", err);
-        setErrorProject("Could not load projects.");
-      } finally {
-        setLoadingProject(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
 
   const handleProjectChange = (event) => {
     setSelectedProjectId(event.target.value);
@@ -95,15 +88,15 @@ const DashboardPage = () => {
 
   const handleBoardChange = (event) => {
     setSelectedBoardId(event.target.value);
+    handleCloseModal();
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        height: "100vh",
-        backgroundColor: "#f0f0f0",
-        overflow: "hidden",
+        minHeight: "100vh",
+        backgroundColor: "#f5f7fa",
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -112,11 +105,11 @@ const DashboardPage = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          width: { xs: "100%", md: "calc(100% - 240px)" },
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
           height: "100vh",
+          overflow: "hidden",
         }}
       >
         <Navbar onMenuClick={handleSidebarToggle} />
@@ -124,36 +117,32 @@ const DashboardPage = () => {
         <Box
           sx={{
             p: { xs: 2, md: 3 },
-            flexGrow: 1,
-            overflow: "hidden",
             display: "flex",
             flexDirection: "column",
+            flexGrow: 1,
+            mt: { xs: "64px", sm: "70px" },
+            overflow: "hidden",
           }}
         >
-          <Box
-            sx={{
-              mb: 2,
-              flexShrink: 0,
-            }}
-          >
+          <Box sx={{ mb: 2, flexShrink: 0 }}>
             {!loadingProject && !errorProject && (
               <FormControl
-                variant="filled"
+                variant="outlined"
+                size="small"
                 sx={{
                   minWidth: { xs: "100%", sm: 250 },
                   bgcolor: "white",
-                  borderRadius: 1,
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                  },
                 }}
               >
                 <Select
                   value={selectedProjectId}
                   onChange={handleProjectChange}
-                  sx={{
-                    "& .MuiSelect-select": {
-                      py: "12px",
-                      fontWeight: "bold",
-                    },
-                  }}
+                  sx={{ fontWeight: "bold" }}
                 >
                   {projects.map((project) => (
                     <MenuItem key={project.id} value={project.id}>
@@ -170,6 +159,7 @@ const DashboardPage = () => {
               flexGrow: 1,
               minHeight: 0,
               display: "flex",
+              borderRadius: 3,
             }}
           >
             <DashboardBoard selectedBoardId={selectedBoardId} />
@@ -178,8 +168,8 @@ const DashboardPage = () => {
           {!loadingBoard && !errorBoard && (
             <Box
               sx={{
-                mt: 4,
-                pb: 2,
+                mt: 2,
+                py: 0,
                 flexShrink: 0,
                 display: "flex",
                 justifyContent: "center",
@@ -187,61 +177,54 @@ const DashboardPage = () => {
             >
               <Button
                 variant="outlined"
-                fullWidth={{ xs: true, sm: false }}
-                color="primary"
-                onClick={() => {
-                  setModalOpen(true);
-                }}
+                onClick={() => setModalOpen(true)}
                 sx={{
-                  height: { sm: "40px" },
                   px: 3,
-                  fontWeight: "bold",
+                  borderRadius: "10px",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  color: "primary.main",
+                  borderColor: "primary.main",
+                  bgcolor: "white",
+
+                  "&:hover": {
+                    bgcolor: "primary.main",
+                    color: "white",
+                  },
                 }}
               >
-                Switch boards
+                Switch Board
               </Button>
-              <Dialog
-                open={isModalOpen}
-                onClose={handleCloseModal}
-                fullWidth
-                maxWidth="xs"
-              >
-                <DialogTitle>Choose one board</DialogTitle>
-                <DialogContent>
-                  <FormControl
-                    variant="filled"
-                    sx={{
-                      m: 1,
-                      minWidth: 250,
-                      bgcolor: "white",
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Select
-                      value={selectedBoardId}
-                      onChange={handleBoardChange}
-                      sx={{
-                        "& .MuiSelect-select": {
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          fontWeight: "bold",
-                        },
-                      }}
-                    >
-                      {boards &&
-                        boards.map((board) => (
-                          <MenuItem key={board.id} value={board.id}>
-                            {board.name}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </DialogContent>
-              </Dialog>
             </Box>
           )}
         </Box>
       </Box>
+
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{ sx: { borderRadius: 3 } }}
+      >
+        <DialogTitle sx={{ fontWeight: "bold" }}>Select a Board</DialogTitle>
+        <DialogContent sx={{ pb: 3 }}>
+          <FormControl fullWidth sx={{ mt: 1 }}>
+            <Select
+              value={selectedBoardId}
+              onChange={handleBoardChange}
+              displayEmpty
+              sx={{ borderRadius: 2 }}
+            >
+              {boards?.map((board) => (
+                <MenuItem key={board.id} value={board.id}>
+                  {board.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
