@@ -11,11 +11,11 @@ public class ProjectResponseDTO {
 
     private Long id;
 
-    @NotBlank(message = "name_is_required")
+    @NotBlank(message = "name_required")
     @Size(max = 64, min = 1, message = "name_length_invalid")
     private String name;
 
-    @Size(max = 255, message = "Description too long")
+    @Size(max = 255, message = "description_too_long")
     private String description;
 
     @Size(min = 0, message = "board_count_invalid")

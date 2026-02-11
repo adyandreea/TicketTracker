@@ -15,16 +15,16 @@ import java.util.List;
 @Table(name="boards")
 public class Board extends BaseEntity {
 
-    @NotBlank(message = "name_is_required")
+    @NotBlank(message = "name_required")
     @Size(max = 64, min = 1, message = "name_length_invalid")
     private String name;
 
-    @Size(max = 255, message = "Description too long")
+    @Size(max = 255, message = "description_too_long")
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @NotNull(message = "ProjectId cannot be null")
+    @NotNull(message = "project_id_required")
     private Project project;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)

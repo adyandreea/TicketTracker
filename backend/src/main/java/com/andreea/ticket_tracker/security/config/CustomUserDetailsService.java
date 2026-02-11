@@ -1,7 +1,7 @@
 package com.andreea.ticket_tracker.security.config;
 
-import com.andreea.ticket_tracker.security.user.User;
-import com.andreea.ticket_tracker.security.user.UserRepository;
+import com.andreea.ticket_tracker.entity.User;
+import com.andreea.ticket_tracker.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

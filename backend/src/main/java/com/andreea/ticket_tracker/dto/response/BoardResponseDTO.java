@@ -12,17 +12,17 @@ public class BoardResponseDTO {
 
     private Long id;
 
-    @NotBlank(message = "name_is_required")
+    @NotBlank(message = "name_required")
     @Size(max = 64, min = 1, message = "name_length_invalid")
     private String name;
 
-    @Size(max = 255, message = "Description too long")
+    @Size(max = 255, message = "description_too_long")
     private String description;
 
-    @NotNull(message = "ProjectId cannot be null")
+    @NotNull(message = "project_id_required")
     private Long projectId;
 
-    @NotBlank(message = "project_name_is_required")
+    @NotBlank(message = "project_name_required")
     private String projectName;
 
     @Size(min = 0, message = "board_count_invalid")

@@ -1,7 +1,7 @@
 package com.andreea.ticket_tracker.mapper;
 
 import com.andreea.ticket_tracker.dto.response.UserResponseDTO;
-import com.andreea.ticket_tracker.security.user.User;
+import com.andreea.ticket_tracker.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component

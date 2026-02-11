@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationRequest {
 
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank(message = "username_required")
     private String username;
 
-    @NotBlank(message = "Password cannot be empty")
+    @NotBlank(message = "password_required")
     private String password;
 }
