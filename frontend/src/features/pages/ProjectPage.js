@@ -5,15 +5,18 @@ import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
 import ProjectModal from "../../components/project/ProjectModal";
 import ProjectCard from "../../components/project/ProjectCard";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import {
   getProjects,
   createProject,
   updateProject,
 } from "../../api/projectApi";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const [newProjectName, setNewProjectName] = useState("");
@@ -22,6 +25,7 @@ const ProjectsPage = () => {
   const [newProjectDescription, setNewProjectDescription] = useState("");
 
   const [errors, setErrors] = useState({ name: "" });
+  const { translate } = useLanguage();
 
   const fetchProjects = async () => {
     try {
@@ -38,6 +42,10 @@ const ProjectsPage = () => {
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleProfileClick = () => {
+    setProfileSidebarOpen(!isProfileSidebarOpen);
   };
 
   const handleCloseModal = () => {
@@ -103,7 +111,7 @@ const ProjectsPage = () => {
 
   const handleSubmit = () => {
     if (newProjectName.trim() === "") {
-      setErrors({ name: "Project name is required" });
+      setErrors({ name: translate("project_name_required") });
       return;
     }
 
@@ -126,6 +134,11 @@ const ProjectsPage = () => {
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
+
       <Box
         component="main"
         sx={{
@@ -136,7 +149,10 @@ const ProjectsPage = () => {
           minWidth: 0,
         }}
       >
-        <Navbar onMenuClick={handleSidebarToggle} />
+        <Navbar
+          onMenuClick={handleSidebarToggle}
+          onProfileClick={handleProfileClick}
+        />
 
         <Box
           sx={{
@@ -167,7 +183,7 @@ const ProjectsPage = () => {
                 letterSpacing: "-0.5px",
               }}
             >
-              Projects
+              {translate("project_title")}
             </Typography>
             <Button
               variant="contained"
@@ -180,7 +196,7 @@ const ProjectsPage = () => {
                 setNewProjectName("");
               }}
             >
-              Create project
+              {translate("create_project_button")}
             </Button>
           </Box>
           <Box

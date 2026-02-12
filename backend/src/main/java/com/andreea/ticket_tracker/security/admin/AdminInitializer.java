@@ -1,13 +1,13 @@
 package com.andreea.ticket_tracker.security.admin;
 
-import com.andreea.ticket_tracker.security.user.User;
-import com.andreea.ticket_tracker.security.user.UserRepository;
+import com.andreea.ticket_tracker.entity.User;
+import com.andreea.ticket_tracker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static com.andreea.ticket_tracker.security.user.Role.ADMIN;
+import static com.andreea.ticket_tracker.entity.Role.ADMIN;
 
 @Slf4j
 @Component

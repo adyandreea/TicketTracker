@@ -7,12 +7,15 @@ import { getBoards, createBoard, updateBoard } from "../../api/boardApi";
 import { getProjects } from "../../api/projectApi";
 import BoardModal from "../../components/board/BoardModal";
 import BoardCard from "../../components/board/BoardCard";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
   const [projectsData, setProjectsData] = useState([]);
 
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const [boardName, setBoardName] = useState("");
@@ -21,6 +24,7 @@ const BoardsPage = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingBoard, setEditingBoard] = useState(null);
+  const { translate } = useLanguage();
 
   const [errors, setErrors] = useState({ name: "", projectId: "" });
 
@@ -55,6 +59,10 @@ const BoardsPage = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const handleProfileClick = () => {
+    setProfileSidebarOpen(!isProfileSidebarOpen);
+  };
+
   const handleCloseModal = () => {
     setModalOpen(false);
     setIsEditing(false);
@@ -79,11 +87,11 @@ const BoardsPage = () => {
     const validation = { name: "", projectId: "" };
 
     if (boardName.trim() === "") {
-      validation.name = "Board name is required";
+      validation.name = translate("board_name_required");
     }
 
     if (!selectedProjectId) {
-      validation.projectId = "Project selection is required";
+      validation.projectId = translate("project_selection_required");
     }
 
     setErrors(validation);
@@ -131,6 +139,10 @@ const BoardsPage = () => {
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
 
       <Box
         component="main"
@@ -142,7 +154,10 @@ const BoardsPage = () => {
           minWidth: 0,
         }}
       >
-        <Navbar onMenuClick={handleSidebarToggle} />
+        <Navbar
+          onMenuClick={handleSidebarToggle}
+          onProfileClick={handleProfileClick}
+        />
 
         <Box
           sx={{
@@ -173,7 +188,7 @@ const BoardsPage = () => {
                 letterSpacing: "-0.5px",
               }}
             >
-              Boards
+              {translate("board_title")}
             </Typography>
             <Button
               variant="contained"
@@ -185,7 +200,7 @@ const BoardsPage = () => {
                 setIsEditing(false);
               }}
             >
-              Create board
+              {translate("create_board_button")}
             </Button>
           </Box>
           <Box

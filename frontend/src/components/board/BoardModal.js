@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const BoardModal = ({
   open,
@@ -29,6 +30,7 @@ const BoardModal = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const { translate } = useLanguage();
   return (
     <Dialog
       open={open}
@@ -37,12 +39,14 @@ const BoardModal = ({
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle>{isEditing ? "Edit Board" : "Create New Board"}</DialogTitle>
+      <DialogTitle>
+        {isEditing ? translate("edit_board") : translate("create_new_board")}
+      </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          label="Board Name"
+          label={translate("board_name_label")}
           type="text"
           fullWidth
           variant="outlined"
@@ -55,7 +59,7 @@ const BoardModal = ({
 
         <TextField
           margin="dense"
-          label="Description"
+          label={translate("board_description_label")}
           type="text"
           fullWidth
           multiline
@@ -70,7 +74,7 @@ const BoardModal = ({
           <Select
             labelId="project-select-label"
             value={selectedProjectId}
-            label="Project"
+            label={translate("board_project_label")}
             error={errors.projectId !== ""}
             onChange={(e) => setSelectedProjectId(e.target.value)}
           >
@@ -84,10 +88,12 @@ const BoardModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
-          Cancel
+          {translate("cancel_button")}
         </Button>
         <Button onClick={onSubmit} color="primary" variant="contained">
-          {isEditing ? "Save changes" : "Create Board"}
+          {isEditing
+            ? translate("save_changes_button")
+            : translate("create_board_button")}
         </Button>
       </DialogActions>
     </Dialog>

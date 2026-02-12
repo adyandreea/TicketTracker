@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "app.admin")
 public class AdminProperties {
-
     private String email;
     private String username;
     private String password;

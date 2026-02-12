@@ -1,5 +1,6 @@
-package com.andreea.ticket_tracker.security.user;
+package com.andreea.ticket_tracker.repository;
 
+import com.andreea.ticket_tracker.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

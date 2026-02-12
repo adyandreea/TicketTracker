@@ -1,8 +1,8 @@
 package com.andreea.ticket_tracker.mapper;
 
 import com.andreea.ticket_tracker.dto.response.UserResponseDTO;
-import com.andreea.ticket_tracker.security.user.Role;
-import com.andreea.ticket_tracker.security.user.User;
+import com.andreea.ticket_tracker.entity.Role;
+import com.andreea.ticket_tracker.entity.User;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

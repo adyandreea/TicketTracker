@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const ProjectModal = ({
   open,
@@ -22,6 +23,8 @@ const ProjectModal = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const { translate } = useLanguage();
+
   return (
     <Dialog
       open={open}
@@ -31,13 +34,15 @@ const ProjectModal = ({
       maxWidth="sm"
     >
       <DialogTitle>
-        {isEditing ? "Edit Project" : "Create New Project"}
+        {isEditing
+          ? translate("edit_project")
+          : translate("create_new_project")}
       </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          label="Project Name"
+          label={translate("project_name_label")}
           type="text"
           fullWidth
           variant="outlined"
@@ -52,7 +57,7 @@ const ProjectModal = ({
 
         <TextField
           margin="dense"
-          label="Description"
+          label={translate("project_description_label")}
           type="text"
           fullWidth
           multiline
@@ -64,10 +69,12 @@ const ProjectModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
-          Cancel
+          {translate("cancel_button")}
         </Button>
         <Button onClick={onSubmit} color="primary" variant="contained">
-          {isEditing ? "Save changes" : "Create Project"}
+          {isEditing
+            ? translate("save_changes_button")
+            : translate("create_project_button")}
         </Button>
       </DialogActions>
     </Dialog>

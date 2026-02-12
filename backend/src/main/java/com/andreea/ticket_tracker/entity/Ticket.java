@@ -14,15 +14,15 @@ import lombok.Setter;
 @Table(name = "tickets")
 public class Ticket extends BaseEntity{
 
-    @NotBlank(message = "title_is_required")
+    @NotBlank(message = "title_required")
     @Size(max = 64, min = 1, message = "title_length_invalid")
     private String title;
 
-    @Size(max = 255, message = "Description too long")
+    @Size(max = 255, message = "description_too_long")
     private String description;
 
-    @NotNull(message = "Position cannot be null")
-    @Min(value = 0, message = "Position must be >= 0")
+    @NotNull(message = "position_required")
+    @Min(value = 0, message = "position_min_error")
     private Integer position;
 
     @Enumerated(EnumType.STRING)
@@ -30,6 +30,6 @@ public class Ticket extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name="board_id")
-    @NotNull(message = "BoardId cannot be null")
+    @NotNull(message = "board_id_required")
     private Board board;
 }

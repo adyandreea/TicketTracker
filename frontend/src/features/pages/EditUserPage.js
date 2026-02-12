@@ -29,9 +29,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { getAllUsers, deleteUser, updateUser } from "../../api/editUserApi";
 import ConfirmationDialog from "../../components/common/ConfirmationDialog";
+import ProfileSidebar from "../../components/layout/ProfileSidebar";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const EditUserPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +47,8 @@ const EditUserPage = () => {
   const [errors, setErrors] = useState({});
 
   const handleSidebarToggle = () => setSidebarOpen(!isSidebarOpen);
+  const handleProfileClick = () => setProfileSidebarOpen(!isProfileSidebarOpen);
+  const { translate } = useLanguage();
 
   useEffect(() => {
     fetchUsers();
@@ -75,25 +80,24 @@ const EditUserPage = () => {
     let tempErrors = {};
 
     if (!selectedUser?.firstname?.trim()) {
-      tempErrors.firstname = "First name is required";
+      tempErrors.firstname = translate("firstname_required");
     }
 
     if (!selectedUser?.lastname?.trim()) {
-      tempErrors.lastname = "Last name is required";
+      tempErrors.lastname = translate("lastname_required");
     }
 
     if (!selectedUser?.username?.trim()) {
-      tempErrors.username = "Username is required";
+      tempErrors.username = translate("username_required");
     } else if (selectedUser.username.trim().length < 3) {
-      tempErrors.username = "Username must be at least 3 characters long";
+      tempErrors.username = translate("username_length_invalid");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!selectedUser?.email?.trim()) {
-      tempErrors.email = "Email is required";
+      tempErrors.email = translate("email_required");
     } else if (!emailRegex.test(selectedUser.email)) {
-      tempErrors.email =
-        "Please enter a valid email address (ex: user@example.com)";
+      tempErrors.email = translate("email_invalid");
     }
 
     setErrors(tempErrors);
@@ -133,7 +137,16 @@ const EditUserPage = () => {
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <Navbar onMenuClick={handleSidebarToggle} />
+
+      <ProfileSidebar
+        open={isProfileSidebarOpen}
+        onClose={() => setProfileSidebarOpen(false)}
+      />
+
+      <Navbar
+        onMenuClick={handleSidebarToggle}
+        onProfileClick={handleProfileClick}
+      />
 
       <Container
         maxWidth="lg"
@@ -153,7 +166,7 @@ const EditUserPage = () => {
               fontSize: { xs: "1.5rem", sm: "2.125rem" },
             }}
           >
-            User Administration
+            {translate("user_administration_title")}
           </Typography>
         </Box>
 
@@ -187,31 +200,31 @@ const EditUserPage = () => {
               <TableHead sx={{ bgcolor: "#f3f4f6" }}>
                 <TableRow>
                   <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
-                    First Name
+                    {translate("firstname_label")}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
-                    Last Name
+                    {translate("lastname_label")}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
-                    Username
+                    {translate("username_label")}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
-                    Email
+                    {translate("email_label")}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700, color: "#111827" }}>
-                    Role
+                    {translate("user_role_label")}
                   </TableCell>
                   <TableCell
                     sx={{ fontWeight: 700, color: "#111827" }}
                     align="center"
                   >
-                    Edit
+                    {translate("edit_title_user")}
                   </TableCell>
                   <TableCell
                     sx={{ fontWeight: 700, color: "#111827" }}
                     align="center"
                   >
-                    Delete
+                    {translate("delete_title_user")}
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -267,7 +280,7 @@ const EditUserPage = () => {
               sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
             >
               <TextField
-                label="First Name"
+                label={translate("firstname_label")}
                 value={selectedUser.firstname}
                 onChange={(e) => {
                   setSelectedUser({
@@ -281,7 +294,7 @@ const EditUserPage = () => {
                 fullWidth
               />
               <TextField
-                label="Last Name"
+                label={translate("lastname_label")}
                 value={selectedUser.lastname}
                 onChange={(e) => {
                   setSelectedUser({
@@ -295,7 +308,7 @@ const EditUserPage = () => {
                 fullWidth
               />
               <TextField
-                label="Username"
+                label={translate("username_label")}
                 value={selectedUser.username}
                 onChange={(e) => {
                   setSelectedUser({
@@ -309,7 +322,7 @@ const EditUserPage = () => {
                 fullWidth
               />
               <TextField
-                label="Email"
+                label={translate("email_label")}
                 value={selectedUser.email}
                 onChange={(e) => {
                   setSelectedUser({ ...selectedUser, email: e.target.value });
@@ -323,7 +336,7 @@ const EditUserPage = () => {
                 <InputLabel>Role</InputLabel>
                 <Select
                   value={selectedUser.role}
-                  label="Role"
+                  label={"user_role_label"}
                   onChange={(e) =>
                     setSelectedUser({ ...selectedUser, role: e.target.value })
                   }
@@ -338,25 +351,25 @@ const EditUserPage = () => {
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
           <Button onClick={handleCloseEdit} color="inherit">
-            Cancel
+            {translate("cancel_button")}
           </Button>
           <Button
             onClick={handleSaveEdit}
             variant="contained"
             sx={{ borderRadius: "10px" }}
           >
-            Save Changes
+            {translate("save_changes_button")}
           </Button>
         </DialogActions>
       </Dialog>
 
       <ConfirmationDialog
-        title="Confirm User Deletion"
-        description={`Are you sure you want to delete user ${userToDelete?.username}?`}
+        title={translate("confirm_user_deletion_title")}
+        description={`${translate("confirm_user_deletion_message")} ${userToDelete?.username}?`}
         open={showConfirmationDialog}
         onClose={() => setShowConfirmationDialog(false)}
-        buttonOneText="Cancel"
-        buttonTwoText="Delete User"
+        buttonOneText={translate("cancel_button")}
+        buttonTwoText={translate("delete_user_button")}
         buttonOneHandle={() => setShowConfirmationDialog(false)}
         buttonTwoHandle={handleConfirmDelete}
       />
