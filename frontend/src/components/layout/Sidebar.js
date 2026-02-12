@@ -24,12 +24,14 @@ import {
   ManageAccounts as EditUserIcon,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const Sidebar = ({ open, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { translate } = useLanguage();
 
   const [adminOpen, setAdminOpen] = useState(false);
 
@@ -53,9 +55,17 @@ const Sidebar = ({ open, onClose }) => {
   };
 
   const mainMenuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "Projects", icon: <ProjectIcon />, path: "/projects" },
-    { text: "Boards", icon: <BoardIcon />, path: "/boards" },
+    {
+      text: translate("dashboard_sidebar"),
+      icon: <DashboardIcon />,
+      path: "/dashboard",
+    },
+    {
+      text: translate("projects_sidebar"),
+      icon: <ProjectIcon />,
+      path: "/projects",
+    },
+    { text: translate("boards_sidebar"), icon: <BoardIcon />, path: "/boards" },
   ];
 
   const getButtonStyle = (path) => {
@@ -99,10 +109,11 @@ const Sidebar = ({ open, onClose }) => {
             sx={{
               fontWeight: 800,
               color: theme.palette.primary.main,
+              textTransform: "uppercase",
               letterSpacing: 1,
             }}
           >
-            KANBAN
+            {translate("kanban_title_sidebar")}
           </Typography>
           <Typography
             variant="caption"
@@ -113,7 +124,7 @@ const Sidebar = ({ open, onClose }) => {
               letterSpacing: 0.5,
             }}
           >
-            Project Management
+            {translate("project_management_sidebar")}
           </Typography>
         </Box>
       </Toolbar>
@@ -181,7 +192,7 @@ const Sidebar = ({ open, onClose }) => {
             <AdminIcon />
           </ListItemIcon>
           <ListItemText
-            primary="Administration"
+            primary={translate("administration_sidebar")}
             primaryTypographyProps={{
               fontSize: "16px",
               fontWeight: isSubPageActive ? 700 : 500,
@@ -208,7 +219,7 @@ const Sidebar = ({ open, onClose }) => {
                 <CreateUserIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText
-                primary="Create User"
+                primary={translate("create_user_sidebar")}
                 primaryTypographyProps={{ fontSize: "14px" }}
               />
             </ListItemButton>
@@ -229,7 +240,7 @@ const Sidebar = ({ open, onClose }) => {
                 <EditUserIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText
-                primary="Manage Users"
+                primary={translate("manage_users_sidebar")}
                 primaryTypographyProps={{ fontSize: "14px" }}
               />
             </ListItemButton>

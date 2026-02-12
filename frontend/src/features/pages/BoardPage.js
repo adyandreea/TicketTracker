@@ -8,6 +8,7 @@ import { getProjects } from "../../api/projectApi";
 import BoardModal from "../../components/board/BoardModal";
 import BoardCard from "../../components/board/BoardCard";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
@@ -23,6 +24,7 @@ const BoardsPage = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingBoard, setEditingBoard] = useState(null);
+  const { translate } = useLanguage();
 
   const [errors, setErrors] = useState({ name: "", projectId: "" });
 
@@ -85,11 +87,11 @@ const BoardsPage = () => {
     const validation = { name: "", projectId: "" };
 
     if (boardName.trim() === "") {
-      validation.name = "Board name is required";
+      validation.name = translate("board_name_required");
     }
 
     if (!selectedProjectId) {
-      validation.projectId = "Project selection is required";
+      validation.projectId = translate("project_selection_required");
     }
 
     setErrors(validation);
@@ -186,7 +188,7 @@ const BoardsPage = () => {
                 letterSpacing: "-0.5px",
               }}
             >
-              Boards
+              {translate("board_title")}
             </Typography>
             <Button
               variant="contained"
@@ -198,7 +200,7 @@ const BoardsPage = () => {
                 setIsEditing(false);
               }}
             >
-              Create board
+              {translate("create_board_button")}
             </Button>
           </Box>
           <Box

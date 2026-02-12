@@ -12,6 +12,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteTicket } from "../../api/ticketApi";
 import ConfirmationDialog from "../common/ConfirmationDialog";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const TicketCard = ({
   ticket,
@@ -26,6 +27,7 @@ const TicketCard = ({
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { translate } = useLanguage();
 
   const handleDeleteTicket = (ticketId) => {
     deleteTicket(ticketId)
@@ -42,7 +44,7 @@ const TicketCard = ({
       })
       .catch((error) => {
         console.error("Failed to delete ticket:", error);
-        setError("Failed to delete ticket.");
+        setError(translate("ticket_delete_error"));
       });
   };
 
@@ -77,12 +79,12 @@ const TicketCard = ({
         </IconButton>
         {showConfirmationDialog && (
           <ConfirmationDialog
-            title={"Confirm Deletion"}
-            description={"Are you sure you want to delete the ticket?"}
+            title={translate("confirm_deletion_title")}
+            description={translate("confirm_ticket_deletion_message")}
             open={showConfirmationDialog}
             onClose={() => setShowConfirmationDialog(false)}
-            buttonOneText={"Cancel"}
-            buttonTwoText={"Delete"}
+            buttonOneText={translate("cancel_button")}
+            buttonTwoText={translate("delete_button")}
             buttonOneHandle={() => setShowConfirmationDialog(false)}
             buttonTwoHandle={() => {
               handleDeleteTicket(ticket.id);

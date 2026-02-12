@@ -15,40 +15,42 @@ import {
   updateTicket,
   createTicket,
 } from "../../api/ticketApi";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const BoardCard = ({ selectedBoardId }) => {
-  const columns = ["To DO", "In Progress", "Done"];
+  const columns = ["TODO", "IN_PROGRESS", "DONE"];
   const statusMap = {
-    "To DO": "TODO",
-    "In Progress": "IN_PROGRESS",
-    Done: "DONE",
+    TODO: "TODO",
+    IN_PROGRESS: "IN_PROGRESS",
+    DONE: "DONE",
   };
 
-  const columnColors = {
-    "To DO": "#1976d2",
-    "In Progress": "#ed6c02",
-    Done: "#2e7d32",
+  const columnConfig = {
+    TODO: { label: "to_do_column_dashboard", color: "#1976d2" },
+    IN_PROGRESS: { label: "in_progress_column_dashboard", color: "#ed6c02" },
+    DONE: { label: "done_column_dashboard", color: "#2e7d32" },
   };
 
   const [tickets, setTickets] = useState({
-    "To DO": [],
-    "In Progress": [],
-    Done: [],
+    TODO: [],
+    IN_PROGRESS: [],
+    DONE: [],
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { translate } = useLanguage();
 
   useEffect(() => {
     const reverseStatusMap = {
-      TODO: "To DO",
-      IN_PROGRESS: "In Progress",
-      DONE: "Done",
+      TODO: "TODO",
+      IN_PROGRESS: "IN_PROGRESS",
+      DONE: "DONE",
     };
 
     const fetchTickets = async () => {
       if (!selectedBoardId) {
-        setTickets({ "To DO": [], "In Progress": [], Done: [] });
+        setTickets({ TODO: [], IN_PROGRESS: [], DONE: [] });
         return;
       }
       setLoading(true);
@@ -56,7 +58,7 @@ const BoardCard = ({ selectedBoardId }) => {
 
       try {
         const data = await getTicketsByBoardId(selectedBoardId);
-        const groupedTickets = { "To DO": [], "In Progress": [], Done: [] };
+        const groupedTickets = { TODO: [], IN_PROGRESS: [], DONE: [] };
 
         data.forEach((ticket) => {
           const columnName = reverseStatusMap[ticket.status];
@@ -67,28 +69,28 @@ const BoardCard = ({ selectedBoardId }) => {
 
         setTickets(groupedTickets);
       } catch (err) {
-        setError("Could not load tickets for this board.");
+        setError(translate("ticket_not_found"));
         console.error("Error loading tickets:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchTickets();
-  }, [selectedBoardId]);
+  }, [selectedBoardId, translate]);
 
   const [editingTicketId, setEditingTicketId] = useState(null);
   const [editingText, setEditingText] = useState("");
 
   const [isAdding, setIsAdding] = useState({
-    "To DO": false,
-    "In Progress": false,
-    Done: false,
+    TODO: false,
+    IN_PROGRESS: false,
+    DONE: false,
   });
 
   const [newCardText, setNewCardText] = useState({
-    "To DO": "",
-    "In Progress": "",
-    Done: "",
+    TODO: "",
+    IN_PROGRESS: "",
+    DONE: "",
   });
 
   const [draggedTicket, setDraggedTicket] = useState(null);
@@ -123,7 +125,7 @@ const BoardCard = ({ selectedBoardId }) => {
         })
         .catch((err) => {
           console.error("Failed to create ticket:", err);
-          setError("Failed to create ticket.");
+          setError(translate("create_ticket_error"));
         });
     }
     setNewCardText({ ...newCardText, [col]: "" });
@@ -191,7 +193,7 @@ const BoardCard = ({ selectedBoardId }) => {
             [col]: revertedDestTickets,
           };
         });
-        setError("Failed to move ticket. Please try again.");
+        setError(translate("move_ticket_error"));
       });
 
     setDraggedTicket(null);
@@ -230,7 +232,7 @@ const BoardCard = ({ selectedBoardId }) => {
       })
       .catch((error) => {
         console.error("Failed to update ticket title:", error);
-        setError("Failed to update ticket title.");
+        setError(translate("update_ticket_error"));
       });
 
     setEditingTicketId(null);
@@ -240,7 +242,7 @@ const BoardCard = ({ selectedBoardId }) => {
   if (loading) {
     return (
       <Box sx={{ p: 3, textAlign: "center" }}>
-        <Typography variant="h6">Loading tickets...</Typography>
+        <Typography variant="h6">{translate("loading_tickets")}</Typography>
       </Box>
     );
   }
@@ -285,17 +287,17 @@ const BoardCard = ({ selectedBoardId }) => {
             sx={{
               p: 2,
               borderColor: "#e5e7eb",
-              borderTop: `4px solid ${columnColors[col]}`,
+              borderTop: `4px solid ${columnConfig[col].color}`,
             }}
           >
             <Typography
               variant="subtitle1"
               sx={{
                 fontWeight: "bold",
-                color: columnColors[col],
+                color: columnConfig[col].color,
               }}
             >
-              {col}
+              {translate(columnConfig[col].label)}
             </Typography>
           </Box>
 
@@ -350,7 +352,7 @@ const BoardCard = ({ selectedBoardId }) => {
                 onClick={() => handleAddClick(col)}
                 sx={{ justifyContent: "flex-start", textTransform: "none" }}
               >
-                Add a card
+                {translate("add_card_dashboard")}
               </Button>
             )}
           </Box>

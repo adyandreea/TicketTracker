@@ -12,11 +12,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteBoard } from "../../api/boardApi";
 import ConfirmationDialog from "../common/ConfirmationDialog";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { translate } = useLanguage();
 
   const handleDelete = async (id) => {
     try {
@@ -65,7 +67,7 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
           color="text.secondary"
           sx={{ display: "block", mt: 1 }}
         >
-          Project: {board.project}
+          {translate("board_project_label")} {board.project}
         </Typography>
         <Typography
           variant="body2"
@@ -78,7 +80,7 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
             overflow: "hidden",
           }}
         >
-          Description: {board.description}
+          {translate("board_description_label")}: {board.description}
         </Typography>
       </CardContent>
       <CardActions
@@ -108,12 +110,12 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
       </CardActions>
       {showConfirmationDialog && (
         <ConfirmationDialog
-          title={"Confirm Deletion"}
-          description={"Are you sure you want to delete the board?"}
+          title={translate("confirm_deletion_title")}
+          description={translate("confirm_board_deletion_message")}
           open={showConfirmationDialog}
           onClose={() => setShowConfirmationDialog(false)}
-          buttonOneText={"Cancel"}
-          buttonTwoText={"Delete"}
+          buttonOneText={translate("cancel_button")}
+          buttonTwoText={translate("delete_button")}
           buttonOneHandle={() => setShowConfirmationDialog(false)}
           buttonTwoHandle={() => {
             handleDelete(board.id);

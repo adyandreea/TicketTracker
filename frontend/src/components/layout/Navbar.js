@@ -9,8 +9,10 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const Navbar = ({ onMenuClick, onProfileClick }) => {
+  const { translate } = useLanguage();
   return (
     <AppBar
       position="fixed"
@@ -47,7 +49,7 @@ const Navbar = ({ onMenuClick, onProfileClick }) => {
         <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
           <TextField
             size="small"
-            placeholder="Search tasks, projects..."
+            placeholder={translate("search_navbar")}
             variant="outlined"
             InputProps={{
               startAdornment: (

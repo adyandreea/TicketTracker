@@ -11,6 +11,7 @@ import {
   createProject,
   updateProject,
 } from "../../api/projectApi";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -24,6 +25,7 @@ const ProjectsPage = () => {
   const [newProjectDescription, setNewProjectDescription] = useState("");
 
   const [errors, setErrors] = useState({ name: "" });
+  const { translate } = useLanguage();
 
   const fetchProjects = async () => {
     try {
@@ -109,7 +111,7 @@ const ProjectsPage = () => {
 
   const handleSubmit = () => {
     if (newProjectName.trim() === "") {
-      setErrors({ name: "Project name is required" });
+      setErrors({ name: translate("project_name_required") });
       return;
     }
 
@@ -131,7 +133,7 @@ const ProjectsPage = () => {
       }}
     >
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-        
+
       <ProfileSidebar
         open={isProfileSidebarOpen}
         onClose={() => setProfileSidebarOpen(false)}
@@ -181,7 +183,7 @@ const ProjectsPage = () => {
                 letterSpacing: "-0.5px",
               }}
             >
-              Projects
+              {translate("project_title")}
             </Typography>
             <Button
               variant="contained"
@@ -194,7 +196,7 @@ const ProjectsPage = () => {
                 setNewProjectName("");
               }}
             >
-              Create project
+              {translate("create_project_button")}
             </Button>
           </Box>
           <Box

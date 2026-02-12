@@ -6,14 +6,13 @@ import {
   Paper,
   Typography,
   TextField,
-  Checkbox,
-  FormControlLabel,
   Button,
   Alert,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { login } from "../../api/authApi";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const LoginPage = () => {
   const [serverError, setServerError] = useState("");
@@ -21,6 +20,8 @@ const LoginPage = () => {
     username: "",
     password: "",
   });
+
+  const { translate } = useLanguage();
 
   const navigate = useNavigate();
 
@@ -35,11 +36,11 @@ const LoginPage = () => {
     const validation = { username: "", password: "" };
 
     if (!username) {
-      validation.username = "Username is required";
+      validation.username = translate("enter_username_login");
     }
 
     if (!password) {
-      validation.password = "Password is required";
+      validation.password = translate("enter_password_login");
     }
 
     setErrors(validation);
@@ -61,9 +62,9 @@ const LoginPage = () => {
         err.statusCode === 401 ||
         err.message === "Unauthorized"
       ) {
-        setServerError("Invalid username or password");
+        setServerError(translate("invalid_credentials_login"));
       } else {
-        setServerError("Something went wrong. Please try again later.");
+        setServerError(translate("server_error_login"));
       }
     }
   };
@@ -99,7 +100,7 @@ const LoginPage = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            {translate("sign_in_login")}
           </Typography>
           {serverError && (
             <Alert severity="error" sx={{ mt: 2, width: "100%" }}>
@@ -114,7 +115,7 @@ const LoginPage = () => {
           >
             <TextField
               name="username"
-              label="Enter username"
+              label={translate("enter_username_login")}
               fullWidth
               required
               autoFocus
@@ -124,17 +125,13 @@ const LoginPage = () => {
             />
             <TextField
               name="password"
-              label="Enter password"
+              label={translate("enter_password_login")}
               fullWidth
               required
               error={errors.password !== ""}
               helperText={errors.password}
               type="password"
               sx={{ mb: 1 }}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
@@ -143,7 +140,7 @@ const LoginPage = () => {
               size="large"
               sx={{ mt: 2, mb: 1 }}
             >
-              Sign In
+              {translate("sign_in_login")}
             </Button>
           </Box>
         </Paper>

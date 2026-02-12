@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import { getProjects } from "../../api/projectApi";
 import { getBoardsByProjectId } from "../../api/boardApi";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const DashboardPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -29,6 +30,7 @@ const DashboardPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [loadingBoard, setLoadingBoard] = useState(false);
   const [errorBoard, setErrorBoard] = useState(null);
+  const { translate } = useLanguage();
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -53,13 +55,13 @@ const DashboardPage = () => {
         }
       } catch (err) {
         console.error("Error loading projects:", err);
-        setErrorProject("Could not load projects.");
+        setErrorProject(translate("project_not_found"));
       } finally {
         setLoadingProject(false);
       }
     };
     fetchProjects();
-  }, []);
+  }, [translate]);
 
   useEffect(() => {
     const fetchBoards = async () => {
@@ -79,14 +81,14 @@ const DashboardPage = () => {
         }
       } catch (err) {
         console.error("Error loading boards:", err);
-        setErrorBoard("Could not load boards.");
+        setErrorBoard(translate("board_not_found"));
         setBoards([]);
       } finally {
         setLoadingBoard(false);
       }
     };
     fetchBoards();
-  }, [selectedProjectId]);
+  }, [selectedProjectId, translate]);
 
   const handleProjectChange = (event) => {
     setSelectedProjectId(event.target.value);
@@ -207,7 +209,7 @@ const DashboardPage = () => {
                   },
                 }}
               >
-                Switch Board
+                {translate("switch_board_dashboard")}
               </Button>
             </Box>
           )}
@@ -221,7 +223,9 @@ const DashboardPage = () => {
         maxWidth="xs"
         PaperProps={{ sx: { borderRadius: 3 } }}
       >
-        <DialogTitle sx={{ fontWeight: "bold" }}>Select a Board</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          {translate("select_board_dashboard")}
+        </DialogTitle>
         <DialogContent sx={{ pb: 3 }}>
           <FormControl fullWidth sx={{ mt: 1 }}>
             <Select

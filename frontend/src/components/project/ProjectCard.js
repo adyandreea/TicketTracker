@@ -12,11 +12,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteProject } from "../../api/projectApi";
 import ConfirmationDialog from "../common/ConfirmationDialog";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { translate } = useLanguage();
 
   const handleDelete = async (id) => {
     try {
@@ -58,7 +60,7 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
           color="text.secondary"
           sx={{ display: "block", mt: 1 }}
         >
-          ID: {project.id}
+          {translate("project_id_label")} {project.id}
         </Typography>
         <Typography
           variant="body2"
@@ -71,7 +73,7 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
             overflow: "hidden",
           }}
         >
-          Description: {project.description}
+          {translate("project_description_label")}: {project.description}
         </Typography>
       </CardContent>
       <CardActions
@@ -100,12 +102,12 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
       </CardActions>
       {showConfirmationDialog && (
         <ConfirmationDialog
-          title={"Confirm Deletion"}
-          description={"Are you sure you want to delete the project?"}
+          title={translate("confirm_deletion_title")}
+          description={translate("confirm_project_deletion_message")}
           open={showConfirmationDialog}
           onClose={() => setShowConfirmationDialog(false)}
-          buttonOneText={"Cancel"}
-          buttonTwoText={"Delete"}
+          buttonOneText={translate("cancel_button")}
+          buttonTwoText={translate("delete_button")}
           buttonOneHandle={() => setShowConfirmationDialog(false)}
           buttonTwoHandle={() => {
             handleDelete(project.id);

@@ -14,12 +14,14 @@ import {
 } from "@mui/material";
 import { register } from "../../api/registerApi";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const RegisterPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [serverMessage, setServerMessage] = useState({ type: "", text: "" });
   const [errors, setErrors] = useState({});
+  const { translate } = useLanguage();
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -44,28 +46,27 @@ const RegisterPage = () => {
     let tempErrors = {};
 
     if (!formData.firstname?.trim())
-      tempErrors.firstname = "First name is required";
+      tempErrors.firstname = translate("firstname_required");
     if (!formData.lastname?.trim())
-      tempErrors.lastname = "Last name is required";
+      tempErrors.lastname = translate("lastname_required");
 
     if (!formData.username?.trim()) {
-      tempErrors.username = "Username is required";
+      tempErrors.username = translate("username_required");
     } else if (formData.username.trim().length < 3) {
-      tempErrors.username = "Username must be at least 3 characters long";
+      tempErrors.username = translate("username_length_invalid");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email?.trim()) {
-      tempErrors.email = "Email is required";
+      tempErrors.email = translate("email_required");
     } else if (!emailRegex.test(formData.email)) {
-      tempErrors.email =
-        "Please enter a valid email address (ex: user@example.com)";
+      tempErrors.email = translate("email_invalid");
     }
 
     if (!formData.password) {
-      tempErrors.password = "Password is required";
+      tempErrors.password = translate("password_required");
     } else if (formData.password.length < 6) {
-      tempErrors.password = "Password must be at least 6 characters long";
+      tempErrors.password = translate("password_length_invalid");
     }
 
     setErrors(tempErrors);
@@ -82,7 +83,7 @@ const RegisterPage = () => {
       const result = await register(formData);
       setServerMessage({
         type: "success",
-        text: `User ${result.username || formData.username} created successfully!`,
+        text: `${translate("user")} ${result.username || formData.username} ${translate("user_created_successfully")}`,
       });
       setFormData({
         firstname: "",
@@ -95,7 +96,7 @@ const RegisterPage = () => {
     } catch (error) {
       setServerMessage({
         type: "error",
-        text: error.message || "Registration failed. Please try again.",
+        text: error.message || translate("registration_error"),
       });
     }
   };
@@ -151,7 +152,7 @@ const RegisterPage = () => {
                 align="center"
                 sx={{ fontWeight: 800, mb: 3, color: "primary.main" }}
               >
-                Create Account
+                {translate("create_account_title")}
               </Typography>
 
               {serverMessage.text && (
@@ -168,7 +169,7 @@ const RegisterPage = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    label="First Name"
+                    label={translate("firstname_label")}
                     name="firstname"
                     value={formData.firstname}
                     onChange={handleChange}
@@ -178,7 +179,7 @@ const RegisterPage = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    label="Last Name"
+                    label={translate("lastname_label")}
                     name="lastname"
                     value={formData.lastname}
                     onChange={handleChange}
@@ -188,7 +189,7 @@ const RegisterPage = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    label="Username"
+                    label={translate("username_label")}
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
@@ -198,7 +199,7 @@ const RegisterPage = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    label="Email"
+                    label={translate("email_label")}
                     name="email"
                     type="email"
                     value={formData.email}
@@ -209,7 +210,7 @@ const RegisterPage = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    label="Password"
+                    label={translate("password_label")}
                     name="password"
                     type="password"
                     value={formData.password}
@@ -222,7 +223,7 @@ const RegisterPage = () => {
                     size="small"
                     select
                     name="role"
-                    label="User Role"
+                    label={translate("user_role_label")}
                     value={formData.role}
                     onChange={handleChange}
                   >
@@ -244,7 +245,7 @@ const RegisterPage = () => {
                       fontSize: "1rem",
                     }}
                   >
-                    Create Account
+                    {translate("create_account_button")}
                   </Button>
                 </Stack>
               </form>

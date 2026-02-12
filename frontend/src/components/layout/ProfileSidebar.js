@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Drawer,
   List,
@@ -25,6 +24,7 @@ import {
   Logout as LogoutIcon,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
   const navigate = useNavigate();
@@ -32,10 +32,11 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [language, setLanguage] = useState("EN");
+  const { currentLanguage, changeLanguage, translate, availableLanguages } =
+    useLanguage();
 
   const handleLanguageChange = (event) => {
-    setLanguage(event.target.value);
+    changeLanguage(event.target.value);
   };
 
   const handleNavigate = (path) => {
@@ -107,7 +108,7 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
           UP
         </Box>
         <Typography variant="h6" sx={{ fontWeight: 800 }}>
-          User Profile
+          {translate("user_profile_sidebar")}
         </Typography>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           user@example.com
@@ -124,7 +125,7 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
           <ListItemIcon sx={{ minWidth: 40 }}>
             <PersonIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Account Settings" />
+          <ListItemText primary={translate("account_settings_sidebar")} />
         </ListItemButton>
 
         <Box
@@ -144,18 +145,22 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
                 <DarkModeIcon />
               )}
             </ListItemIcon>
-            <Typography variant="body1">Dark Mode</Typography>
+            <Typography variant="body1">
+              {translate("dark_mode_sidebar")}
+            </Typography>
           </Box>
           <Switch checked={isDarkMode} onChange={toggleDarkMode} size="small" />
         </Box>
 
         <Box sx={{ px: 2, py: 2 }}>
           <FormControl fullWidth size="small">
-            <InputLabel id="language-select-label">Language</InputLabel>
+            <InputLabel id="language-select-label">
+              {translate("language_sidebar")}
+            </InputLabel>
             <Select
               labelId="language-select-label"
-              value={language}
-              label="Language"
+              value={currentLanguage}
+              label={translate("language_sidebar")}
               onChange={handleLanguageChange}
               startAdornment={
                 <LanguageIcon
@@ -164,10 +169,18 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
               }
               sx={{ borderRadius: "10px" }}
             >
-              <MenuItem value="EN">English</MenuItem>
-              <MenuItem value="RO">Romanian</MenuItem>
-              <MenuItem value="FR">French</MenuItem>
-              <MenuItem value="RU">Russian</MenuItem>
+              {availableLanguages.map((languageOption) => (
+                <MenuItem key={languageOption.lang} value={languageOption.lang}>
+                  {languageOption.lang === "ENG" &&
+                    translate("english_language_sidebar")}
+                  {languageOption.lang === "RO" &&
+                    translate("romanian_language_sidebar")}
+                  {languageOption.lang === "FR" &&
+                    translate("french_language_sidebar")}
+                  {languageOption.lang === "RU" &&
+                    translate("russian_language_sidebar")}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -185,7 +198,7 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
           <ListItemIcon sx={{ minWidth: 40 }}>
             <LogoutIcon color="error" fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Sign Out" />
+          <ListItemText primary={translate("sign_out_sidebar")} />
         </ListItemButton>
       </List>
     </Drawer>
