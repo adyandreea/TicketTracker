@@ -12,7 +12,7 @@ public class UserDTOMapperTest {
     @Test
     void testToDTO(){
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setFirstname("Huang");
         user.setLastname("Ana");
         user.setUsername("ana");

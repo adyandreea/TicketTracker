@@ -157,9 +157,9 @@ public class ProjectControllerTest {
                 .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(3)))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='name')].message",
-                        org.hamcrest.Matchers.hasItems("name_is_required", "name_length_invalid")))
+                        org.hamcrest.Matchers.hasItems("name_required", "name_length_invalid")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
-                        org.hamcrest.Matchers.hasItem("Description too long")));
+                        org.hamcrest.Matchers.hasItem("description_too_long")));
     }
 }

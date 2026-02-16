@@ -6,7 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,4 +25,15 @@ public class Project extends BaseEntity{
 
     @OneToMany(mappedBy="project", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<Board> boards;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "project_members",
+               joinColumns = @JoinColumn(name = "project_id"),
+               inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
+
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getProjects().add(this);
+    }
 }

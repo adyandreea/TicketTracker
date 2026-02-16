@@ -261,19 +261,19 @@ public class TicketControllerTest {
                 .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(6)))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='title')].message",
-                        org.hamcrest.Matchers.hasItems("title_is_required", "title_length_invalid")))
+                        org.hamcrest.Matchers.hasItems("title_required", "title_length_invalid")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
-                        org.hamcrest.Matchers.hasItem("Description too long")))
+                        org.hamcrest.Matchers.hasItem("description_too_long")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='position')].message",
-                        org.hamcrest.Matchers.hasItem("Position must be >= 0")))
+                        org.hamcrest.Matchers.hasItem("position_min_error")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='status')].message",
-                        org.hamcrest.Matchers.hasItem("Status cannot be null")))
+                        org.hamcrest.Matchers.hasItem("status_required")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='boardId')].message",
-                        org.hamcrest.Matchers.hasItem("BoardId cannot be null")));
+                        org.hamcrest.Matchers.hasItem("board_id_required")));
     }
 
     @Test

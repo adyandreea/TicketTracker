@@ -66,13 +66,13 @@ public class AuthenticationService {
                 .toList();
     }
 
-    public void deleteUser(Integer id) {
+    public void deleteUser(Long id) {
         userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
         userRepository.deleteById(id);
     }
 
-    public UserResponseDTO updateUser(Integer id, UserRequestDTO request) {
+    public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
         var user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 

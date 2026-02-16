@@ -55,7 +55,7 @@ public class AuthenticationServiceTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .id(1)
+                .id(1L)
                 .firstname("firstname")
                 .lastname("lastname")
                 .username("user_test")
@@ -101,12 +101,12 @@ public class AuthenticationServiceTest {
 
     @Test
     void testDeleteUser(){
-     when(repository.findById(1)).thenReturn(Optional.of(user));
+     when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-     authenticationService.deleteUser(1);
+     authenticationService.deleteUser(1L);
 
-     verify(repository, times(1)).findById(1);
-     verify(repository).deleteById(1);
+     verify(repository, times(1)).findById(1L);
+     verify(repository).deleteById(1L);
     }
 
     @Test
@@ -119,9 +119,9 @@ public class AuthenticationServiceTest {
         dto.setRole(USER);
 
         when(repository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(repository.findById(1)).thenReturn(Optional.of(user));
+        when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-        authenticationService.updateUser(1, dto);
+        authenticationService.updateUser(1L, dto);
 
         verify(repository).save(user);
         assertEquals("Huang", user.getFirstname());
@@ -133,9 +133,9 @@ public class AuthenticationServiceTest {
 
     @Test
     void testGetUserWhenNotFound(){
-        when(repository.findById(1)).thenReturn(Optional.empty());
+        when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> authenticationService.deleteUser(1));
-        verify(repository, never()).deleteById(anyInt());
+        assertThrows(UserNotFoundException.class, () -> authenticationService.deleteUser(1L));
+        verify(repository, never()).deleteById(anyLong());
     }
 }
