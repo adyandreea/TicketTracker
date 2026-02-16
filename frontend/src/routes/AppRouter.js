@@ -8,6 +8,7 @@ import EditUserPage from "../features/pages/EditUserPage.js";
 import ProtectedRoute from "../utils/ProtectedRoute";
 import LogoutHandler from "../utils/LogoutHandler";
 import { LanguageProvider } from "../i18n/LanguageContext";
+import PermissionsPage from "../features/pages/PermissionsPage.js";
 
 const AppRouter = () => {
   return (
@@ -52,6 +53,14 @@ const AppRouter = () => {
             element={
               <ProtectedRoute>
                 <EditUserPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/permissions"
+            element={
+              <ProtectedRoute>
+                <PermissionsPage />
               </ProtectedRoute>
             }
           />

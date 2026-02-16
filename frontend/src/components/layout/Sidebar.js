@@ -18,6 +18,7 @@ import {
   AccountTree as ProjectIcon,
   ViewKanban as BoardIcon,
   AdminPanelSettings as AdminIcon,
+  Security as PermissionsIcon,
   ExpandLess,
   ExpandMore,
   PersonAdd as CreateUserIcon,
@@ -241,6 +242,27 @@ const Sidebar = ({ open, onClose }) => {
               </ListItemIcon>
               <ListItemText
                 primary={translate("manage_users_sidebar")}
+                primaryTypographyProps={{ fontSize: "14px" }}
+              />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => handleNavigate("/permissions")}
+              sx={getButtonStyle("/permissions")}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: "40px",
+                  color:
+                    location.pathname === "/permissions"
+                      ? theme.palette.primary.main
+                      : "inherit",
+                }}
+              >
+                <PermissionsIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText
+                primary={translate("user_permissions_sidebar")}
                 primaryTypographyProps={{ fontSize: "14px" }}
               />
             </ListItemButton>

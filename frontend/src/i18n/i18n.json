@@ -29,6 +29,7 @@
         "french_language_sidebar": {"ENG": "French", "RO": "Franceză", "FR": "Français", "RU": "Французский" },
         "russian_language_sidebar": {"ENG": "Russian", "RO": "Rusă", "FR": "Russe", "RU": "Русский" },
         "sign_out_sidebar": {"ENG": "Sign Out", "RO": "Deconectare", "FR": "Se déconnecter", "RU": "Выйти" },
+        "user_permissions_sidebar": { "ENG": "Permissions", "RO": "Permisiuni", "FR": "Autorisations", "RU": "Разрешения"},
         "switch_board_dashboard": {"ENG": "Switch Board", "RO": "Schimbați tabloul", "FR": "Changer de tableau", "RU": "Переключить доску" },
         "add_card_dashboard": {"ENG": "Add a card", "RO": "Adăugați un tichet", "FR": "Ajouter une carte", "RU": "Добавить карточку" },
         "to_do_column_dashboard": {"ENG": "To Do", "RO": "De făcut", "FR": "À faire", "RU": "Сделать" },
@@ -91,6 +92,11 @@
         "confirm_ticket_deletion_message": { "ENG": "Are you sure you want to delete ticket?", "RO": "Sigur doriți să ștergeți tichetul?", "FR": "Êtes-vous sûr de vouloir supprimer le ticket?", "RU": "Вы уверены, что хотите удалить тикет?" },
         "registration_error": { "ENG": "Registration failed. Please try again.", "RO": "Înregistrarea a eșuat. Vă rugăm să încercați din nou.", "FR": "L'inscription a échoué. Veuillez réessayer.", "RU": "Ошибка регистрации. Пожалуйста, попробуйте еще раз."},
         "user": { "ENG": "User", "RO": "Utilizator", "FR": "Utilisateur", "RU": "Пользователь"},
-        "user_created_successfully": { "ENG": "created successfully!", "RO": "a fost creat cu succes!", "FR": "créé avec succès !", "RU": "успешно создан!"}
+        "user_created_successfully": { "ENG": "created successfully!", "RO": "a fost creat cu succes!", "FR": "créé avec succès !", "RU": "успешно создан!"},
+        "permissions_title": { "ENG": "Permissions", "RO": "Permisiuni", "FR": "Autorisations", "RU": "Разрешения"},
+        "select_user": { "ENG": "Select a user", "RO": "Selectați un utilizator", "FR": "Sélectionnez un utilisateur", "RU": "Выберите пользователя"},
+        "select_project": { "ENG": "Select a project", "RO": "Selectați un proiect", "FR": "Sélectionnez un projet", "RU": "Выберите проект"},
+        "no_members_found": { "ENG": "No members found for this project.", "RO": "Nu s-au găsit membri pentru acest proiect.", "FR": "Aucun membre trouvé pour ce projet.", "RU": "Для этого проекта не найдено участников." },
+        "assign_button": { "ENG": "Assign", "RO": "Atribuiți", "FR": "Attribuer", "RU": "Назначить" }
     }
 }
