@@ -23,8 +23,12 @@ import {
   getProjects,
   assignUserToProject,
   getProjectMembers,
+  removeUserFromProject,
 } from "../../api/projectApi";
 import { getAllUsers } from "../../api/editUserApi";
+import ConfirmationDialog from "../../components/common/ConfirmationDialog";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const PermissionsPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -38,6 +42,8 @@ const PermissionsPage = () => {
   const [selectedUserId, setSelectedUserId] = useState("");
   const [allUsers, setAllUsers] = useState([]);
   const [projectMembers, setProjectMembers] = useState([]);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
   const fetchInitialData = async () => {
     try {
@@ -78,6 +84,19 @@ const PermissionsPage = () => {
       setSelectedUserId("");
     } catch (error) {
       console.error("Assign error:", error);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+    try {
+      await removeUserFromProject(selectedProjectId, userToDelete.id);
+      setProjectMembers(
+        projectMembers.filter((user) => user.id !== userToDelete.id),
+      );
+      setShowConfirmationDialog(false);
+    } catch (err) {
+      alert("Failed to remove user from project");
     }
   };
 
@@ -189,6 +208,12 @@ const PermissionsPage = () => {
               <TableRow>
                 <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
+                  {translate("firstname_label")}
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  {translate("lastname_label")}
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
                   {translate("username_label")}
                 </TableCell>
                 <TableCell
@@ -202,23 +227,39 @@ const PermissionsPage = () => {
                 <TableCell sx={{ fontWeight: "bold" }}>
                   {translate("user_role_label")}
                 </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  {translate("delete_title_user")}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {projectMembers.map((member) => (
                 <TableRow key={member.id} hover>
                   <TableCell>{member.id}</TableCell>
+                  <TableCell>{member.firstname}</TableCell>
+                  <TableCell>{member.lastname}</TableCell>
                   <TableCell>{member.username}</TableCell>
                   <TableCell sx={{ display: { xs: "none", md: "table-cell" } }}>
                     {member.email}
                   </TableCell>
                   <TableCell>{member.role}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setUserToDelete(member);
+                        setShowConfirmationDialog(true);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
               {projectMembers.length === 0 && selectedProjectId && (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={7}
                     align="center"
                     sx={{ py: 3, color: "text.secondary" }}
                   >
@@ -230,6 +271,16 @@ const PermissionsPage = () => {
           </Table>
         </TableContainer>
       </Box>
+      <ConfirmationDialog
+        title={translate("confirm_user_from_project_title")}
+        description={`${translate("confirm_user_from_project_message")} ${userToDelete?.username} ${translate("from_project_label")}`}
+        open={showConfirmationDialog}
+        onClose={() => setShowConfirmationDialog(false)}
+        buttonOneText={translate("cancel_button")}
+        buttonTwoText={translate("delete_user_button")}
+        buttonOneHandle={() => setShowConfirmationDialog(false)}
+        buttonTwoHandle={handleConfirmDelete}
+      />
     </Box>
   );
 };

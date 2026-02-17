@@ -50,7 +50,7 @@
         "project_description_label": {"ENG": "Description", "RO": "Descriere", "FR": "Description", "RU": "Описание" },
         "create_new_project": {"ENG": "Create New Project", "RO": "Creați un proiect nou", "FR": "Créer un nouveau projet", "RU": "Создать новый проект" },
         "edit_project": {"ENG": "Edit Project", "RO": "Editați proiectul", "FR": "Modifier le projet", "RU": "Редактировать проект" },
-        "project_id_label": { "ENG": "ID:", "RO": "ID:", "FR": "ID :", "RU": "ID:"},
+        "project_id_label": { "ENG": "ID:", "RO": "ID:", "FR": "ID:", "RU": "ID:"},
         "project_name_required": { "ENG": "Project name is required", "RO": "Numele proiectului este obligatoriu", "FR": "Le nom du projet est requis", "RU": "Название проекта обязательно"},
         "board_title": {"ENG": "Board", "RO": "Tablou", "FR": "Tableau", "RU": "Доска" },
         "create_board_button": { "ENG": "Create Board", "RO": "Creați un tablou", "FR": "Créer un tableau", "RU": "Создать доску"},
@@ -97,6 +97,9 @@
         "select_user": { "ENG": "Select a user", "RO": "Selectați un utilizator", "FR": "Sélectionnez un utilisateur", "RU": "Выберите пользователя"},
         "select_project": { "ENG": "Select a project", "RO": "Selectați un proiect", "FR": "Sélectionnez un projet", "RU": "Выберите проект"},
         "no_members_found": { "ENG": "No members found for this project.", "RO": "Nu s-au găsit membri pentru acest proiect.", "FR": "Aucun membre trouvé pour ce projet.", "RU": "Для этого проекта не найдено участников." },
-        "assign_button": { "ENG": "Assign", "RO": "Atribuiți", "FR": "Attribuer", "RU": "Назначить" }
+        "assign_button": { "ENG": "Assign", "RO": "Atribuiți", "FR": "Attribuer", "RU": "Назначить" },
+        "confirm_user_from_project_title": { "ENG": "Confirm User Removal from Project", "RO": "Confirmați eliminarea utilizatorului din proiect", "FR": "Confirmer la suppression de l'utilisateur du projet", "RU": "Подтвердите удаление пользователя из проекта" },
+        "confirm_user_from_project_message": { "ENG": "Are you sure you want to remove user", "RO": "Sigur doriți să eliminați utilizatorul", "FR": "Êtes-vous sûr de vouloir supprimer l'utilisateur", "RU": "Вы уверены, что хотите удалить пользователя" },
+        "from_project_label": { "ENG": "from this project?", "RO": "din acest proiect?", "FR": "de ce projet?", "RU": "из этого проекта?" }
     }
 }

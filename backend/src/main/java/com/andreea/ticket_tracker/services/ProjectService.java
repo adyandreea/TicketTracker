@@ -88,4 +88,14 @@ public class ProjectService {
                 .map(userDTOMapper::toDTO)
                 .toList();
     }
+
+    public void removeUserFromProject(Long projectId, Long userId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(ProjectNotFoundException::new);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        project.removeUser(user);
+        projectRepository.save(project);
+    }
 }

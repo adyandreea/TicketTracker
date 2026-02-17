@@ -93,3 +93,17 @@ export const getProjectMembers = async (id) => {
     throw err.response?.data || { message: "Error fetching project members." };
   }
 };
+
+export const removeUserFromProject = async (projectId, userId) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${PROJECTS_URL}/${projectId}/users/${userId}`,
+      { userId },
+    );
+    return response.data;
+  } catch (err) {
+    throw (
+      err.response?.data || { message: "Error removing user from project." }
+    );
+  }
+};

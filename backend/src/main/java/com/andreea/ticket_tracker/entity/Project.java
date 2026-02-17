@@ -36,4 +36,9 @@ public class Project extends BaseEntity{
         this.users.add(user);
         user.getProjects().add(this);
     }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getProjects().remove(this);
+    }
 }

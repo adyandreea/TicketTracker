@@ -167,4 +167,23 @@ public class ProjectController {
         List<UserResponseDTO> members = projectService.getProjectMembers(projectId);
         return ResponseEntity.ok(members);
     }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.REMOVE_USER_FROM_PROJECT,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserResponseDTO[].class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
+    }
+    )
+    @Operation(summary = "Removes a user from a project.")
+    @DeleteMapping("/{projectId}/users/{userId}")
+    public ResponseEntity<SuccessDTO> removeUserFromProject(@PathVariable Long projectId, @PathVariable Long userId) {
+        projectService.removeUserFromProject(projectId, userId);
+        return ResponseHandler.success("User removed from project successfully");
+    }
 }
