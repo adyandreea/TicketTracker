@@ -2,7 +2,10 @@ package com.andreea.ticket_tracker.controllers;
 
 import com.andreea.ticket_tracker.dto.request.ProjectRequestDTO;
 import com.andreea.ticket_tracker.entity.Project;
+import com.andreea.ticket_tracker.entity.Role;
+import com.andreea.ticket_tracker.entity.User;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
+import com.andreea.ticket_tracker.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,8 @@ public class ProjectControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void cleanDatabase() {
@@ -161,5 +166,84 @@ public class ProjectControllerTest {
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
                         org.hamcrest.Matchers.hasItem("description_too_long")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testAssignUserToProject() throws Exception{
+        Project project = new Project();
+        project.setName("Test Project");
+        project.setDescription("Work project");
+        project = projectRepository.save(project);
+
+        User user = new User();
+        user.setFirstname("User");
+        user.setLastname("User");
+        user.setUsername("user1");
+        user.setPassword("password123");
+        user.setEmail("user@gmail.com");
+        user.setRole(Role.USER);
+        user = userRepository.save(user);
+
+        mockMvc.perform(post("/api/v1/projects/" + project.getId()+"/users/" + user.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("User assigned to project successfully"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testGetProjectMembers() throws Exception{
+        Project project = new Project();
+        project.setName("Test Project");
+        project.setDescription("Work project");
+        project = projectRepository.save(project);
+
+        User u1 = new User();
+        u1.setFirstname("User");
+        u1.setLastname("User");
+        u1.setUsername("user1");
+        u1.setPassword("password123");
+        u1.setEmail("user@gmail.com");
+        u1.setRole(Role.USER);
+        u1 = userRepository.save(u1);
+
+        project.addUser(u1);
+        projectRepository.save(project);
+
+        mockMvc.perform(get("/api/v1/projects/" + project.getId() + "/members")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(1)))
+                .andExpect(jsonPath("$[0].username").value("user1"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testRemoveUserFromProject() throws Exception{
+        Project project = new Project();
+        project.setName("Test Project");
+        project.setDescription("Work project");
+        project = projectRepository.save(project);
+
+        User u1 = new User();
+        u1.setFirstname("User");
+        u1.setLastname("User");
+        u1.setUsername("user1");
+        u1.setPassword("password123");
+        u1.setEmail("user@gmail.com");
+        u1.setRole(Role.USER);
+        u1 = userRepository.save(u1);
+
+        project.addUser(u1);
+        projectRepository.save(project);
+
+        project.removeUser(u1);
+        projectRepository.save(project);
+
+        mockMvc.perform(delete("/api/v1/projects/"  + project.getId()+"/users/" + u1.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("User removed from project successfully"));
     }
 }
