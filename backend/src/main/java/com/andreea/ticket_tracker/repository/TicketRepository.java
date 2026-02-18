@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByBoardId(Long boardId);
+    List<Ticket> findAllByBoard_Project_Users_Username(String username);
+    List<Ticket> findAllByBoardIdAndBoard_Project_Users_Username(Long boardId, String username);
 }

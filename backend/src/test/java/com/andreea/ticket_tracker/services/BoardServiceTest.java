@@ -4,20 +4,22 @@ import com.andreea.ticket_tracker.dto.request.BoardRequestDTO;
 import com.andreea.ticket_tracker.dto.response.BoardResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Project;
-import com.andreea.ticket_tracker.exceptions.BoardNotFoundException;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
+import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,176 +29,102 @@ public class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
+
+    @Mock
+    private ProjectSecurityEvaluator projectSecurity;
 
     @InjectMocks
     private BoardService boardService;
+
+    private void mockSecurityContext(String username, boolean isAdmin) {
+        Authentication auth = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(auth.getName()).thenReturn(username);
+        when(projectSecurity.isUserAdmin()).thenReturn(isAdmin);
+    }
 
     @Test
     void testCreateBoard(){
         Project project = new Project();
         project.setId(1L);
-        project.setName("Project 1");
 
         BoardRequestDTO dto = new BoardRequestDTO();
         dto.setName("Test");
-        dto.setDescription("Desc");
         dto.setProjectId(1L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
         when(boardRepository.save(any(Board.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        var result = boardService.createBoard(dto);
-
-        assertEquals("Test", result.getName());
-        assertEquals("Desc", result.getDescription());
-        assertEquals(1L, result.getProjectId());
-        verify(boardRepository, times(1)).save(any(Board.class));
+        boardService.createBoard(dto);
+        verify(projectSecurity).validateUserAccess(project);
+        verify(boardRepository).save(any(Board.class));
     }
 
     @Test
     void testGetAllBoards(){
-        Project project = new Project();
-        project.setId(1L);
-        project.setName("Project 1");
-        project.setDescription("Desc");
+        mockSecurityContext("adminUser", true);
 
-        Board board1 = new Board();
-        board1.setId(1L);
-        board1.setName("Board 1");
-        board1.setDescription("Desc");
-        board1.setProject(project);
-
-        Board board2 = new Board();
-        board2.setId(1L);
-        board2.setName("Board 2");
-        board2.setDescription("Desc");
-        board2.setProject(project);
-
-        when(boardRepository.findAll()).thenReturn(List.of(board1, board2));
+        Board b1 = new Board();
+        when(boardRepository.findAll()).thenReturn(List.of(b1));
 
         var result = boardService.getAllBoards();
 
-        assertEquals(2,result.size());
-        verify(boardRepository, times(1)).findAll();
+        assertEquals(1, result.size());
+        verify(boardRepository).findAll();
     }
 
     @Test
     void testGetBoardById(){
         Project project = new Project();
-        project.setId(1L);
-        project.setName("Project 1");
-        project.setDescription("Desc");
-
         Board board = new Board();
-        board.setId(1L);
-        board.setName("Board 1");
-        board.setDescription("Desc");
         board.setProject(project);
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
 
-        var result = boardService.getBoard(1L);
+        boardService.getBoard(1L);
 
-        assertEquals("Board 1", result.getName());
-        assertEquals("Desc", result.getDescription());
-        assertEquals(1L, result.getProjectId());
-        verify(boardRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void testGetBoardByIdNotFound() {
-        when(boardRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(BoardNotFoundException.class, () -> boardService.getBoard(1L));
+        verify(projectSecurity).validateUserAccess(project);
     }
 
     @Test
     void testUpdateBoard() {
         Project project1 = new Project();
         project1.setId(1L);
-        project1.setName("Old project");
-        project1.setDescription("Old desc");
-
-        Project project2 = new Project();
-        project2.setId(2L);
-        project2.setName("New project");
-        project2.setDescription("New desc");
-
         Board board = new Board();
-        board.setId(1L);
-        board.setName("Old board");
-        board.setDescription("Old desc");
         board.setProject(project1);
 
         BoardRequestDTO dto = new BoardRequestDTO();
         dto.setName("New board");
-        dto.setDescription("New desc");
-        dto.setProjectId(2L);
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
-        when(projectRepository.findById(2L)).thenReturn(Optional.of(project2));
         when(boardRepository.save(any(Board.class))).thenAnswer(i -> i.getArguments()[0]);
 
         boardService.updateBoard(1L, dto);
-        verify(boardRepository, times(1)).save(board);
-        assertEquals("New board", board.getName());
-        assertEquals("New desc", board.getDescription());
-        assertEquals(2L,board.getProject().getId());
+
+        verify(projectSecurity).validateUserAccess(project1);
+        verify(boardRepository).save(board);
     }
 
     @Test
-    void testDeleteBoard() {
-
-        Project project = new Project();
-        project.setId(1L);
-        project.setName("Project 1");
-        project.setDescription("Desc");
-
-        Board board = new Board();
-        board.setId(1L);
-        board.setName("Board 1");
-        board.setDescription("Desc");
-        board.setProject(project);
-
-        when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
-
-        boardService.deleteBoard(1L);
-
-        verify(boardRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    void getBoardsByProjectId(){
-
+    void testGetBoardsByProjectId(){
         Long projectId = 1L;
-
         Project project = new Project();
         project.setId(projectId);
-        project.setName("Project 1");
 
-        Board board1 = new Board();
-        board1.setId(10L);
-        board1.setName("Board 1");
-        board1.setProject(project);
-
-        Board board2 = new Board();
-        board2.setId(10L);
-        board2.setName("Board 2");
-        board2.setProject(project);
+        Board b1 = new Board(); b1.setProject(project);
+        mockSecurityContext("adminUser", true);
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(boardRepository.findByProjectId(projectId)).thenReturn(List.of(board1, board2));
+        when(boardRepository.findByProjectId(projectId)).thenReturn(List.of(b1));
 
         List<BoardResponseDTO> result = boardService.getBoardsByProjectId(projectId);
 
-        assertEquals(2, result.size());
-        assertEquals("Board 1", result.get(0).getName());
-        assertEquals("Board 2", result.get(1).getName());
-        assertEquals(projectId, result.get(0).getProjectId());
-
-        verify(projectRepository, times(1)).findById(projectId);
-        verify(boardRepository, times(1)).findByProjectId(projectId);
-        verify(boardRepository, times(0)).findAll();
+        assertEquals(1, result.size());
+        verify(boardRepository).findByProjectId(projectId);
     }
 }

@@ -56,22 +56,15 @@ public class ProjectController {
                 .body(createdProject);
     }
 
-    @Operation(summary = "Returns all the projects.")
+    @Operation(summary = "Returns projects based on user role (all for ADMIN/MANAGER, assigned for USER).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_PROJECTS,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ProjectResponseDTO[].class))}),
-            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
-                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorDTO.class))}),
-            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
-                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorDTO.class))})
-    }
-    )
+                            schema = @Schema(implementation = ProjectResponseDTO[].class))})
+    })
     @GetMapping
-    public List<ProjectResponseDTO> getAllProjects(){
-        return projectService.getAllProjects();
+    public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
+        return ResponseEntity.ok(projectService.getAllProjects());
     }
 
     @Operation(summary = "Returns a project.")

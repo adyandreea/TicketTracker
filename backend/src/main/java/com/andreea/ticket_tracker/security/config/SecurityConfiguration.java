@@ -53,10 +53,10 @@ public class SecurityConfiguration {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, PROJECTS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name(),Role.MANAGER.name())
+                        .requestMatchers(HttpMethod.POST, PROJECTS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, PROJECTS_ALL_ENDPOINTS).hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.MANAGER.name())
                         .requestMatchers(HttpMethod.PUT, PROJECTS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name(),Role.MANAGER.name())
-                        .requestMatchers(HttpMethod.DELETE, PROJECTS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name(),Role.MANAGER.name())
+                        .requestMatchers(HttpMethod.DELETE, PROJECTS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name())
 
                         .requestMatchers(HttpMethod.POST, BOARDS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name(),Role.MANAGER.name())
                         .requestMatchers(HttpMethod.GET, BOARDS_ALL_ENDPOINTS).hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.MANAGER.name())

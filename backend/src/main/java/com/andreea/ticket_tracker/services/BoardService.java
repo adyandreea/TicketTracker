@@ -9,7 +9,9 @@ import com.andreea.ticket_tracker.exceptions.ProjectNotFoundException;
 import com.andreea.ticket_tracker.mapper.BoardDTOMapper;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
+import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,33 +21,41 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectSecurityEvaluator projectSecurity;
 
     @Autowired
-    public BoardService(BoardRepository boardRepository, ProjectRepository projectRepository) {
+    public BoardService(BoardRepository boardRepository, ProjectRepository projectRepository, ProjectSecurityEvaluator projectSecurity) {
         this.boardRepository = boardRepository;
         this.projectRepository = projectRepository;
+        this.projectSecurity = projectSecurity;
     }
 
     public BoardResponseDTO createBoard(BoardRequestDTO dto){
       Project project = projectRepository.findById(dto.getProjectId())
               .orElseThrow(ProjectNotFoundException::new);
 
+      projectSecurity.validateUserAccess(project);
       Board board = BoardDTOMapper.toEntity(dto, project);
 
       Board savedBoard = boardRepository.save(board);
       return BoardDTOMapper.toDTO(savedBoard);
     }
 
-    public List<BoardResponseDTO> getAllBoards(){
-        return boardRepository.findAll()
-                .stream()
-                .map(BoardDTOMapper::toDTO)
-                .toList();
+    public List<BoardResponseDTO> getAllBoards() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<Board> boards = projectSecurity.isUserAdmin()
+                ? boardRepository.findAll()
+                : boardRepository.findAllByProject_Users_Username(username);
+
+        return boards.stream().map(BoardDTOMapper::toDTO).toList();
     }
 
     public BoardResponseDTO getBoard(Long id){
         Board board = boardRepository.findById(id)
                 .orElseThrow(BoardNotFoundException::new);
+
+        projectSecurity.validateUserAccess(board.getProject());
 
         return BoardDTOMapper.toDTO(board);
     }
@@ -53,6 +63,8 @@ public class BoardService {
     public BoardResponseDTO updateBoard(Long id, BoardRequestDTO dto){
         Board board = boardRepository.findById(id)
                 .orElseThrow(BoardNotFoundException::new);
+
+        projectSecurity.validateUserAccess(board.getProject());
 
         board.setName(dto.getName());
         board.setDescription(dto.getDescription());
@@ -68,19 +80,22 @@ public class BoardService {
     }
 
     public void deleteBoard(Long id){
-        boardRepository.findById(id)
+        Board board = boardRepository.findById(id)
                 .orElseThrow(BoardNotFoundException::new);
 
+        projectSecurity.validateUserAccess(board.getProject());
         boardRepository.deleteById(id);
     }
 
-    public List<BoardResponseDTO> getBoardsByProjectId(Long projectId){
-        projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
+    public List<BoardResponseDTO> getBoardsByProjectId(Long projectId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return boardRepository.findByProjectId(projectId)
-                .stream()
-                .map(BoardDTOMapper::toDTO)
-                .toList();
+        projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+
+        List<Board> boards = projectSecurity.isUserAdmin()
+                ? boardRepository.findByProjectId(projectId)
+                : boardRepository.findAllByProjectIdAndProject_Users_Username(projectId, username);
+
+        return boards.stream().map(BoardDTOMapper::toDTO).toList();
     }
 }
