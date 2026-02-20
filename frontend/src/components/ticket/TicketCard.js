@@ -13,6 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteTicket } from "../../api/ticketApi";
 import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../../features/auth/HasRole";
 
 const TicketCard = ({
   ticket,
@@ -74,9 +75,11 @@ const TicketCard = ({
         <IconButton size="small" onClick={onEditSave} color="primary">
           <CheckIcon fontSize="small" />
         </IconButton>
-        <IconButton onClick={() => setShowConfirmationDialog(true)}>
-          <DeleteIcon fontSize="small" color="error" />
-        </IconButton>
+        <HasRole allowedRoles={["ADMIN", "MANAGER"]}>
+          <IconButton onClick={() => setShowConfirmationDialog(true)}>
+            <DeleteIcon fontSize="small" color="error" />
+          </IconButton>
+        </HasRole>
         {showConfirmationDialog && (
           <ConfirmationDialog
             title={translate("confirm_deletion_title")}

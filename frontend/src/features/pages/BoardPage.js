@@ -9,6 +9,7 @@ import BoardModal from "../../components/board/BoardModal";
 import BoardCard from "../../components/board/BoardCard";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../auth/HasRole";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
@@ -190,18 +191,20 @@ const BoardsPage = () => {
             >
               {translate("board_title")}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth={{ xs: true, sm: false }}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setModalOpen(true);
-                setIsEditing(false);
-              }}
-            >
-              {translate("create_board_button")}
-            </Button>
+            <HasRole allowedRoles={["ADMIN", "MANAGER"]}>
+              <Button
+                variant="contained"
+                fullWidth={{ xs: true, sm: false }}
+                sx={{ width: { xs: "100%", sm: "auto" } }}
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  setModalOpen(true);
+                  setIsEditing(false);
+                }}
+              >
+                {translate("create_board_button")}
+              </Button>
+            </HasRole>
           </Box>
           <Box
             sx={{

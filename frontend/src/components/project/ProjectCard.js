@@ -13,6 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { deleteProject } from "../../api/projectApi";
 import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../../features/auth/HasRole";
 
 const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -76,30 +77,33 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
           {translate("project_description_label")}: {project.description}
         </Typography>
       </CardContent>
-      <CardActions
-        sx={{
-          justifyContent: "flex-end",
-          p: 1,
-          borderTop: "1px solid #f0f0f0",
-        }}
-      >
-        <IconButton
-          color="primary"
-          size={isMobile ? "medium" : "small"}
-          aria-label="edit"
-          onClick={() => handleEditStart(project)}
+      <HasRole allowedRoles={["ADMIN"]}>
+        <CardActions
+          sx={{
+            justifyContent: "flex-end",
+            p: 1,
+            borderTop: "1px solid #f0f0f0",
+          }}
         >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          color="error"
-          size={isMobile ? "medium" : "small"}
-          aria-label="delete"
-          onClick={() => setShowConfirmationDialog(true)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </CardActions>
+          <IconButton
+            color="primary"
+            size={isMobile ? "medium" : "small"}
+            aria-label="edit"
+            onClick={() => handleEditStart(project)}
+          >
+            <EditIcon />
+          </IconButton>
+          
+          <IconButton
+            color="error"
+            size={isMobile ? "medium" : "small"}
+            aria-label="delete"
+            onClick={() => setShowConfirmationDialog(true)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </CardActions>
+      </HasRole>
       {showConfirmationDialog && (
         <ConfirmationDialog
           title={translate("confirm_deletion_title")}

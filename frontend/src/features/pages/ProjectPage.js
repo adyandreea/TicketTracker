@@ -12,6 +12,7 @@ import {
   updateProject,
 } from "../../api/projectApi";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../../features/auth/HasRole";
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -185,19 +186,21 @@ const ProjectsPage = () => {
             >
               {translate("project_title")}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth={{ xs: true, sm: false }}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setModalOpen(true);
-                setIsEditing(false);
-                setNewProjectName("");
-              }}
-            >
-              {translate("create_project_button")}
-            </Button>
+            <HasRole allowedRoles={["ADMIN"]}>
+              <Button
+                variant="contained"
+                fullWidth={{ xs: true, sm: false }}
+                sx={{ width: { xs: "100%", sm: "auto" } }}
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  setModalOpen(true);
+                  setIsEditing(false);
+                  setNewProjectName("");
+                }}
+              >
+                {translate("create_project_button")}
+              </Button>
+            </HasRole>
           </Box>
           <Box
             sx={{

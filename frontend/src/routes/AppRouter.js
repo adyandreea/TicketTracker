@@ -43,7 +43,7 @@ const AppRouter = () => {
           <Route
             path="/register"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <RegisterPage />
               </ProtectedRoute>
             }
@@ -51,7 +51,7 @@ const AppRouter = () => {
           <Route
             path="/edit-user"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <EditUserPage />
               </ProtectedRoute>
             }
@@ -59,7 +59,7 @@ const AppRouter = () => {
           <Route
             path="/permissions"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <PermissionsPage />
               </ProtectedRoute>
             }
