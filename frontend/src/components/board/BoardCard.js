@@ -15,7 +15,7 @@ import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useLanguage } from "../../i18n/LanguageContext";
 import HasRole from "../../features/auth/HasRole";
 
-const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
+const BoardCard = ({ boards, board, setBoards, handleEditStart, onNotify }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -25,8 +25,9 @@ const BoardCard = ({ boards, board, setBoards, handleEditStart }) => {
     try {
       await deleteBoard(id);
       setBoards(boards.filter((board) => board.id !== id));
+      onNotify("success", translate("board_deleted_successfully"));
     } catch (error) {
-      console.error("Delete board error:", error.message || error);
+      onNotify("error", translate("delete_board_error"));
     }
   };
 

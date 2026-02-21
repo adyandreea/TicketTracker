@@ -24,6 +24,7 @@ const TicketCard = ({
   editingText,
   setTickets,
   setError,
+  onNotify,
 }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
@@ -40,12 +41,13 @@ const TicketCard = ({
               (t) => t.id !== ticketId,
             );
           });
+          onNotify("success", translate("ticket_deleted_successfully"));
           return newTickets;
         });
       })
       .catch((error) => {
         console.error("Failed to delete ticket:", error);
-        setError(translate("ticket_delete_error"));
+        onNotify("error", translate("delete_ticket_error"));
       });
   };
 

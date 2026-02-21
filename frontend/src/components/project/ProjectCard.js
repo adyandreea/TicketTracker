@@ -15,7 +15,13 @@ import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useLanguage } from "../../i18n/LanguageContext";
 import HasRole from "../../features/auth/HasRole";
 
-const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
+const ProjectCard = ({
+  project,
+  projects,
+  setProjects,
+  handleEditStart,
+  onNotify,
+}) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -25,8 +31,12 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
     try {
       await deleteProject(id);
       setProjects(projects.filter((project) => project.id !== id));
+      onNotify("success", translate("project_deleted_successfully"));
+      setShowConfirmationDialog(false);
     } catch (error) {
-      console.error("Delete project error:", error.message || error);
+      onNotify("error", translate("delete_project_error"));
+    } finally {
+      setShowConfirmationDialog(false);
     }
   };
 
@@ -93,7 +103,7 @@ const ProjectCard = ({ project, projects, setProjects, handleEditStart }) => {
           >
             <EditIcon />
           </IconButton>
-          
+
           <IconButton
             color="error"
             size={isMobile ? "medium" : "small"}

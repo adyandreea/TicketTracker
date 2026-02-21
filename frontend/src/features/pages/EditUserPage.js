@@ -31,6 +31,7 @@ import { getAllUsers, deleteUser, updateUser } from "../../api/editUserApi";
 import ConfirmationDialog from "../../components/common/ConfirmationDialog";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import { useLanguage } from "../../i18n/LanguageContext";
+import ConfirmationNotification from "../../components/common/ConfirmationNotification";
 
 const EditUserPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -49,6 +50,11 @@ const EditUserPage = () => {
   const handleSidebarToggle = () => setSidebarOpen(!isSidebarOpen);
   const handleProfileClick = () => setProfileSidebarOpen(!isProfileSidebarOpen);
   const { translate } = useLanguage();
+  const [serverMessage, setServerMessage] = useState({
+    type: "success",
+    text: "",
+  });
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -103,16 +109,24 @@ const EditUserPage = () => {
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
+
   const handleSaveEdit = async () => {
     if (!validate()) return;
 
     try {
       const updated = await updateUser(selectedUser.id, selectedUser);
       setUsers(users.map((u) => (u.id === updated.id ? updated : u)));
+
+      setServerMessage({
+        type: "success",
+        text: `${translate("user")} ${updated.username || selectedUser.username} ${translate("user_updated_successfully")}`,
+      });
+
+      setNotificationOpen(true);
       handleCloseEdit();
-      setErrors({});
     } catch (err) {
-      alert("Failed to update user");
+      setServerMessage({ type: "error", text: translate("update_user_error") });
+      setNotificationOpen(true);
     }
   };
 
@@ -121,9 +135,17 @@ const EditUserPage = () => {
     try {
       await deleteUser(userToDelete.id);
       setUsers(users.filter((user) => user.id !== userToDelete.id));
+
+      setServerMessage({
+        type: "success",
+        text: `${translate("user")} ${userToDelete.username} ${translate("user_deleted_successfully")}`,
+      });
+
+      setNotificationOpen(true);
       setShowConfirmationDialog(false);
     } catch (err) {
-      alert("Failed to delete user");
+      setServerMessage({ type: "error", text: translate("delete_user_error") });
+      setNotificationOpen(true);
     }
   };
 
@@ -333,10 +355,10 @@ const EditUserPage = () => {
                 fullWidth
               />
               <FormControl fullWidth>
-                <InputLabel>Role</InputLabel>
+                <InputLabel>{translate("user_role_label")}</InputLabel>
                 <Select
                   value={selectedUser.role}
-                  label={"user_role_label"}
+                  label={translate("user_role_label")}
                   onChange={(e) =>
                     setSelectedUser({ ...selectedUser, role: e.target.value })
                   }
@@ -372,6 +394,13 @@ const EditUserPage = () => {
         buttonTwoText={translate("delete_user_button")}
         buttonOneHandle={() => setShowConfirmationDialog(false)}
         buttonTwoHandle={handleConfirmDelete}
+      />
+
+      <ConfirmationNotification
+        open={notificationOpen}
+        onClose={() => setNotificationOpen(false)}
+        severity={serverMessage.type}
+        message={serverMessage.text}
       />
     </Box>
   );

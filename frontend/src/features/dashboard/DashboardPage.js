@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
@@ -16,6 +17,7 @@ import { getProjects } from "../../api/projectApi";
 import { getBoardsByProjectId } from "../../api/boardApi";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import { useLanguage } from "../../i18n/LanguageContext";
+import WarningAlert from "../../components/common/WarningAlert";
 
 const DashboardPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -141,7 +143,7 @@ const DashboardPage = () => {
           }}
         >
           <Box sx={{ mb: 2, flexShrink: 0 }}>
-            {!loadingProject && !errorProject && (
+            {!loadingProject && !errorProject && projects.length > 0 && (
               <FormControl
                 variant="outlined"
                 size="small"
@@ -176,12 +178,27 @@ const DashboardPage = () => {
               minHeight: 0,
               display: "flex",
               borderRadius: 3,
+              justifyContent: "center",
+              alignItems:
+                boards && boards.length > 0 ? "stretch" : "flex-start",
+              p: 1,
+              pt: boards && boards.length > 0 ? 1 : 10,
             }}
           >
-            <DashboardBoard selectedBoardId={selectedBoardId} />
+            {loadingBoard ? (
+              <Typography>{translate("loading_tickets")}</Typography>
+            ) : boards && boards.length > 0 ? (
+              <DashboardBoard selectedBoardId={selectedBoardId} />
+            ) : (
+              <WarningAlert
+                title={translate("no_boards_found_title_dashboard")}
+                message={translate("no_boards_found_message_dashboard")}
+                marginTop={0}
+              />
+            )}
           </Box>
 
-          {!loadingBoard && !errorBoard && (
+          {!loadingBoard && !errorBoard && boards && boards.length > 0 && (
             <Box
               sx={{
                 mt: 2,

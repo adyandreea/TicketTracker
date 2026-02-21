@@ -16,6 +16,7 @@ import {
   createTicket,
 } from "../../api/ticketApi";
 import { useLanguage } from "../../i18n/LanguageContext";
+import ConfirmationNotification from "../../components/common/ConfirmationNotification";
 
 const BoardCard = ({ selectedBoardId }) => {
   const columns = ["TODO", "IN_PROGRESS", "DONE"];
@@ -40,6 +41,16 @@ const BoardCard = ({ selectedBoardId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { translate } = useLanguage();
+  const [serverMessage, setServerMessage] = useState({
+    type: "success",
+    text: "",
+  });
+  const [notificationOpen, setNotificationOpen] = useState(false);
+
+  const triggerNotification = (type, text) => {
+    setServerMessage({ type, text });
+    setNotificationOpen(true);
+  };
 
   useEffect(() => {
     const reverseStatusMap = {
@@ -122,6 +133,11 @@ const BoardCard = ({ selectedBoardId }) => {
             ...prevTickets,
             [col]: [...prevTickets[col], completeTicket],
           }));
+          setServerMessage({
+            type: "success",
+            text: translate("ticket_created_successfully"),
+          });
+          setNotificationOpen(true);
         })
         .catch((err) => {
           console.error("Failed to create ticket:", err);
@@ -229,10 +245,19 @@ const BoardCard = ({ selectedBoardId }) => {
           );
           return newTickets;
         });
+        setServerMessage({
+          type: "success",
+          text: translate("ticket_updated_successfully"),
+        });
+        setNotificationOpen(true);
       })
       .catch((error) => {
         console.error("Failed to update ticket title:", error);
-        setError(translate("update_ticket_error"));
+        setServerMessage({
+          type: "error",
+          text: translate("update_ticket_error"),
+        });
+        setNotificationOpen(true);
       });
 
     setEditingTicketId(null);
@@ -318,6 +343,7 @@ const BoardCard = ({ selectedBoardId }) => {
                   tickets={tickets}
                   setTickets={setTickets}
                   setError={setError}
+                  onNotify={triggerNotification}
                 />
               </Box>
             ))}
@@ -358,6 +384,13 @@ const BoardCard = ({ selectedBoardId }) => {
           </Box>
         </Paper>
       ))}
+
+      <ConfirmationNotification
+        open={notificationOpen}
+        onClose={() => setNotificationOpen(false)}
+        severity={serverMessage.type}
+        message={serverMessage.text}
+      />
     </Box>
   );
 };
