@@ -46,7 +46,7 @@ public class BoardService {
 
         List<Board> boards = projectSecurity.isUserAdmin()
                 ? boardRepository.findAll()
-                : boardRepository.findAllByProject_Users_Username(username);
+                : boardRepository.findAllByUser(username);
 
         return boards.stream().map(BoardDTOMapper::toDTO).toList();
     }
@@ -94,7 +94,7 @@ public class BoardService {
 
         List<Board> boards = projectSecurity.isUserAdmin()
                 ? boardRepository.findByProjectId(projectId)
-                : boardRepository.findAllByProjectIdAndProject_Users_Username(projectId, username);
+                : boardRepository.findAllByProjectAndUser(projectId, username);
 
         return boards.stream().map(BoardDTOMapper::toDTO).toList();
     }

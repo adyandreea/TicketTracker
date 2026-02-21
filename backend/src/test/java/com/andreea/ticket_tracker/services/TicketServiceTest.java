@@ -74,12 +74,12 @@ public class TicketServiceTest {
         mockSecurityContext("user1", false);
 
         Ticket ticket = new Ticket();
-        when(ticketRepository.findAllByBoard_Project_Users_Username("user1")).thenReturn(List.of(ticket));
+        when(ticketRepository.findAllByUser("user1")).thenReturn(List.of(ticket));
 
         var result = ticketService.getAllTickets();
 
         assertEquals(1, result.size());
-        verify(ticketRepository).findAllByBoard_Project_Users_Username("user1");
+        verify(ticketRepository).findAllByUser("user1");
     }
 
     @Test
@@ -143,12 +143,12 @@ public class TicketServiceTest {
         board.setProject(project);
 
         when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
-        when(ticketRepository.findAllByBoardIdAndBoard_Project_Users_Username(1L, "user1"))
+        when(ticketRepository.findAllByBoardAndUser(1L, "user1"))
                 .thenReturn(List.of(new Ticket()));
 
         var result = ticketService.getTicketsByBoardId(1L);
 
         assertEquals(1, result.size());
-        verify(ticketRepository).findAllByBoardIdAndBoard_Project_Users_Username(1L, "user1");
+        verify(ticketRepository).findAllByBoardAndUser(1L, "user1");
     }
 }

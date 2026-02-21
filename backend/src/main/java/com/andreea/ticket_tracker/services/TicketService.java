@@ -44,7 +44,7 @@ public class TicketService {
 
         List<Ticket> tickets = projectSecurity.isUserAdmin()
                 ? ticketRepository.findAll()
-                : ticketRepository.findAllByBoard_Project_Users_Username(username);
+                : ticketRepository.findAllByUser(username);
 
         return tickets.stream().map(TicketDTOMapper::toDTO).toList();
     }
@@ -100,7 +100,7 @@ public class TicketService {
         if (projectSecurity.isUserAdmin()) {
             tickets = ticketRepository.findByBoardId(boardId);
         } else {
-            tickets = ticketRepository.findAllByBoardIdAndBoard_Project_Users_Username(boardId, username);
+            tickets = ticketRepository.findAllByBoardAndUser(boardId, username);
         }
 
         return tickets.stream().map(TicketDTOMapper::toDTO).toList();

@@ -146,7 +146,7 @@ public class ProjectServiceTest {
         u1.setUsername("user1");
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(userRepository.findAllByProjects_Id(1L)).thenReturn(Set.of(u1));
+        when(userRepository.findAllByProjectId(1L)).thenReturn(Set.of(u1));
         when(userDTOMapper.toDTO(u1)).thenReturn(new UserResponseDTO(1L, "U", "U", "user1", "e", Role.USER));
 
         List<UserResponseDTO> result = projectService.getProjectMembers(1L);

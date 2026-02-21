@@ -45,7 +45,7 @@ public class ProjectService {
 
         List<Project> projects = projectSecurity.isUserAdmin()
                 ? projectRepository.findAll()
-                : projectRepository.findAllByUsers_Username(currentUsername);
+                : projectRepository.findAllByMember(currentUsername);
 
         return projects.stream()
                 .map(ProjectDTOMapper::toDTO)
@@ -100,7 +100,7 @@ public class ProjectService {
 
         projectSecurity.validateUserAccess(project);
 
-        return userRepository.findAllByProjects_Id(projectId)
+        return userRepository.findAllByProjectId(projectId)
                 .stream()
                 .map(userDTOMapper::toDTO)
                 .toList();

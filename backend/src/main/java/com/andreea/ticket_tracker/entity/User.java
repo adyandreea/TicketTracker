@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.Builder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +46,7 @@ public class User {
         @Enumerated(EnumType.STRING)
         private Role role;
 
+        @Builder.Default
         @ManyToMany(mappedBy="users", cascade=CascadeType.ALL)
         private Set<Project> projects = new HashSet<>();
 }
