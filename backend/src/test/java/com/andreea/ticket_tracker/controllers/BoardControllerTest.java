@@ -208,15 +208,15 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.fieldErrors", org.hamcrest.Matchers.hasSize(4)))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='name')].message",
-                        org.hamcrest.Matchers.hasItem("name_is_required")))
+                        org.hamcrest.Matchers.hasItem("name_required")))
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='name')].message",
                         org.hamcrest.Matchers.hasItem("name_length_invalid")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='description')].message",
-                        org.hamcrest.Matchers.hasItem("Description too long")))
+                        org.hamcrest.Matchers.hasItem("description_too_long")))
 
                 .andExpect(jsonPath("$.fieldErrors[?(@.field=='projectId')].message",
-                        org.hamcrest.Matchers.hasItem("ProjectId cannot be null")));
+                        org.hamcrest.Matchers.hasItem("project_id_required")));
     }
 
     @Test

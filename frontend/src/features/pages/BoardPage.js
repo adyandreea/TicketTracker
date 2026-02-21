@@ -9,6 +9,9 @@ import BoardModal from "../../components/board/BoardModal";
 import BoardCard from "../../components/board/BoardCard";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../auth/HasRole";
+import ConfirmationNotification from "../../components/common/ConfirmationNotification";
+import WarningAlert from "../../components/common/WarningAlert";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
@@ -25,6 +28,11 @@ const BoardsPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingBoard, setEditingBoard] = useState(null);
   const { translate } = useLanguage();
+  const [serverMessage, setServerMessage] = useState({
+    type: "success",
+    text: "",
+  });
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const [errors, setErrors] = useState({ name: "", projectId: "" });
 
@@ -109,8 +117,20 @@ const BoardsPage = () => {
 
       if (isEditing) {
         resultBoard = await updateBoard(editingBoard.id, requestData);
+
+        setServerMessage({
+          type: "success",
+          text: translate("board_updated_successfully"),
+        });
+        setNotificationOpen(true);
       } else {
         resultBoard = await createBoard(requestData);
+
+        setServerMessage({
+          type: "success",
+          text: translate("board_created_successfully"),
+        });
+        setNotificationOpen(true);
       }
 
       const projectName = projectsData.find(
@@ -128,6 +148,11 @@ const BoardsPage = () => {
     } catch (error) {
       console.error("Submit board error:", error.message || error);
     }
+  };
+
+  const triggerNotification = (type, text) => {
+    setServerMessage({ type, text });
+    setNotificationOpen(true);
   };
 
   return (
@@ -190,22 +215,24 @@ const BoardsPage = () => {
             >
               {translate("board_title")}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth={{ xs: true, sm: false }}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setModalOpen(true);
-                setIsEditing(false);
-              }}
-            >
-              {translate("create_board_button")}
-            </Button>
+            <HasRole allowedRoles={["ADMIN", "MANAGER"]}>
+              <Button
+                variant="contained"
+                fullWidth={{ xs: true, sm: false }}
+                sx={{ width: { xs: "100%", sm: "auto" } }}
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  setModalOpen(true);
+                  setIsEditing(false);
+                }}
+              >
+                {translate("create_board_button")}
+              </Button>
+            </HasRole>
           </Box>
           <Box
             sx={{
-              display: "grid",
+              display: boards.length > 0 ? "grid" : "block",
               gridTemplateColumns: {
                 xs: "1fr",
                 sm: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -213,16 +240,32 @@ const BoardsPage = () => {
               gap: { xs: 2, sm: 3 },
             }}
           >
-            {boards.map((board) => (
-              <BoardCard
-                key={board.id}
-                boards={boards}
-                setBoards={setBoards}
-                board={board}
-                handleEditStart={handleEditStart}
+            {boards.length > 0 ? (
+              boards.map((board) => (
+                <BoardCard
+                  key={board.id}
+                  boards={boards}
+                  setBoards={setBoards}
+                  board={board}
+                  handleEditStart={handleEditStart}
+                  onNotify={triggerNotification}
+                />
+              ))
+            ) : (
+              <WarningAlert
+                title={translate("no_boards_found_title")}
+                message={translate("no_boards_found_message")}
+                marginTop={5}
               />
-            ))}
+            )}
           </Box>
+
+          <ConfirmationNotification
+            open={notificationOpen}
+            onClose={() => setNotificationOpen(false)}
+            severity={serverMessage.type}
+            message={serverMessage.text}
+          />
         </Box>
       </Box>
       <BoardModal

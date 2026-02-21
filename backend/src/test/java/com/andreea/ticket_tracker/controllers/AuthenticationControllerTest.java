@@ -108,7 +108,7 @@ public class AuthenticationControllerTest {
         user.setRole(Role.USER);
 
         userRepository.save(user);
-        Integer id = user.getId();
+        Long id = user.getId();
 
         mockMvc.perform(delete("/api/v1/auth/users/" + id))
                 .andExpect(status().isNoContent());
@@ -126,7 +126,7 @@ public class AuthenticationControllerTest {
         user.setRole(Role.ADMIN);
 
         userRepository.save(user);
-        Integer id = user.getId();
+        Long id = user.getId();
 
         UserRequestDTO dto = new UserRequestDTO();
         dto.setFirstname("user firstname");

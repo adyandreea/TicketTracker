@@ -10,11 +10,11 @@ import {
   MenuItem,
   Button,
   Stack,
-  Alert,
 } from "@mui/material";
 import { register } from "../../api/registerApi";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import { useLanguage } from "../../i18n/LanguageContext";
+import ConfirmationNotification from "../../components/common/ConfirmationNotification";
 
 const RegisterPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -22,6 +22,7 @@ const RegisterPage = () => {
   const [serverMessage, setServerMessage] = useState({ type: "", text: "" });
   const [errors, setErrors] = useState({});
   const { translate } = useLanguage();
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -85,6 +86,7 @@ const RegisterPage = () => {
         type: "success",
         text: `${translate("user")} ${result.username || formData.username} ${translate("user_created_successfully")}`,
       });
+      setNotificationOpen(true);
       setFormData({
         firstname: "",
         lastname: "",
@@ -98,6 +100,7 @@ const RegisterPage = () => {
         type: "error",
         text: error.message || translate("registration_error"),
       });
+      setNotificationOpen(true);
     }
   };
 
@@ -154,15 +157,6 @@ const RegisterPage = () => {
               >
                 {translate("create_account_title")}
               </Typography>
-
-              {serverMessage.text && (
-                <Alert
-                  severity={serverMessage.type}
-                  sx={{ mb: 2, borderRadius: 2 }}
-                >
-                  {serverMessage.text}
-                </Alert>
-              )}
 
               <form onSubmit={handleSubmit} noValidate>
                 <Stack spacing={1.5}>
@@ -253,6 +247,12 @@ const RegisterPage = () => {
           </Container>
         </Box>
       </Box>
+      <ConfirmationNotification
+        open={notificationOpen}
+        onClose={() => setNotificationOpen(false)}
+        severity={serverMessage.type}
+        message={serverMessage.text}
+      />
     </Box>
   );
 };

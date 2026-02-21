@@ -6,8 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.Builder;
 
-@Data
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +22,7 @@ public class User {
 
         @Id
         @GeneratedValue
-        private Integer id;
+        private Long id;
 
         @NotBlank(message = "firstname_required")
         private String firstname;
@@ -40,4 +45,8 @@ public class User {
         @NotNull(message = "role_required")
         @Enumerated(EnumType.STRING)
         private Role role;
+
+        @Builder.Default
+        @ManyToMany(mappedBy="users", cascade=CascadeType.ALL)
+        private Set<Project> projects = new HashSet<>();
 }

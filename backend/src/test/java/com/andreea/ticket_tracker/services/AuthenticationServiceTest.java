@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class AuthenticationServiceTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .id(1)
+                .id(1L)
                 .firstname("firstname")
                 .lastname("lastname")
                 .username("user_test")
@@ -68,25 +69,29 @@ public class AuthenticationServiceTest {
     void testRegister(){
         RegisterRequest request = new RegisterRequest("User", "User", "user_test", "test@example.com", "password123", MANAGER);
         when(passwordEncoder.encode(anyString())).thenReturn("hashed_password");
-        when(jwtProvider.generateToken(anyString())).thenReturn("mocked_jwt_token");
+        when(jwtProvider.generateToken(any(User.class))).thenReturn("mocked_jwt_token");
 
         AuthenticationResponse response = authenticationService.register(request);
 
         assertNotNull(response);
         assertEquals("mocked_jwt_token", response.getToken());
         verify(repository, times(1)).save(any(User.class));
+        verify(jwtProvider).generateToken(any(User.class));
     }
 
     @Test
     void testAuthenticate(){
         AuthenticationRequest request = new AuthenticationRequest("User","password123");
-        when(jwtProvider.generateToken(anyString())).thenReturn("mocked_jwt_token");
+        Authentication mockAuth = mock(Authentication.class);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuth);
+        when(jwtProvider.generateToken(any(Authentication.class))).thenReturn("mocked_jwt_token");
 
         AuthenticationResponse response = authenticationService.authenticate(request);
 
         assertNotNull(response);
         assertEquals("mocked_jwt_token",response.getToken());
-        verify(authenticationManager).authenticate((any(UsernamePasswordAuthenticationToken.class)));
+        verify(authenticationManager).authenticate((any(Authentication.class)));
     }
 
     @Test
@@ -101,12 +106,12 @@ public class AuthenticationServiceTest {
 
     @Test
     void testDeleteUser(){
-     when(repository.findById(1)).thenReturn(Optional.of(user));
+     when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-     authenticationService.deleteUser(1);
+     authenticationService.deleteUser(1L);
 
-     verify(repository, times(1)).findById(1);
-     verify(repository).deleteById(1);
+     verify(repository, times(1)).findById(1L);
+     verify(repository).deleteById(1L);
     }
 
     @Test
@@ -119,9 +124,9 @@ public class AuthenticationServiceTest {
         dto.setRole(USER);
 
         when(repository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(repository.findById(1)).thenReturn(Optional.of(user));
+        when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-        authenticationService.updateUser(1, dto);
+        authenticationService.updateUser(1L, dto);
 
         verify(repository).save(user);
         assertEquals("Huang", user.getFirstname());
@@ -133,9 +138,9 @@ public class AuthenticationServiceTest {
 
     @Test
     void testGetUserWhenNotFound(){
-        when(repository.findById(1)).thenReturn(Optional.empty());
+        when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> authenticationService.deleteUser(1));
-        verify(repository, never()).deleteById(anyInt());
+        assertThrows(UserNotFoundException.class, () -> authenticationService.deleteUser(1L));
+        verify(repository, never()).deleteById(anyLong());
     }
 }

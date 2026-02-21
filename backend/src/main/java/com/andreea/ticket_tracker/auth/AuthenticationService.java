@@ -38,7 +38,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        var jwtToken = jwtProvider.generateToken(request.getUsername());
+        var jwtToken = jwtProvider.generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -47,13 +47,13 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
+        var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
-        var jwtToken = jwtProvider.generateToken(request.getUsername());
+        var jwtToken = jwtProvider.generateToken(auth);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -66,13 +66,13 @@ public class AuthenticationService {
                 .toList();
     }
 
-    public void deleteUser(Integer id) {
+    public void deleteUser(Long id) {
         userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
         userRepository.deleteById(id);
     }
 
-    public UserResponseDTO updateUser(Integer id, UserRequestDTO request) {
+    public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
         var user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 

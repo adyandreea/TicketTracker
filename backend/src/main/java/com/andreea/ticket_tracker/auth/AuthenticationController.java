@@ -92,7 +92,7 @@ public class AuthenticationController {
                             schema = @Schema(implementation = ErrorDTO.class))})
     })
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
@@ -111,7 +111,7 @@ public class AuthenticationController {
     })
     @PutMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @Valid @RequestBody UserRequestDTO request
     ) {
         return ResponseEntity.ok(service.updateUser(id, request));

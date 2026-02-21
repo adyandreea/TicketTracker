@@ -12,6 +12,9 @@ import {
   updateProject,
 } from "../../api/projectApi";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../../features/auth/HasRole";
+import ConfirmationNotification from "../../components/common/ConfirmationNotification";
+import WarningAlert from "../../components/common/WarningAlert";
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -26,6 +29,11 @@ const ProjectsPage = () => {
 
   const [errors, setErrors] = useState({ name: "" });
   const { translate } = useLanguage();
+  const [serverMessage, setServerMessage] = useState({
+    type: "success",
+    text: "",
+  });
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const fetchProjects = async () => {
     try {
@@ -74,8 +82,17 @@ const ProjectsPage = () => {
       };
       setProjects([...projects, completeProject]);
       handleCloseModal();
+      setServerMessage({
+        type: "success",
+        text: translate("project_created_successfully"),
+      });
+      setNotificationOpen(true);
     } catch (error) {
-      console.error("Create project error:", error.message || error);
+      setServerMessage({
+        type: "error",
+        text: translate("create_project_error"),
+      });
+      setNotificationOpen(true);
     }
   };
 
@@ -104,8 +121,17 @@ const ProjectsPage = () => {
         projects.map((p) => (p.id === editingProject.id ? updatedProject : p)),
       );
       handleCloseModal();
+      setServerMessage({
+        type: "success",
+        text: translate("project_updated_successfully"),
+      });
+      setNotificationOpen(true);
     } catch (error) {
-      console.error("Update project error:", error.message || error);
+      setServerMessage({
+        type: "error",
+        text: translate("update_project_error"),
+      });
+      setNotificationOpen(true);
     }
   };
 
@@ -122,6 +148,11 @@ const ProjectsPage = () => {
     } else {
       handleCreate();
     }
+  };
+
+  const triggerNotification = (type, text) => {
+    setServerMessage({ type, text });
+    setNotificationOpen(true);
   };
 
   return (
@@ -185,23 +216,25 @@ const ProjectsPage = () => {
             >
               {translate("project_title")}
             </Typography>
-            <Button
-              variant="contained"
-              fullWidth={{ xs: true, sm: false }}
-              sx={{ width: { xs: "100%", sm: "auto" } }}
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setModalOpen(true);
-                setIsEditing(false);
-                setNewProjectName("");
-              }}
-            >
-              {translate("create_project_button")}
-            </Button>
+            <HasRole allowedRoles={["ADMIN"]}>
+              <Button
+                variant="contained"
+                fullWidth={{ xs: true, sm: false }}
+                sx={{ width: { xs: "100%", sm: "auto" } }}
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  setModalOpen(true);
+                  setIsEditing(false);
+                  setNewProjectName("");
+                }}
+              >
+                {translate("create_project_button")}
+              </Button>
+            </HasRole>
           </Box>
           <Box
             sx={{
-              display: "grid",
+              display: projects.length > 0 ? "grid" : "block",
               gridTemplateColumns: {
                 xs: "1fr",
                 sm: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -209,16 +242,31 @@ const ProjectsPage = () => {
               gap: { xs: 2, sm: 3 },
             }}
           >
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                projects={projects}
-                setProjects={setProjects}
-                handleEditStart={handleEditStart}
+            {projects.length > 0 ? (
+              projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  projects={projects}
+                  setProjects={setProjects}
+                  handleEditStart={handleEditStart}
+                  onNotify={triggerNotification}
+                />
+              ))
+            ) : (
+              <WarningAlert
+                title={translate("no_projects_found_title")}
+                message={translate("no_projects_found_message")}
+                marginTop={5}
               />
-            ))}
+            )}
           </Box>
+          <ConfirmationNotification
+            open={notificationOpen}
+            onClose={() => setNotificationOpen(false)}
+            severity={serverMessage.type}
+            message={serverMessage.text}
+          />
         </Box>
       </Box>
       <ProjectModal

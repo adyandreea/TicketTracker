@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDTO {
 
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "firstname_required")
     private String firstname;

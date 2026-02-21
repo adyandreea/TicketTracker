@@ -116,4 +116,18 @@ public class SwaggerMessages {
      */
     public static final String RETURN_USERS = "Returns all the users.";
 
+    /**
+     * Message when user was assigned successfully to project.
+     */
+    public static final String ASSIGN_USER_TO_PROJECT = "User successfully assigned to project";
+
+    /**
+     * Message when all the projects were returned by project ID.
+     */
+    public static final String RETURN_USERS_BY_PROJECT = "Returns all users by project Id";
+
+    /**
+     * Message when user was removed from project.
+     */
+    public static final String REMOVE_USER_FROM_PROJECT = "User removed from project successfully.";
 }

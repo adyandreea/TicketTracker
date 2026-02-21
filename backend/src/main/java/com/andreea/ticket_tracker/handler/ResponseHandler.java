@@ -19,4 +19,8 @@ public class ResponseHandler {
     public static ResponseEntity<SuccessDTO> deleted(String message){
         return new ResponseEntity<>(SuccessDTO.returnNewDTO(HttpStatus.OK.value(),message),HttpStatus.OK);
     }
+
+    public static ResponseEntity<SuccessDTO> success(String message){
+        return new ResponseEntity<>(SuccessDTO.returnNewDTO(HttpStatus.OK.value(),message),HttpStatus.OK);
+    }
 }

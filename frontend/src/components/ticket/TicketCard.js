@@ -13,6 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteTicket } from "../../api/ticketApi";
 import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../../features/auth/HasRole";
 
 const TicketCard = ({
   ticket,
@@ -23,6 +24,7 @@ const TicketCard = ({
   editingText,
   setTickets,
   setError,
+  onNotify,
 }) => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const theme = useTheme();
@@ -39,12 +41,13 @@ const TicketCard = ({
               (t) => t.id !== ticketId,
             );
           });
+          onNotify("success", translate("ticket_deleted_successfully"));
           return newTickets;
         });
       })
       .catch((error) => {
         console.error("Failed to delete ticket:", error);
-        setError(translate("ticket_delete_error"));
+        onNotify("error", translate("delete_ticket_error"));
       });
   };
 
@@ -74,9 +77,11 @@ const TicketCard = ({
         <IconButton size="small" onClick={onEditSave} color="primary">
           <CheckIcon fontSize="small" />
         </IconButton>
-        <IconButton onClick={() => setShowConfirmationDialog(true)}>
-          <DeleteIcon fontSize="small" color="error" />
-        </IconButton>
+        <HasRole allowedRoles={["ADMIN", "MANAGER"]}>
+          <IconButton onClick={() => setShowConfirmationDialog(true)}>
+            <DeleteIcon fontSize="small" color="error" />
+          </IconButton>
+        </HasRole>
         {showConfirmationDialog && (
           <ConfirmationDialog
             title={translate("confirm_deletion_title")}

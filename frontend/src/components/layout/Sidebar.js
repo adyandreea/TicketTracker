@@ -18,6 +18,7 @@ import {
   AccountTree as ProjectIcon,
   ViewKanban as BoardIcon,
   AdminPanelSettings as AdminIcon,
+  Security as PermissionsIcon,
   ExpandLess,
   ExpandMore,
   PersonAdd as CreateUserIcon,
@@ -25,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "../../i18n/LanguageContext";
+import HasRole from "../../features/auth/HasRole";
 
 const Sidebar = ({ open, onClose }) => {
   const navigate = useNavigate();
@@ -158,94 +160,116 @@ const Sidebar = ({ open, onClose }) => {
             />
           </ListItemButton>
         ))}
+        <HasRole allowedRoles={["ADMIN"]}>
+          <ListItemButton
+            onClick={handleAdminClick}
+            sx={{
+              borderRadius: "12px",
+              mb: 1,
 
-        <ListItemButton
-          onClick={handleAdminClick}
-          sx={{
-            borderRadius: "12px",
-            mb: 1,
-
-            color:
-              isSubPageActive || adminOpen
-                ? theme.palette.primary.main
-                : "text.primary",
-            backgroundColor:
-              isSubPageActive || adminOpen
-                ? "rgba(25, 118, 210, 0.08)"
-                : "transparent",
-            "&:hover": {
+              color:
+                isSubPageActive || adminOpen
+                  ? theme.palette.primary.main
+                  : "text.primary",
               backgroundColor:
                 isSubPageActive || adminOpen
-                  ? "rgba(25, 118, 210, 0.12)"
-                  : "rgba(0, 0, 0, 0.04)",
-              transform: "translateX(5px)",
-            },
-            transition: "all 0.2s ease",
-          }}
-        >
-          <ListItemIcon
-            sx={{
-              minWidth: "45px",
-              color: isSubPageActive ? theme.palette.primary.main : "inherit",
+                  ? "rgba(25, 118, 210, 0.08)"
+                  : "transparent",
+              "&:hover": {
+                backgroundColor:
+                  isSubPageActive || adminOpen
+                    ? "rgba(25, 118, 210, 0.12)"
+                    : "rgba(0, 0, 0, 0.04)",
+                transform: "translateX(5px)",
+              },
+              transition: "all 0.2s ease",
             }}
           >
-            <AdminIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary={translate("administration_sidebar")}
-            primaryTypographyProps={{
-              fontSize: "16px",
-              fontWeight: isSubPageActive ? 700 : 500,
-            }}
-          />
-          {adminOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-
-        <Collapse in={adminOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: 3 }}>
-            <ListItemButton
-              onClick={() => handleNavigate("/register")}
-              sx={getButtonStyle("/register")}
+            <ListItemIcon
+              sx={{
+                minWidth: "45px",
+                color: isSubPageActive ? theme.palette.primary.main : "inherit",
+              }}
             >
-              <ListItemIcon
-                sx={{
-                  minWidth: "40px",
-                  color:
-                    location.pathname === "/register"
-                      ? theme.palette.primary.main
-                      : "inherit",
-                }}
-              >
-                <CreateUserIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={translate("create_user_sidebar")}
-                primaryTypographyProps={{ fontSize: "14px" }}
-              />
-            </ListItemButton>
+              <AdminIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={translate("administration_sidebar")}
+              primaryTypographyProps={{
+                fontSize: "16px",
+                fontWeight: isSubPageActive ? 700 : 500,
+              }}
+            />
+            {adminOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
 
-            <ListItemButton
-              onClick={() => handleNavigate("/edit-user")}
-              sx={getButtonStyle("/edit-user")}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: "40px",
-                  color:
-                    location.pathname === "/edit-user"
-                      ? theme.palette.primary.main
-                      : "inherit",
-                }}
+          <Collapse in={adminOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding sx={{ pl: 3 }}>
+              <ListItemButton
+                onClick={() => handleNavigate("/register")}
+                sx={getButtonStyle("/register")}
               >
-                <EditUserIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={translate("manage_users_sidebar")}
-                primaryTypographyProps={{ fontSize: "14px" }}
-              />
-            </ListItemButton>
-          </List>
-        </Collapse>
+                <ListItemIcon
+                  sx={{
+                    minWidth: "40px",
+                    color:
+                      location.pathname === "/register"
+                        ? theme.palette.primary.main
+                        : "inherit",
+                  }}
+                >
+                  <CreateUserIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={translate("create_user_sidebar")}
+                  primaryTypographyProps={{ fontSize: "14px" }}
+                />
+              </ListItemButton>
+
+              <ListItemButton
+                onClick={() => handleNavigate("/edit-user")}
+                sx={getButtonStyle("/edit-user")}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: "40px",
+                    color:
+                      location.pathname === "/edit-user"
+                        ? theme.palette.primary.main
+                        : "inherit",
+                  }}
+                >
+                  <EditUserIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={translate("manage_users_sidebar")}
+                  primaryTypographyProps={{ fontSize: "14px" }}
+                />
+              </ListItemButton>
+
+              <ListItemButton
+                onClick={() => handleNavigate("/permissions")}
+                sx={getButtonStyle("/permissions")}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: "40px",
+                    color:
+                      location.pathname === "/permissions"
+                        ? theme.palette.primary.main
+                        : "inherit",
+                  }}
+                >
+                  <PermissionsIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={translate("user_permissions_sidebar")}
+                  primaryTypographyProps={{ fontSize: "14px" }}
+                />
+              </ListItemButton>
+            </List>
+          </Collapse>
+        </HasRole>
       </List>
     </Drawer>
   );
