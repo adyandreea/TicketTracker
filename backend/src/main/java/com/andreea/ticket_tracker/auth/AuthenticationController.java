@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -115,5 +116,27 @@ public class AuthenticationController {
             @Valid @RequestBody UserRequestDTO request
     ) {
         return ResponseEntity.ok(service.updateUser(id, request));
+    }
+
+    @Operation(summary = "Returns the profile of the currently authenticated user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_USER,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserResponseDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
+    })
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getCurrentUser() {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(service.getUserByUsername(currentUsername));
+    }
+
+    @PatchMapping("/users/profile-picture")
+    public ResponseEntity<Void> updateProfilePicture(@RequestBody String base64Image) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        service.updateProfilePicture(currentUsername, base64Image);
+        return ResponseEntity.ok().build();
     }
 }

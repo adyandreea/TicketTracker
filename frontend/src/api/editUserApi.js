@@ -41,3 +41,34 @@ export const deleteUser = async (id) => {
     throw err.response?.data || { message: "Delete failed" };
   }
 };
+
+export const getMyProfile = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/me`, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (err) {
+    throw err.response?.data || { message: "Failed to fetch profile data." };
+  }
+};
+
+export const updateProfilePicture = async (base64Image) => {
+  try {
+    const response = await axios.patch(
+      `${API_URL}/auth/users/profile-picture`,
+      base64Image,
+      {
+        headers: {
+          ...getAuthHeaders(),
+          "Content-Type": "text/plain",
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    throw (
+      err.response?.data || { message: "Failed to upload profile picture." }
+    );
+  }
+};
