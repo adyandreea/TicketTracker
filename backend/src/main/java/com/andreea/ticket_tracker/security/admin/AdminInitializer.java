@@ -27,13 +27,13 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        boolean exists = userRepository.existsByUsername(adminProperties.getUsername());
+        boolean exists = userRepository.existsByUsername("admin");
 
         if (!exists) {
             User admin = new User();
             admin.setFirstname("admin");
             admin.setLastname("admin");
-            admin.setUsername(adminProperties.getUsername());
+            admin.setUsername("admin");
             admin.setEmail(adminProperties.getEmail());
             admin.setPassword(passwordEncoder.encode(adminProperties.getPassword()));
             admin.setRole(ADMIN);
