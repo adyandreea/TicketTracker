@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -152,5 +154,68 @@ public class AuthenticationControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("user_not_found"))
                 .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @Test
+    @WithMockUser(username = "username", authorities = {"USER"})
+    void testGetCurrentUser() throws Exception {
+        User user = new User();
+        user.setFirstname("User");
+        user.setLastname("User");
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEmail("user@test.com");
+        user.setRole(Role.USER);
+        userRepository.save(user);
+
+        mockMvc.perform(get("/api/v1/auth/me")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", is("username")))
+                .andExpect(jsonPath("$.email", is("user@test.com")));
+    }
+
+    @Test
+    @WithMockUser(username = "username", authorities = {"USER"})
+    void testUpdateProfilePicture() throws Exception {
+        User user = new User();
+        user.setFirstname("User");
+        user.setLastname("User");
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEmail("user@test.com");
+        user.setRole(Role.USER);
+        userRepository.save(user);
+
+        String base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+
+        mockMvc.perform(put("/api/v1/auth/users/profile-picture")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content(base64Image))
+                .andExpect(status().isOk());
+
+        User updatedUser = userRepository.findByUsername("username").orElseThrow();
+        assertEquals(base64Image, updatedUser.getProfilePicture());
+    }
+
+    @Test
+    @WithMockUser(username = "username", authorities = {"USER"})
+    void testDeleteProfilePicture() throws Exception {
+        User user = new User();
+        user.setFirstname("User");
+        user.setLastname("User");
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEmail("user@test.com");
+        user.setRole(Role.USER);
+        user.setProfilePicture("existent-image-data");
+        userRepository.save(user);
+
+        mockMvc.perform(delete("/api/v1/auth/users/profile-picture")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        User updatedUser = userRepository.findByUsername("username").orElseThrow();
+        assertNull(updatedUser.getProfilePicture());
     }
 }
