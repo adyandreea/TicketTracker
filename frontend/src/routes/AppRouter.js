@@ -9,6 +9,7 @@ import ProtectedRoute from "../utils/ProtectedRoute";
 import LogoutHandler from "../utils/LogoutHandler";
 import { LanguageProvider } from "../i18n/LanguageContext";
 import PermissionsPage from "../features/pages/PermissionsPage.js";
+import ProfilePage from "../features/pages/ProfilePage.js";
 
 const AppRouter = () => {
   return (
@@ -61,6 +62,14 @@ const AppRouter = () => {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <PermissionsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

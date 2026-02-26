@@ -55,7 +55,7 @@ export const getMyProfile = async () => {
 
 export const updateProfilePicture = async (base64Image) => {
   try {
-    const response = await axios.patch(
+    const response = await axios.put(
       `${API_URL}/auth/users/profile-picture`,
       base64Image,
       {
@@ -69,6 +69,22 @@ export const updateProfilePicture = async (base64Image) => {
   } catch (err) {
     throw (
       err.response?.data || { message: "Failed to upload profile picture." }
+    );
+  }
+};
+
+export const deleteProfilePicture = async () => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/auth/users/profile-picture`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
+    return response.data;
+  } catch (err) {
+    throw (
+      err.response?.data || { message: "Failed to delete profile picture." }
     );
   }
 };

@@ -90,28 +90,8 @@ const ProfileSidebar = ({ open, onClose, isDarkMode, toggleDarkMode }) => {
           alignItems: "center",
         }}
       >
-        <Box
-          sx={{
-            width: 60,
-            height: 60,
-            bgcolor: "primary.main",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            mb: 1,
-            color: "white",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-          }}
-        >
-          UP
-        </Box>
-        <Typography variant="h6" sx={{ fontWeight: 800 }}>
+        <Typography variant="h5" sx={{ fontWeight: 800, mt: 4 }}>
           {translate("user_profile_sidebar")}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          user@example.com
         </Typography>
       </Toolbar>
 

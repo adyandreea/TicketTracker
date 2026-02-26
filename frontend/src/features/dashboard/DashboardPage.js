@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Typography,
 } from "@mui/material";
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
@@ -18,21 +17,22 @@ import { getBoardsByProjectId } from "../../api/boardApi";
 import ProfileSidebar from "../../components/layout/ProfileSidebar";
 import { useLanguage } from "../../i18n/LanguageContext";
 import WarningAlert from "../../components/common/WarningAlert";
+import LoadingScreen from "../../components/common/LoadingScreen";
 
 const DashboardPage = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState("");
-  const [loadingProject, setLoadingProject] = useState(true);
   const [errorProject, setErrorProject] = useState(null);
 
   const [boards, setBoards] = useState(null);
   const [selectedBoardId, setSelectedBoardId] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [loadingBoard, setLoadingBoard] = useState(false);
   const [errorBoard, setErrorBoard] = useState(null);
   const { translate } = useLanguage();
+  const [loading, setLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -49,17 +49,19 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        setLoadingProject(true);
         const data = await getProjects();
         setProjects(data);
         if (data && data.length > 0) {
           setSelectedProjectId(data[0].id);
+        } else {
+          setLoading(false);
+          setIsInitialLoad(false);
         }
       } catch (err) {
         console.error("Error loading projects:", err);
         setErrorProject(translate("project_not_found"));
-      } finally {
-        setLoadingProject(false);
+        setLoading(false);
+        setIsInitialLoad(false);
       }
     };
     fetchProjects();
@@ -68,12 +70,11 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       if (!selectedProjectId) {
-        setBoards([]);
-        setSelectedBoardId("");
+        setLoading(false);
+        setIsInitialLoad(false);
         return;
       }
       try {
-        setLoadingBoard(true);
         const data = await getBoardsByProjectId(selectedProjectId);
         setBoards(data);
         if (data && data.length > 0) {
@@ -86,7 +87,8 @@ const DashboardPage = () => {
         setErrorBoard(translate("board_not_found"));
         setBoards([]);
       } finally {
-        setLoadingBoard(false);
+        setLoading(false);
+        setIsInitialLoad(false);
       }
     };
     fetchBoards();
@@ -100,6 +102,8 @@ const DashboardPage = () => {
     setSelectedBoardId(event.target.value);
     handleCloseModal();
   };
+
+  if (loading && isInitialLoad) return <LoadingScreen />;
 
   return (
     <Box
@@ -143,7 +147,7 @@ const DashboardPage = () => {
           }}
         >
           <Box sx={{ mb: 2, flexShrink: 0 }}>
-            {!loadingProject && !errorProject && projects.length > 0 && (
+            {!errorProject && projects.length > 0 && (
               <FormControl
                 variant="outlined"
                 size="small"
@@ -179,26 +183,23 @@ const DashboardPage = () => {
               display: "flex",
               borderRadius: 3,
               justifyContent: "center",
-              alignItems:
-                boards && boards.length > 0 ? "stretch" : "flex-start",
+              alignItems: boards?.length > 0 ? "stretch" : "flex-start",
               p: 1,
-              pt: boards && boards.length > 0 ? 1 : 10,
+              pt: boards?.length > 0 ? 1 : 10,
             }}
           >
-            {loadingBoard ? (
-              <Typography>{translate("loading_tickets")}</Typography>
-            ) : boards && boards.length > 0 ? (
+            {boards && boards.length > 0 ? (
               <DashboardBoard selectedBoardId={selectedBoardId} />
-            ) : (
+            ) : boards && boards.length === 0 ? (
               <WarningAlert
                 title={translate("no_boards_found_title_dashboard")}
                 message={translate("no_boards_found_message_dashboard")}
                 marginTop={0}
               />
-            )}
+            ) : null}
           </Box>
 
-          {!loadingBoard && !errorBoard && boards && boards.length > 0 && (
+          {!errorBoard && boards && boards.length > 0 && (
             <Box
               sx={{
                 mt: 2,

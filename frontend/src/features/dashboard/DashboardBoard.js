@@ -38,7 +38,6 @@ const BoardCard = ({ selectedBoardId }) => {
     DONE: [],
   });
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { translate } = useLanguage();
   const [serverMessage, setServerMessage] = useState({
@@ -64,7 +63,6 @@ const BoardCard = ({ selectedBoardId }) => {
         setTickets({ TODO: [], IN_PROGRESS: [], DONE: [] });
         return;
       }
-      setLoading(true);
       setError(null);
 
       try {
@@ -82,8 +80,6 @@ const BoardCard = ({ selectedBoardId }) => {
       } catch (err) {
         setError(translate("ticket_not_found"));
         console.error("Error loading tickets:", err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchTickets();
@@ -263,14 +259,6 @@ const BoardCard = ({ selectedBoardId }) => {
     setEditingTicketId(null);
     setEditingText("");
   };
-
-  if (loading) {
-    return (
-      <Box sx={{ p: 3, textAlign: "center" }}>
-        <Typography variant="h6">{translate("loading_tickets")}</Typography>
-      </Box>
-    );
-  }
 
   if (error) {
     return (
