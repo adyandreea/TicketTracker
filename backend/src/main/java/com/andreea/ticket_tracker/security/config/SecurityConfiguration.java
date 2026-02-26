@@ -68,6 +68,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, TICKETS_ALL_ENDPOINTS).hasAnyAuthority(Role.USER.name(),Role.ADMIN.name(),Role.MANAGER.name())
                         .requestMatchers(HttpMethod.DELETE, TICKETS_ALL_ENDPOINTS).hasAnyAuthority(Role.ADMIN.name(),Role.MANAGER.name())
 
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/auth/users/profile-picture").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name(), Role.MANAGER.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/auth/users/profile-picture").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name(), Role.MANAGER.name())
+
                         .requestMatchers(HttpMethod.POST, REGISTER_ENDPOINT).hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, USERS_MANAGEMENT_ENDPOINT).hasAuthority(Role.ADMIN.name())

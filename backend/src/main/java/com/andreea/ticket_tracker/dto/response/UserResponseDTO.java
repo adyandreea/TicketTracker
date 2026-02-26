@@ -34,4 +34,6 @@ public class UserResponseDTO {
 
     @NotNull(message = "role_required")
     private Role role;
+
+    private String profilePicture;
 }

@@ -86,4 +86,25 @@ public class AuthenticationService {
 
         return userDTOMapper.toDTO(updatedUser);
     }
+
+    public UserResponseDTO getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(userDTOMapper::toDTO)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    public void updateProfilePicture(String username, String base64Image) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+        user.setProfilePicture(base64Image);
+        userRepository.save(user);
+    }
+
+    public void deleteProfilePicture(String username) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        user.setProfilePicture(null);
+        userRepository.save(user);
+    }
 }

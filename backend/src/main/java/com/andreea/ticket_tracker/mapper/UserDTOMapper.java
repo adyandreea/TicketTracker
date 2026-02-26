@@ -17,6 +17,7 @@ public class UserDTOMapper {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .profilePicture(user.getProfilePicture())
                 .build();
     }
 }

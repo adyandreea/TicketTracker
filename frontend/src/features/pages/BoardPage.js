@@ -12,6 +12,7 @@ import { useLanguage } from "../../i18n/LanguageContext";
 import HasRole from "../auth/HasRole";
 import ConfirmationNotification from "../../components/common/ConfirmationNotification";
 import WarningAlert from "../../components/common/WarningAlert";
+import LoadingScreen from "../../components/common/LoadingScreen";
 
 const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
@@ -33,7 +34,7 @@ const BoardsPage = () => {
     text: "",
   });
   const [notificationOpen, setNotificationOpen] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({ name: "", projectId: "" });
 
   const fetchBoardsAndProjects = async () => {
@@ -56,6 +57,8 @@ const BoardsPage = () => {
       setBoards(mappedBoards);
     } catch (error) {
       console.error("Fetch data error:", error.message || error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,6 +157,8 @@ const BoardsPage = () => {
     setServerMessage({ type, text });
     setNotificationOpen(true);
   };
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <Box

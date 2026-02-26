@@ -5,6 +5,7 @@ import com.andreea.ticket_tracker.auth.AuthenticationResponse;
 import com.andreea.ticket_tracker.auth.AuthenticationService;
 import com.andreea.ticket_tracker.auth.RegisterRequest;
 import com.andreea.ticket_tracker.dto.request.UserRequestDTO;
+import com.andreea.ticket_tracker.dto.response.UserResponseDTO;
 import com.andreea.ticket_tracker.exceptions.UserNotFoundException;
 import com.andreea.ticket_tracker.mapper.UserDTOMapper;
 import com.andreea.ticket_tracker.security.config.JwtProvider;
@@ -48,6 +49,9 @@ public class AuthenticationServiceTest {
     @Mock
     private UserDTOMapper userDTOMapper;
 
+    @Mock
+    private UserResponseDTO userResponseDTO;
+
     @InjectMocks
     private AuthenticationService authenticationService;
 
@@ -59,10 +63,14 @@ public class AuthenticationServiceTest {
                 .id(1L)
                 .firstname("firstname")
                 .lastname("lastname")
-                .username("user_test")
+                .username("username")
                 .email("test@example.com")
                 .role(MANAGER)
+                .profilePicture("old-image")
                 .build();
+
+        userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setUsername("username");
     }
 
     @Test
@@ -142,5 +150,38 @@ public class AuthenticationServiceTest {
 
         assertThrows(UserNotFoundException.class, () -> authenticationService.deleteUser(1L));
         verify(repository, never()).deleteById(anyLong());
+    }
+
+    @Test
+    void testGetUserByUsername() {
+        when(repository.findByUsername("username")).thenReturn(Optional.of(user));
+        when(userDTOMapper.toDTO(user)).thenReturn(userResponseDTO);
+
+        UserResponseDTO result = authenticationService.getUserByUsername("username");
+
+        assertNotNull(result);
+        assertEquals("username", result.getUsername());
+        verify(repository).findByUsername("username");
+    }
+
+    @Test
+    void testUpdateProfilePicture() {
+        String newImage = "base64-new-image";
+        when(repository.findByUsername("username")).thenReturn(Optional.of(user));
+
+        authenticationService.updateProfilePicture("username", newImage);
+
+        assertEquals(newImage, user.getProfilePicture());
+        verify(repository).save(user);
+    }
+
+    @Test
+    void testDeleteProfilePicture() {
+        when(repository.findByUsername("username")).thenReturn(Optional.of(user));
+
+        authenticationService.deleteProfilePicture("username");
+
+        assertNull(user.getProfilePicture());
+        verify(repository).save(user);
     }
 }

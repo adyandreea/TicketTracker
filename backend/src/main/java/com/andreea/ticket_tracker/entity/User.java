@@ -49,4 +49,8 @@ public class User {
         @Builder.Default
         @ManyToMany(mappedBy="users", cascade=CascadeType.ALL)
         private Set<Project> projects = new HashSet<>();
+
+        @Lob
+        @Column(name = "profile_picture", columnDefinition = "LONGTEXT")
+        private String profilePicture;
 }

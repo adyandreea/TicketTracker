@@ -32,7 +32,6 @@ const ProjectCard = ({
       await deleteProject(id);
       setProjects(projects.filter((project) => project.id !== id));
       onNotify("success", translate("project_deleted_successfully"));
-      setShowConfirmationDialog(false);
     } catch (error) {
       onNotify("error", translate("delete_project_error"));
     } finally {

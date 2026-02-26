@@ -15,6 +15,7 @@ import { useLanguage } from "../../i18n/LanguageContext";
 import HasRole from "../../features/auth/HasRole";
 import ConfirmationNotification from "../../components/common/ConfirmationNotification";
 import WarningAlert from "../../components/common/WarningAlert";
+import LoadingScreen from "../../components/common/LoadingScreen";
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -34,6 +35,7 @@ const ProjectsPage = () => {
     text: "",
   });
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchProjects = async () => {
     try {
@@ -41,6 +43,8 @@ const ProjectsPage = () => {
       setProjects(data);
     } catch (error) {
       console.error("Fetch projects error:", error.message || error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,6 +158,8 @@ const ProjectsPage = () => {
     setServerMessage({ type, text });
     setNotificationOpen(true);
   };
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <Box

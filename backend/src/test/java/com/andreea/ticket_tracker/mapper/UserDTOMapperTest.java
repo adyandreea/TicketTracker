@@ -18,6 +18,7 @@ public class UserDTOMapperTest {
         user.setUsername("ana");
         user.setEmail("ana@gmail.com");
         user.setRole(Role.MANAGER);
+        user.setProfilePicture("image");
 
         UserResponseDTO dto = new UserDTOMapper().toDTO(user);
 
