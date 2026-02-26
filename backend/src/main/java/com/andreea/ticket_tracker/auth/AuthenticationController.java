@@ -133,10 +133,38 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.getUserByUsername(currentUsername));
     }
 
-    @PatchMapping("/users/profile-picture")
+    @Operation(summary = "Updates the profile picture of the currently authenticated user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROFILE_PICTURE_SUCCESSFULLY_UPDATED,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
+    })
+    @PutMapping("/users/profile-picture")
     public ResponseEntity<Void> updateProfilePicture(@RequestBody String base64Image) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         service.updateProfilePicture(currentUsername, base64Image);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Deletes the profile picture of the currently authenticated user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROFILE_PICTURE_SUCCESSFULLY_DELETED,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = SuccessDTO.class))}),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR,
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorDTO.class))})
+    })
+    @DeleteMapping("/users/profile-picture")
+    public ResponseEntity<Void> deleteProfilePicture() {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        service.deleteProfilePicture(currentUsername);
         return ResponseEntity.ok().build();
     }
 }

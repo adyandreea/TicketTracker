@@ -135,4 +135,14 @@ public class SwaggerMessages {
      * Message when a user was returned.
      */
     public static final String RETURN_USER = "Successfully retrieved current user profile";
+
+    /**
+     * Message when profile picture was successfully updated.
+     */
+    public static final String PROFILE_PICTURE_SUCCESSFULLY_UPDATED = "Profile picture updated successfully.";
+
+    /**
+     * Message when profile picture was successfully deleted.
+     */
+    public static final String PROFILE_PICTURE_SUCCESSFULLY_DELETED = "Profile picture deleted successfully.";
 }

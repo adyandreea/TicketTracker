@@ -99,4 +99,12 @@ public class AuthenticationService {
         user.setProfilePicture(base64Image);
         userRepository.save(user);
     }
+
+    public void deleteProfilePicture(String username) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        user.setProfilePicture(null);
+        userRepository.save(user);
+    }
 }
