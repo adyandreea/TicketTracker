@@ -14,6 +14,7 @@ public class TicketDTOMapper {
         ticket.setPosition(dto.getPosition());
         ticket.setStatus(dto.getStatus());
         ticket.setBoard(board);
+        ticket.setStoryPoints(dto.getStoryPoints());
         return ticket;
     }
 
@@ -25,12 +26,21 @@ public class TicketDTOMapper {
         dto.setDescription(ticket.getDescription());
         dto.setStatus(ticket.getStatus());
         dto.setPosition(ticket.getPosition());
+        dto.setStoryPoints(ticket.getStoryPoints());
 
         if(ticket.getBoard() != null){
             dto.setBoardId(ticket.getBoard().getId());
             dto.setBoardName(ticket.getBoard().getName());
+
+            if(ticket.getBoard().getProject() != null) {
+                dto.setProjectId(ticket.getBoard().getProject().getId());
+            }
         }
 
+        if(ticket.getAssignedUser() != null){
+            dto.setAssignedUserId(ticket.getAssignedUser().getId());
+            dto.setAssignedUsername(ticket.getAssignedUser().getUsername());
+        }
         return dto;
     }
 }

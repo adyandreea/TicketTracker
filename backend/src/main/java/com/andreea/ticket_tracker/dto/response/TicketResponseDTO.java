@@ -32,4 +32,9 @@ public class TicketResponseDTO {
 
     @NotBlank(message = "board_name_required")
     private String boardName;
+
+    private Integer storyPoints;
+    private Long assignedUserId;
+    private String assignedUsername;
+    private Long projectId;
 }

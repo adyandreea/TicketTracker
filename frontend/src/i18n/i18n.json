@@ -129,6 +129,22 @@
         "profile_picture_updated_successfully": { "ENG": "Profile picture updated successfully!", "RO": "Fotografia de profil a fost actualizată cu succes!", "FR": "Photo de profil mise à jour avec succès !", "RU": "Фотография профиля успешно обновлена!" },
         "confirm_profile_picture_deletion_message": { "ENG": "Are you sure you want to delete your profile picture?", "RO": "Sigur doriți să vă ștergeți fotografia de profil?", "FR": "Êtes-vous sûr de vouloir supprimer votre photo de profil ?", "RU": "Вы уверены, что хотите удалить фотографию профиля?" },
         "error_deleting_picture": { "ENG": "Failed to delete profile picture. Please try again.", "RO": "Ștergerea fotografiei de profil a eșuat. Vă rugăm să încercați din nou.", "FR": "Échec de la suppression de la photo de profil. Veuillez réessayer.", "RU": "Не удалось удалить фотографию профиля. Пожалуйста, попробуйте снова." },
-        "error_updating_picture": { "ENG": "Failed to update profile picture. Please try again.", "RO": "Actualizarea fotografiei de profil a eșuat. Vă rugăm să încercați din nou.", "FR": "Échec de la mise à jour de la photo de profil. Veuillez réessayer.", "RU": "Не удалось обновить фотографию профиля. Пожалуйста, попробуйте снова." }
+        "error_updating_picture": { "ENG": "Failed to update profile picture. Please try again.", "RO": "Actualizarea fotografiei de profil a eșuat. Vă rugăm să încercați din nou.", "FR": "Échec de la mise à jour de la photo de profil. Veuillez réessayer.", "RU": "Не удалось обновить фотографию профиля. Пожалуйста, попробуйте снова." },
+        "back_to_dashboard_button": { "ENG": "Back to Dashboard", "RO": "Înapoi la Panou de control", "FR": "Retour au tableau de bord", "RU": "Назад к панели управления" },
+        "ticket_description_label": { "ENG": "Description", "RO": "Descriere", "FR": "Description", "RU": "Описание" },
+        "ticket_title_label": { "ENG": "Title", "RO": "Titlu", "FR": "Titre", "RU": "Название" },
+        "ticket_information_title": { "ENG": "Ticket Information", "RO": "Informații despre tichet", "FR": "Informations sur le ticket", "RU": "Информация о тикете" },
+        "ticket_status_label": { "ENG": "Status", "RO": "Stare", "FR": "Statut", "RU": "Статус" },
+        "ticket_id_label": { "ENG": "Ticket ID", "RO": "ID tichet", "FR": "ID du ticket", "RU": "ID тикета" },
+        "board_location_label": { "ENG": "Board Location", "RO": "Locația tabloului", "FR": "Emplacement du tableau", "RU": "Расположение доски" },
+        "board_reference_label": { "ENG": "Board Reference", "RO": "Referință la tablou", "FR": "Référence du tableau", "RU": "Ссылка на доску" },
+        "error_updating_ticket": { "ENG": "Failed to update ticket. Please try again.", "RO": "Actualizarea tichetului a eșuat. Vă rugăm să încercați din nou.", "FR": "Échec de la mise à jour du ticket. Veuillez réessayer.", "RU": "Не удалось обновить тикет. Пожалуйста, попробуйте снова." },
+        "error_deleting_ticket": { "ENG": "Failed to delete ticket. Please try again.", "RO": "Ștergerea tichetului a eșuat. Vă rugăm să încercați din nou.", "FR": "Échec de la suppression du ticket. Veuillez réessayer.", "RU": "Не удалось удалить тикет. Пожалуйста, попробуйте снова." },
+        "ticket_title_required": { "ENG": "Ticket title is required", "RO": "Titlul tichetului este obligatoriu", "FR": "Le titre du ticket est requis", "RU": "Название тикета обязательно" },
+        "ticket_title_too_short": { "ENG": "Ticket title must be at least 3 characters long", "RO": "Titlul tichetului trebuie să aibă cel puțin 3 caractere", "FR": "Le titre du ticket doit comporter au moins 3 caractères", "RU": "Название тикета должно быть не менее 3 символов" },
+        "ticket_description_too_long": { "ENG": "Ticket description cannot exceed 255 characters", "RO": "Descrierea tichetului nu poate depăși 255 de caractere", "FR": "La description du ticket ne peut pas dépasser 255 caractères", "RU": "Описание тикета не может превышать 255 символов" },
+        "ticket_title_length_invalid": { "ENG": "Ticket title cannot exceed 50 characters", "RO": "Titlul tichetului nu poate depăși 50 de caractere", "FR": "Le titre du ticket ne peut pas dépasser 50 caractères", "RU": "Название тикета не может превышать 50 символов" },
+        "unassigned_label": { "ENG": "Unassigned", "RO": "Neasignat", "FR": "Non assigné", "RU": "Не назначен" },
+        "story_points_label": { "ENG": "Story Points", "RO": "Puncte de poveste", "FR": "Points d'histoire", "RU": "Очки истории" }
     }
 }

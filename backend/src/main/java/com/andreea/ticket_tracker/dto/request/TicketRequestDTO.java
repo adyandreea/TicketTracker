@@ -28,4 +28,7 @@ public class TicketRequestDTO {
 
     @NotNull(message = "board_id_required")
     private Long boardId;
+
+    private Integer storyPoints;
+    private Long assignedUserId;
 }

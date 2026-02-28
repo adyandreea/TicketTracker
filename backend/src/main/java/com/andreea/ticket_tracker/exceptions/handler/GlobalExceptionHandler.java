@@ -89,4 +89,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UserNotInProjectException.class)
+    public ResponseEntity<ErrorDTO> handleUserNotInProject(UserNotInProjectException ex){
+        ErrorDTO error = new ErrorDTO();
+
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }
