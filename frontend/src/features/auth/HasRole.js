@@ -1,9 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 
-const HasRole = ({ allowedRoles, children }) => {
+const HasRole = ({ allowedRoles, children, fallback = null }) => {
   const token = localStorage.getItem("token");
 
-  if (!token) return null;
+  if (!token) return fallback;
 
   try {
     const decoded = jwtDecode(token);
@@ -12,10 +12,10 @@ const HasRole = ({ allowedRoles, children }) => {
       userRole === role || userRole === `ROLE_${role}`
     );
 
-    return hasAccess ? children : null;
+    return hasAccess ? children : fallback;
   } catch (error) {
     console.error("JWT Decode Error:", error);
-    return null;
+    return fallback;
   }
 };
 

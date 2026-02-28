@@ -10,6 +10,7 @@ import LogoutHandler from "../utils/LogoutHandler";
 import { LanguageProvider } from "../i18n/LanguageContext";
 import PermissionsPage from "../features/pages/PermissionsPage.js";
 import ProfilePage from "../features/pages/ProfilePage.js";
+import TicketPage from "../features/pages/TicketPage.js";
 
 const AppRouter = () => {
   return (
@@ -70,6 +71,15 @@ const AppRouter = () => {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/tickets/:id"
+            element={
+              <ProtectedRoute>
+                <TicketPage />
               </ProtectedRoute>
             }
           />

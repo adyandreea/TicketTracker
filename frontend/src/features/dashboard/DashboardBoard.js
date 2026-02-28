@@ -85,7 +85,6 @@ const BoardCard = ({ selectedBoardId }) => {
     fetchTickets();
   }, [selectedBoardId, translate]);
 
-  const [editingTicketId, setEditingTicketId] = useState(null);
   const [editingText, setEditingText] = useState("");
 
   const [isAdding, setIsAdding] = useState({
@@ -212,54 +211,6 @@ const BoardCard = ({ selectedBoardId }) => {
     setDraggedFromCol(null);
   };
 
-  const handleEditStart = (ticket) => {
-    setEditingTicketId(ticket.id);
-    setEditingText(ticket.title);
-  };
-
-  const handleEditSave = (col) => {
-    const ticketToEdit = tickets[col].find((t) => t.id === editingTicketId);
-
-    if (!ticketToEdit || editingText.trim() === "") {
-      setEditingTicketId(null);
-      setEditingText("");
-      return;
-    }
-
-    const updatedData = {
-      ...ticketToEdit,
-      title: editingText.trim(),
-      boardId: selectedBoardId,
-    };
-
-    updateTicket(editingTicketId, updatedData)
-      .then(() => {
-        setTickets((prevTickets) => {
-          const newTickets = { ...prevTickets };
-          newTickets[col] = newTickets[col].map((t) =>
-            t.id === editingTicketId ? { ...t, title: updatedData.title } : t,
-          );
-          return newTickets;
-        });
-        setServerMessage({
-          type: "success",
-          text: translate("ticket_updated_successfully"),
-        });
-        setNotificationOpen(true);
-      })
-      .catch((error) => {
-        console.error("Failed to update ticket title:", error);
-        setServerMessage({
-          type: "error",
-          text: translate("update_ticket_error"),
-        });
-        setNotificationOpen(true);
-      });
-
-    setEditingTicketId(null);
-    setEditingText("");
-  };
-
   if (error) {
     return (
       <Box sx={{ p: 3, textAlign: "center", color: "error.main" }}>
@@ -323,10 +274,7 @@ const BoardCard = ({ selectedBoardId }) => {
               >
                 <TicketCard
                   ticket={ticket}
-                  isEditing={editingTicketId === ticket.id}
-                  onEditStart={() => handleEditStart(ticket)}
                   onEditChange={(e) => setEditingText(e.target.value)}
-                  onEditSave={() => handleEditSave(col)}
                   editingText={editingText}
                   tickets={tickets}
                   setTickets={setTickets}
