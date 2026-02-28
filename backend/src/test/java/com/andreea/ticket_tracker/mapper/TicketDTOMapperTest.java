@@ -4,6 +4,7 @@ import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
 import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Ticket;
+import com.andreea.ticket_tracker.entity.User;
 import org.junit.jupiter.api.Test;
 
 import static com.andreea.ticket_tracker.entity.TicketStatus.TODO;
@@ -25,6 +26,7 @@ public class TicketDTOMapperTest {
         dto.setPosition(1);
         dto.setStatus(TODO);
         dto.setBoardId(board.getId());
+        dto.setStoryPoints(8);
 
         Ticket ticket = TicketDTOMapper.toEntity(dto, board);
 
@@ -35,6 +37,7 @@ public class TicketDTOMapperTest {
         assertThat(ticket.getPosition()).isEqualTo(dto.getPosition());
         assertThat(ticket.getStatus()).isEqualTo(dto.getStatus());
         assertThat(board.getId()).isEqualTo(dto.getBoardId());
+        assertThat(ticket.getStoryPoints()).isEqualTo(dto.getStoryPoints());
     }
 
     @Test
@@ -45,12 +48,18 @@ public class TicketDTOMapperTest {
         board.setName("Board");
         board.setDescription("Desc");
 
+        User user = new User();
+        user.setId(55L);
+        user.setUsername("andreea_dev");
+
         Ticket ticket = new Ticket();
         ticket.setTitle("Ticket");
         ticket.setDescription("Desc");
         ticket.setPosition(1);
         ticket.setStatus(TODO);
         ticket.setBoard(board);
+        ticket.setStoryPoints(5);
+        ticket.setAssignedUser(user);
 
         TicketResponseDTO dto = TicketDTOMapper.toDTO(ticket);
 
@@ -61,5 +70,7 @@ public class TicketDTOMapperTest {
         assertThat(dto.getPosition()).isEqualTo(ticket.getPosition());
         assertThat(dto.getStatus()).isEqualTo(ticket.getStatus());
         assertThat(dto.getBoardId()).isEqualTo(board.getId());
+        assertThat(dto.getStoryPoints()).isEqualTo(ticket.getStoryPoints());
+        assertThat(dto.getAssignedUserId()).isEqualTo(user.getId());
     }
 }

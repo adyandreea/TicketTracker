@@ -4,8 +4,10 @@ import com.andreea.ticket_tracker.dto.request.TicketRequestDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Project;
 import com.andreea.ticket_tracker.entity.Ticket;
+import com.andreea.ticket_tracker.entity.User;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.TicketRepository;
+import com.andreea.ticket_tracker.repository.UserRepository;
 import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +37,9 @@ public class TicketServiceTest {
 
     @Mock
     private ProjectSecurityEvaluator projectSecurity;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private TicketService ticketService;
@@ -150,5 +155,61 @@ public class TicketServiceTest {
 
         assertEquals(1, result.size());
         verify(ticketRepository).findAllByBoardAndUser(1L, "user1");
+    }
+
+    @Test
+    void testCreateTicketWithValidAssignedUser(){
+        Project project = new Project();
+        User user = new User();
+        user.setId(99L);
+        project.setUsers(java.util.Set.of(user));
+
+        Board board = new Board();
+        board.setId(1L);
+        board.setProject(project);
+
+        TicketRequestDTO dto = new TicketRequestDTO();
+        dto.setTitle("Ticket");
+        dto.setBoardId(1L);
+        dto.setAssignedUserId(99L);
+
+        when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
+        when(userRepository.findById(99L)).thenReturn(Optional.of(user));
+        when(ticketRepository.save(any(Ticket.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        var result = ticketService.createTicket(dto);
+
+        verify(projectSecurity).validateUserAccess(project);
+        verify(userRepository).findById(99L);
+        assertEquals("Ticket", result.getTitle());
+        assertEquals(99L, result.getAssignedUserId());
+    }
+
+    @Test
+    void testCreateTicketThrowsUserNotInProjectException() {
+        Project project = new Project();
+        project.setUsers(java.util.Set.of());
+
+        Board board = new Board();
+        board.setId(1L);
+        board.setProject(project);
+
+        User externalUser = new User();
+        externalUser.setId(99L);
+
+        TicketRequestDTO dto = new TicketRequestDTO();
+        dto.setTitle("Test Fail Assign");
+        dto.setBoardId(1L);
+        dto.setAssignedUserId(99L);
+
+        when(boardRepository.findById(1L)).thenReturn(Optional.of(board));
+        when(userRepository.findById(99L)).thenReturn(Optional.of(externalUser));
+
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.andreea.ticket_tracker.exceptions.UserNotInProjectException.class,
+                () -> ticketService.createTicket(dto)
+        );
+
+        verify(ticketRepository, never()).save(any(Ticket.class));
     }
 }
