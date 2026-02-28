@@ -46,45 +46,51 @@
 
 
 
-<h2 align="center"><strong>Main Dashboard</strong></h2>
+<h2 align="center"><strong>🚀 Main Dashboard</strong></h2>
 
 <p align="center">
-
-  <img src="demo/dashboard.png" height="425" width="1000" alt="Dashboard">
-
+  <img src="demo/dashboard.png" width="1000" alt="Dashboard" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.2);">
   <br>
-
-  <em>Manage your tasks across TODO, In Progress, and DONE columns.</em>
-
-</p>
-
-
-
-<h2 align="center"><strong>Admin Permissions & Security</strong></h2>
-
-<p align="center">
-
-  <img src="demo/permissions.png" height="425" width="1000" alt="Permissions">
-
-  <img src="demo/manage_users.png" height="425" width="1000" alt="Manage Users">
-
   <br>
-
-  <em>Admins can assign users to specific projects and manage system access.</em>
-
+  <em>Manage your tasks effortlessly across <code>TODO</code>, <code>In Progress</code>, and <code>DONE</code> columns with a clean, intuitive Kanban interface.</em>
 </p>
 
 
 
-<h2 align="center"><strong>Ticket Details & User Profile</strong></h2>
+<h2 align="center"><strong>🔐 Admin Permissions & Security</strong></h2>
 
-<p align="center">
+<table align="center">
+  <tr>
+    <td align="center" valign="top" width="50%">
+      <img src="demo/permissions.png" alt="Permissions" style="border-radius: 8px; border: 1px solid #ddd;">
+      <br>
+      <strong>Project Permissions</strong>
+      <p>Assign users to specific projects.</p>
+    </td>
+    <td align="center" valign="top" width="50%">
+      <img src="demo/manage_users.png" alt="Manage Users" style="border-radius: 8px; border: 1px solid #ddd;">
+      <br>
+      <strong>User Management</strong>
+      <p>Admins can register new members and manage system access.</p>
+    </td>
+  </tr>
+</table>
 
-  <img src="demo/ticket_details.png" height="425" width="480" alt="Ticket Details">
 
-  <img src="demo/user_profile.png" height="425" width="480" alt="User Profile">
 
-</p>
+<h2 align="center"><strong>User & Ticket Details</strong></h2>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="demo/user_profile.png" width="450px" alt="User Profile"><br>
+      <em>User Settings & Profile</em>
+    </td>
+    <td align="center">
+      <img src="demo/ticket_details.png" width="450px" alt="Ticket Details"><br>
+      <em>Detailed Ticket View</em>
+    </td>
+  </tr>
+</table>
 
 
 
@@ -108,6 +114,6 @@
 
 * **Frontend:** React.js, i18next, Material UI.
 
-* **Backend:** Java, Spring Boot, Spring Security (JWT/Session).
+* **Backend:** Java, Spring Boot, Maven, Spring Security (JWT/Session).
 
 * **Database:** MySQL / Hibernate JPA.
