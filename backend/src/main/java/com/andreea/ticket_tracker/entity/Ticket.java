@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Ticket extends BaseEntity{
 
     @NotBlank(message = "title_required")
-    @Size(max = 64, min = 1, message = "title_length_invalid")
+    @Size(max = 50, min = 3, message = "title_length_invalid")
     private String title;
 
     @Size(max = 255, message = "description_too_long")
@@ -32,4 +32,11 @@ public class Ticket extends BaseEntity{
     @JoinColumn(name="board_id")
     @NotNull(message = "board_id_required")
     private Board board;
+
+    @Min(value = 0, message = "story_points_min_error")
+    private Integer storyPoints;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_user_id")
+    private User assignedUser;
 }
