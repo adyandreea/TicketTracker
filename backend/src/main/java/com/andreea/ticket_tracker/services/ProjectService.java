@@ -12,6 +12,7 @@ import com.andreea.ticket_tracker.mapper.ProjectDTOMapper;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
 import com.andreea.ticket_tracker.repository.UserRepository;
 import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
@@ -104,7 +106,7 @@ public class ProjectService {
         try {
             emailService.sendSimpleEmail(user.getEmail(), subject, body);
         } catch (Exception e) {
-            System.err.println("Error sending email to " + user.getEmail() + ": " + e.getMessage());
+            log.error("Error sending email to {}: {}", user.getEmail(), e.getMessage());
         }
     }
 

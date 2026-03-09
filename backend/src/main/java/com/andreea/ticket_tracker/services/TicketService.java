@@ -11,17 +11,18 @@ import com.andreea.ticket_tracker.exceptions.TicketNotFoundException;
 import com.andreea.ticket_tracker.exceptions.UserNotFoundException;
 import com.andreea.ticket_tracker.exceptions.UserNotInProjectException;
 import com.andreea.ticket_tracker.mapper.TicketDTOMapper;
-import com.andreea.ticket_tracker.mapper.UserDTOMapper;
 import com.andreea.ticket_tracker.repository.BoardRepository;
 import com.andreea.ticket_tracker.repository.TicketRepository;
 import com.andreea.ticket_tracker.repository.UserRepository;
 import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class TicketService {
 
     private final TicketRepository ticketRepository;
@@ -151,7 +152,7 @@ public class TicketService {
                 try {
                     emailService.sendSimpleEmail(assignee.getEmail(), subject, body);
                 } catch (Exception e) {
-                    System.err.println("Error sending email to " + assignee.getEmail() + ": " + e.getMessage());
+                    log.error("Error sending email to {}: {}", assignee.getEmail(), e.getMessage());
                 }
             }
         } else {
