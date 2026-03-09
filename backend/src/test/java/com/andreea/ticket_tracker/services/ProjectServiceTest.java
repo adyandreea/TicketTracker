@@ -45,6 +45,9 @@ public class ProjectServiceTest {
     @InjectMocks
     private ProjectService projectService;
 
+    @Mock
+    private EmailService emailService;
+
     private void mockSecurityContext(String username) {
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -128,7 +131,10 @@ public class ProjectServiceTest {
     @Test
     void testAssignUserToProject(){
         Project project = new Project();
+        project.setName("Kanban Test");
+
         User user = new User();
+        user.setEmail("test@user.com");
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user));
@@ -137,6 +143,12 @@ public class ProjectServiceTest {
 
         verify(projectSecurity).validateUserAccess(project);
         verify(projectRepository).save(project);
+
+        verify(emailService, times(1)).sendSimpleEmail(
+                eq("test@user.com"),
+                anyString(),
+                anyString()
+        );
     }
 
     @Test

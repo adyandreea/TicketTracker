@@ -44,6 +44,9 @@ public class TicketServiceTest {
     @InjectMocks
     private TicketService ticketService;
 
+    @Mock
+    private EmailService emailService;
+
     private void mockSecurityContext(String username, boolean isAdmin) {
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -160,8 +163,11 @@ public class TicketServiceTest {
     @Test
     void testCreateTicketWithValidAssignedUser(){
         Project project = new Project();
+        project.setName("Kanban Project");
+
         User user = new User();
         user.setId(99L);
+        user.setEmail("assignee@test.com");
         project.setUsers(java.util.Set.of(user));
 
         Board board = new Board();
@@ -181,6 +187,13 @@ public class TicketServiceTest {
 
         verify(projectSecurity).validateUserAccess(project);
         verify(userRepository).findById(99L);
+
+        verify(emailService, times(1)).sendSimpleEmail(
+                eq("assignee@test.com"),
+                contains("New ticket assigned"),
+                anyString()
+        );
+
         assertEquals("Ticket", result.getTitle());
         assertEquals(99L, result.getAssignedUserId());
     }

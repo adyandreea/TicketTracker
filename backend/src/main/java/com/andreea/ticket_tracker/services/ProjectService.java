@@ -12,6 +12,7 @@ import com.andreea.ticket_tracker.mapper.ProjectDTOMapper;
 import com.andreea.ticket_tracker.repository.ProjectRepository;
 import com.andreea.ticket_tracker.repository.UserRepository;
 import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,19 +20,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final UserDTOMapper userDTOMapper;
     private final ProjectSecurityEvaluator projectSecurity;
+    private final EmailService emailService;
+
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, UserDTOMapper userDTOMapper, ProjectSecurityEvaluator projectSecurity) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, UserDTOMapper userDTOMapper, ProjectSecurityEvaluator projectSecurity, EmailService emailService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.userDTOMapper = userDTOMapper;
         this.projectSecurity = projectSecurity;
+        this.emailService = emailService;
     }
 
     public ProjectResponseDTO createProject(ProjectRequestDTO dto){
@@ -92,6 +97,17 @@ public class ProjectService {
 
         project.addUser(user);
         projectRepository.save(project);
+
+        String subject = "You have been added to a new project: " + project.getName();
+        String body = "Hello,\n\n" +
+                "You were assigned to the project \"" + project.getName() + "\".\n" +
+                "Enter the Kanban Board app to see the details and tasks.\n\n";
+
+        try {
+            emailService.sendSimpleEmail(user.getEmail(), subject, body);
+        } catch (Exception e) {
+            log.error("Error sending email to {}: {}", user.getEmail(), e.getMessage());
+        }
     }
 
     public List<UserResponseDTO> getProjectMembers(Long projectId){
