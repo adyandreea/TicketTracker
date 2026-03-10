@@ -17,6 +17,7 @@ import com.andreea.ticket_tracker.repository.UserRepository;
 import com.andreea.ticket_tracker.security.config.ProjectSecurityEvaluator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -110,7 +111,7 @@ public class TicketService {
     }
 
     public List<TicketResponseDTO> getTicketsByBoardId(Long boardId){
-        String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -161,7 +162,7 @@ public class TicketService {
     }
 
     public List<TicketResponseDTO> searchTickets(String query) {
-        String username = org.springframework.security.core.context.SecurityContextHolder
+        String username = SecurityContextHolder
                 .getContext().getAuthentication().getName();
 
         List<Ticket> tickets;
