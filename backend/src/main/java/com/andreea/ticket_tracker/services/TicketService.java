@@ -159,4 +159,20 @@ public class TicketService {
             ticket.setAssignedUser(null);
         }
     }
+
+    public List<TicketResponseDTO> searchTickets(String query) {
+        String username = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getName();
+
+        List<Ticket> tickets;
+        if (projectSecurity.isUserAdmin()) {
+            tickets = ticketRepository.findByTitleContainingIgnoreCase(query);
+        } else {
+            tickets = ticketRepository.searchByTitleAndUser(query, username);
+        }
+
+        return tickets.stream()
+                .map(TicketDTOMapper::toDTO)
+                .toList();
+    }
 }
