@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import static com.andreea.ticket_tracker.entity.TicketStatus.TODO;
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Unit tests for TicketDTOMapper.
+ */
 public class TicketDTOMapperTest {
 
     @Test

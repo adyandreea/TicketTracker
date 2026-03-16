@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Unit tests for UserDTOMapper.
+ */
 public class UserDTOMapperTest {
 
     @Test

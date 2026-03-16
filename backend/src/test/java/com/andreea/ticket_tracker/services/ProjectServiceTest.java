@@ -27,6 +27,9 @@ import java.util.Set;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for ProjectService.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ProjectServiceTest {
 

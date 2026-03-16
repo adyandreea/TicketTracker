@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Unit tests for EmailService.
+ */
 @ExtendWith(MockitoExtension.class)
 public class EmailServiceTest {
 
