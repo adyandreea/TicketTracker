@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing projects.
+ */
 @Tag(name = "Project API", description = "API for project management")
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -35,6 +38,11 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
+    /**
+     * Endpoint to create a new project.
+     * @param dto project data
+     * @return response entity with created project
+     */
     @Operation(summary = "Creates a new project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROJECT_SUCCESSFULLY_CREATED,
@@ -56,6 +64,10 @@ public class ProjectController {
                 .body(createdProject);
     }
 
+    /**
+     * Endpoint to retrieve all projects for the current user.
+     * @return list of project DTOs
+     */
     @Operation(summary = "Returns projects based on user role (all for ADMIN/MANAGER, assigned for USER).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_PROJECTS,
@@ -67,6 +79,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
 
+    /**
+     * Endpoint to get a specific project by ID.
+     * @param id project ID
+     * @return project details
+     */
     @Operation(summary = "Returns a project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_PROJECT,
@@ -85,6 +102,12 @@ public class ProjectController {
         return projectService.getProject(id);
     }
 
+    /**
+     * Endpoint to update a project.
+     * @param id project ID
+     * @param dto updated data
+     * @return updated project
+     */
     @Operation(summary = "Updates the project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROJECT_SUCCESSFULLY_UPDATED,
@@ -104,6 +127,11 @@ public class ProjectController {
         return ResponseEntity.ok(updatedProject);
     }
 
+    /**
+     * Endpoint to delete a project.
+     * @param id project ID
+     * @return success message
+     */
     @Operation(summary = "Deletes the project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.PROJECT_SUCCESSFULLY_DELETED,
@@ -123,6 +151,12 @@ public class ProjectController {
         return ResponseHandler.deleted("Project deleted successfully");
     }
 
+    /**
+     * Endpoint to assign a user to a project.
+     * @param projectId project ID
+     * @param userId user ID
+     * @return success message
+     */
     @Operation(summary = "Assigns a user to a project.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.ASSIGN_USER_TO_PROJECT,
@@ -142,6 +176,11 @@ public class ProjectController {
         return ResponseHandler.success("User assigned to project successfully");
     }
 
+    /**
+     * Endpoint to list all members of a project.
+     * @param projectId project ID
+     * @return list of users
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_USERS_BY_PROJECT,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -161,6 +200,12 @@ public class ProjectController {
         return ResponseEntity.ok(members);
     }
 
+    /**
+     * Endpoint to remove a user from a project.
+     * @param projectId project ID
+     * @param userId user ID
+     * @return success message
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.REMOVE_USER_FROM_PROJECT,
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,

@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing boards.
+ */
 @Tag(name = "Board API", description = "API for board management")
 @RestController
 @RequestMapping("/api/v1/boards")
@@ -34,6 +37,11 @@ public class BoardController {
         this.boardService = boardService;
     }
 
+    /**
+     * Endpoint to create a new board.
+     * @param dto board data
+     * @return response entity with created board
+     */
     @Operation(summary = "Creates a new board.")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.BOARD_SUCCESSFULLY_CREATED,
@@ -55,6 +63,10 @@ public class BoardController {
                 .body(createdBoard);
     }
 
+    /**
+     * Endpoint to retrieve all boards.
+     * @return list of board DTOs
+     */
     @Operation(summary = "Returns all the boards.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_BOARDS,
@@ -73,6 +85,11 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
+    /**
+     * Endpoint to get a specific board by ID.
+     * @param id board ID
+     * @return board details
+     */
     @Operation(summary = "Returns a board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_BOARD,
@@ -91,6 +108,12 @@ public class BoardController {
         return boardService.getBoard(id);
     }
 
+    /**
+     * Endpoint to update a board.
+     * @param id board ID
+     * @param dto updated data
+     * @return updated board
+     */
     @Operation(summary = "Updates the board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.BOARD_SUCCESSFULLY_UPDATED,
@@ -110,6 +133,11 @@ public class BoardController {
         return ResponseEntity.ok(updatedBoard);
     }
 
+    /**
+     * Endpoint to delete a board.
+     * @param id board ID
+     * @return success message
+     */
     @Operation(summary = "Deletes the board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.BOARD_SUCCESSFULLY_DELETED,
@@ -129,6 +157,11 @@ public class BoardController {
         return ResponseHandler.deleted("Board deleted successfully");
     }
 
+    /**
+     * Endpoint to list all boards of a project.
+     * @param projectId project ID
+     * @return list of boards
+     */
     @Operation(summary = "Returns all the boards for a specific Project ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_BOARDS,
