@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data transfer object for user responses.
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,22 +21,40 @@ public class UserResponseDTO {
 
     private Long id;
 
+    /**
+     * The firstname of the user.
+     */
     @NotBlank(message = "firstname_required")
     private String firstname;
 
+    /**
+     * The lastname of the user.
+     */
     @NotBlank(message = "lastname_required")
     private String lastname;
 
+    /**
+     * The username of the user.
+     */
     @NotBlank(message = "username_required")
     @Size(min = 3, max = 20, message = "username_length_invalid")
     private String username;
 
+    /**
+     * The email of the user.
+     */
     @NotBlank(message = "email_required")
     @Email(message = "email_invalid")
     private String email;
 
+    /**
+     * Assigned role for permissions.
+     */
     @NotNull(message = "role_required")
     private Role role;
 
+    /**
+     * Profile picture of the user.
+     */
     private String profilePicture;
 }
