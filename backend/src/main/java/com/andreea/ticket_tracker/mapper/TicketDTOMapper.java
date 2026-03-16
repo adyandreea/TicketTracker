@@ -5,8 +5,17 @@ import com.andreea.ticket_tracker.dto.response.TicketResponseDTO;
 import com.andreea.ticket_tracker.entity.Board;
 import com.andreea.ticket_tracker.entity.Ticket;
 
+/**
+ * Mapper utility to convert between Ticket entities and DTOs.
+ */
 public class TicketDTOMapper {
 
+    /**
+     * Converts a TicketRequestDTO to a Ticket entity.
+     * @param dto the request data transfer object
+     * @param board the parent board to be associated with the ticket
+     * @return a new Ticket entity
+     */
     public static Ticket toEntity(TicketRequestDTO dto, Board board){
         Ticket ticket = new Ticket();
         ticket.setTitle(dto.getTitle());
@@ -18,6 +27,11 @@ public class TicketDTOMapper {
         return ticket;
     }
 
+    /**
+     * Converts a Ticket entity to a TicketResponseDTO.
+     * @param ticket the entity to convert
+     * @return the populated response DTO
+     */
     public static TicketResponseDTO toDTO(Ticket ticket){
         TicketResponseDTO dto = new TicketResponseDTO();
 
