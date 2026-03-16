@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing tickets.
+ */
 @Tag(name = "Ticket API", description = "API for ticket management")
 @RestController
 @RequestMapping("/api/v1/tickets")
@@ -34,6 +37,11 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
+    /**
+     * Endpoint to create a new ticket.
+     * @param dto ticket data
+     * @return response entity with created ticket
+     */
     @Operation(summary = "Creates a new ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.TICKET_SUCCESSFULLY_CREATED,
@@ -55,6 +63,10 @@ public class TicketController {
                 .body(createdTicket);
     }
 
+    /**
+     * Endpoint to retrieve all tickets.
+     * @return list of tickets DTOs
+     */
     @Operation(summary = "Returns all the tickets.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_TICKETS,
@@ -73,6 +85,11 @@ public class TicketController {
         return ticketService.getAllTickets();
     }
 
+    /**
+     * Endpoint to get a specific ticket by ID.
+     * @param id ticket ID
+     * @return ticket details
+     */
     @Operation(summary = "Returns a ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_TICKET,
@@ -91,6 +108,12 @@ public class TicketController {
         return ticketService.getTicket(id);
     }
 
+    /**
+     * Endpoint to update a ticket.
+     * @param id ticket ID
+     * @param dto updated data
+     * @return updated ticket
+     */
     @Operation(summary = "Updates the ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.TICKET_SUCCESSFULLY_UPDATED,
@@ -110,6 +133,11 @@ public class TicketController {
         return ResponseEntity.ok(updatedTicket);
     }
 
+    /**
+     * Endpoint to delete a ticket.
+     * @param id ticket ID
+     * @return success message
+     */
     @Operation(summary = "Deletes the ticket.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.TICKET_SUCCESSFULLY_DELETED,
@@ -129,6 +157,11 @@ public class TicketController {
         return ResponseHandler.deleted("Ticket deleted successfully");
     }
 
+    /**
+     * Endpoint to list all tickets of a board.
+     * @param boardId board ID
+     * @return list of tickets
+     */
     @Operation(summary = "Returns all the tickets for a specific Board ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.RETURN_TICKETS,
@@ -147,6 +180,11 @@ public class TicketController {
         return ticketService.getTicketsByBoardId(boardId);
     }
 
+    /**
+     * Endpoint to search for tickets by title
+     * @param query the search keyword
+     * @return list of matching tickets
+     */
     @Operation(summary = "Searches tickets by title.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.SEARCH_TICKETS,

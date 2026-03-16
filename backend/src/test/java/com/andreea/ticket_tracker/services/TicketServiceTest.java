@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for TicketService.
+ */
 @ExtendWith(MockitoExtension.class)
 public class TicketServiceTest {
 

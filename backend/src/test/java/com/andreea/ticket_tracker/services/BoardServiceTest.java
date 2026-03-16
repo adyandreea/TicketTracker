@@ -22,6 +22,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for BoardService.
+ */
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
